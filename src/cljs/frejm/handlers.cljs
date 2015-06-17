@@ -112,9 +112,9 @@
  (fn [db [_ res]]
    (if res
      (do 
-     ;(js/console.log res)
-     (js/console.log res)
      ;(assoc db :test (js->clj res.attributes))
+     ;.forEach(function(n) { console.log(n.attributes) })
+     (js/console.log (first (js->clj res )))
      db)
      (js/alert "fick inga kurser"))))
 
