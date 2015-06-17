@@ -1,0 +1,9 @@
+/*.iml
+/*-init.clj
+/target/
+/resources/public/js/compiled
+/.boot-jvm-options
+/.projectile
+/figwheel_server.log
+/README.md
+/.gitignore
