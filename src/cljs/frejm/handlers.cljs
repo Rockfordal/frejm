@@ -6,6 +6,7 @@
   (:require-macros [cljs.core.async.macros :refer [go alt!]])
   (:refer-clojure :exclude [find count]))
 
+
 (re-frame/register-handler
   :initialize-db
   (fn [_ _]
@@ -31,13 +32,15 @@
 ;        (re-frame/dispatch [:process-getcourses-response (str (:title (:body res)))])))
 ;    db))
 
-(def Query (.-Query js/Parse))
+;(def v8-object-type (type (.toJSON (ParseObject.))))
 
 ;(defn map->Course [map]
 ;  (let [course (Course.)]
 ;    (doseq [[key value] map]
 ;      (.set course (name key) value))
 ;    course))
+
+(def Query (.-Query js/Parse))
 
  (defn fix-arguments
    "Fix an arguments object, turning it into a normal javascript array"
@@ -47,11 +50,11 @@
 (defn find [query]
   (let [ch (chan 1)]
     (.find query (clj->js {"success" (fn [objects]
-                                       (put! ch (first (fix-arguments objects)))
-                                       (close! ch))
+                                         (put! ch (first (fix-arguments objects)))
+                                         (close! ch))
                            "error" (fn [error]
-                                     (put! ch "error")
-                                     (close! ch))}))
+                                       (put! ch "error")
+                                       (close! ch))}))
     ch))
 
 (defn count [query]
@@ -74,9 +77,9 @@
   :getclojure
   (fn [db _]
     (let [Course (.extend (.-Object js/Parse) "course")
-        query  (Query. Course)]
+        query (Query. Course)]
         (.get query "W8uc91QYJL" (clj->js {
-            "success" (fn [kurs] (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
+            "success" (fn [kurs]    (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
             "error"   (fn [obj err] (js/console.log (str "Fel i :getclojure!" err)))})))
   db))
 
@@ -86,7 +89,7 @@
     (let [Course (.extend (.-Object js/Parse) "course")
         query  (Query. Course)]
         (.get query "NXp23QnLVW" (clj->js {
-            "success" (fn [kurs] (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
+            "success" (fn [kurs]    (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
             "error"   (fn [obj err] (js/console.log (str "Fel i :getjs!" err)))})))
   db))
 
@@ -96,7 +99,7 @@
     (let [Course (.extend (.-Object js/Parse) "course")
         query (Query. Course)]
         (.find query (clj->js {
-            "success" (fn [kurser] (re-frame/dispatch [:process-getcourses-response kurser]))
+            "success" (fn [kurser]  (re-frame/dispatch [:process-getcourses-response kurser]))
             "error"   (fn [obj err] (js/console.log (str "Fel i :getcourses!" err)))})))
   db))
 
@@ -104,19 +107,33 @@
  :process-getcourse-response
  (fn [db [_ res]]
    (if res
-     (assoc db :test (js->clj res.attributes))
+     (assoc db :test (js->clj res.attributes :keywordize-keys true))
+     ;(assoc db :test {:name "kurser" :desc "mja"})
+     ;(js/console.log res.attributes)
      (js/alert "fick ingen kurs"))))
 
 (re-frame/register-handler
  :process-getcourses-response
  (fn [db [_ res]]
    (if res
-     (do 
-     ;(assoc db :test (js->clj res.attributes))
-     ;.forEach(function(n) { console.log(n.attributes) })
-     (js/console.log (first (js->clj res )))
-     db)
-     (js/alert "fick inga kurser"))))
+    (let [kurser (js->clj res :keywordize-keys true)]
+     (js/console.log (.-length (clj->js kurser)))
+     (js/console.log (clj->js kurser))
+
+     ;(js/console.log (into {} (for [k (.keys js/Object kurser)]
+     ;                        [(keyfn k) (thisfn (aget kurser k))])))
+
+     ;(js/console.log (.keys js/Object kurser))
+     ;(js/console.log (for [k (.keys js/Object kurser)]
+     ;                  (js/console.log (k))))
+
+     ;(js/console.log kurser)
+     ;(for )
+     ;(js/console.log ((js->clj (.toJSON (kurs)) :keywordize-keys true) :desc))
+     ;(assoc db :test {:name "kurser" :desc "mja"})
+     )
+     (js/alert "fick inga kurser"))
+   db))
 
 ;(defn getstart []
 ;  (let [txt "http://textfiles.com/100/914bbs.txt"
