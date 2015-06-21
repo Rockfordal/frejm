@@ -87,7 +87,7 @@
   :getjs
   (fn [db _]
     (let [Course (.extend (.-Object js/Parse) "course")
-        query  (Query. Course)]
+        query (Query. Course)]
         (.get query "NXp23QnLVW" (clj->js {
             "success" (fn [kurs]    (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
             "error"   (fn [obj err] (js/console.log (str "Fel i :getjs!" err)))})))
@@ -111,6 +111,11 @@
      ;(assoc db :test {:name "kurser" :desc "mja"})
      ;(js/console.log res.attributes)
      (js/alert "fick ingen kurs"))))
+
+(re-frame/register-handler
+  :getkurssnabb
+  (fn [db [_] nyakurser]
+    (assoc db :kurser nyakurser)))
 
 (re-frame/register-handler
  :process-getcourses-response

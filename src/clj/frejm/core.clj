@@ -1,1 +1,2 @@
-(ns frejm.core)
+(ns frejm.core
+  :require [frejm.api])

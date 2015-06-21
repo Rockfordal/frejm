@@ -1,5 +1,5 @@
 (ns frejm.views
-    (:require [re-frame.core :as re-frame]))
+    (:require [re-frame.core :as re-frame :refer [subscribe dispatch]]))
 
 ;; --------------------
 (defn home-panel []
@@ -10,7 +10,7 @@
        [:div [:a {:href "#/about"} "Kontakt"]]])))
 
 (defn about-panel []
-  (let [test (re-frame/subscribe [:test])]
+  (let [test (subscribe [:test])]
   (fn []
     [:div
      [:h2 "Kontakt"]
@@ -20,18 +20,17 @@
      [:b "Namn"] [:div (@test :name)] [:br]
      [:b "Beskrivning"] [:div (@test :desc)] 
      [:br]
-     ;[:div [:button.btn.btn-xs.btn-danger { :on-click #(re-frame/dispatch [:testa "Hej!"])} "Testa"]] [:br]
-     [:button { :on-click #(re-frame/dispatch [:getjs])}      "Hämta js"]
-     [:button { :on-click #(re-frame/dispatch [:getclojure])} "Hämta clj"]
-     [:button { :on-click #(re-frame/dispatch [:getcourses])} "Hämta kurser"]
+     [:button { :on-click #(dispatch [:getjs])}      "Hämta js"]
+     [:button { :on-click #(dispatch [:getclojure])} "Hämta clj"]
+     [:button { :on-click #(dispatch [:getcourses])} "Hämta kurser"]
  ])))
 
 
 ;; --------------------
-(defmulti panels identity)
-(defmethod panels :home-panel [] [home-panel])
+(defmulti  panels identity)
+(defmethod panels :home-panel  [] [home-panel])
 (defmethod panels :about-panel [] [about-panel])
-(defmethod panels :default [] [:div])
+(defmethod panels :default     [] [:div])
 
 (defn main-panel []
   (let [active-panel (re-frame/subscribe [:active-panel])]
