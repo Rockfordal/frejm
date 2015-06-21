@@ -1,4 +1,4 @@
-(ns frejm.lab
+(ns frejm.chanlab
   (:require [re-frame.core :as re-frame]
             [frejm.db :as db]
             [cljs-http.client :as http]
@@ -53,4 +53,3 @@
 
 (defn hej []
   (js/console.log "Hejja"))
-

@@ -3,7 +3,8 @@
               [re-frame.core :as re-frame]
               [frejm.handlers]
               [frejm.subs]
-              [frejm.lab]
+              ;[frejm.chanlab]
+              ;[frejm.slask]
               [frejm.routes :as routes]
               [frejm.views :as views]))
 
