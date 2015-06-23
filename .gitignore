@@ -4,3 +4,5 @@
 /resources/public/js/compiled
 /figwheel_server.log
 /.idea
+/.lein-env
+/logs

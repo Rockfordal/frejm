@@ -1,0 +1,22 @@
+// Compiled by ClojureScript 0.0-3308 {}
+goog.provide('rente.client.db');
+goog.require('cljs.core');
+rente.client.db.hardcodedphones = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"age","age",-604307804),"0",new cljs.core.Keyword(null,"id","id",-1388402092),"motorola-xoom-with-wi-fi",new cljs.core.Keyword(null,"imageUrl","imageUrl",1269643151),"img/phones/motorola-xoom-with-wi-fi.0.jpg",new cljs.core.Keyword(null,"name","name",1843675177),"Motorola XOOM\u2122 with Wi-Fi",new cljs.core.Keyword(null,"snippet","snippet",953581994),"The Next, Next Generation\r\n\r\nExperience the future with Motorola XOOM with Wi-Fi, the world's first tablet powered by Android 3.0 (Honeycomb)."], null),new cljs.core.PersistentArrayMap(null, 5, [new cljs.core.Keyword(null,"age","age",-604307804),"1",new cljs.core.Keyword(null,"id","id",-1388402092),"motorola-xoom",new cljs.core.Keyword(null,"imageUrl","imageUrl",1269643151),"img/phones/motorola-xoom.0.jpg",new cljs.core.Keyword(null,"name","name",1843675177),"MOTOROLA XOOM\u2122",new cljs.core.Keyword(null,"snippet","snippet",953581994),"The Next, Next Generation\n\nExperience the future with MOTOROLA XOOM, the world's first tablet powered by Android 3.0 (Honeycomb)."], null)], null);
+rente.client.db.default_db = new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"name","name",1843675177),"re-frame",new cljs.core.Keyword(null,"test","test",577538877),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"name","name",1843675177),"000",new cljs.core.Keyword(null,"desc","desc",2093485764),"noll"], null),new cljs.core.Keyword(null,"people","people",1443537404),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"firstname","firstname",1659984849),"Nils",new cljs.core.Keyword(null,"lastname","lastname",-265181465),"Ohlsson",new cljs.core.Keyword(null,"age","age",-604307804),(45)], null)], null);
+if(typeof rente.client.db.state !== 'undefined'){
+} else {
+rente.client.db.state = cljs.core.atom.call(null,cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null,"currentpage","currentpage",-480118203),new cljs.core.Keyword(null,"saved?","saved?",-2027163192),new cljs.core.Keyword(null,"search-input","search-input",-576916149),new cljs.core.Keyword(null,"title","title",636505583),new cljs.core.Keyword(null,"re-render-flip","re-render-flip",1682025136),new cljs.core.Keyword(null,"counter","counter",804008177),new cljs.core.Keyword(null,"current-company","current-company",769850934),new cljs.core.Keyword(null,"order-prop","order-prop",-1545508264),new cljs.core.Keyword(null,"doc","doc",1913296891),new cljs.core.Keyword(null,"current-project","current-project",903630396),new cljs.core.Keyword(null,"current-page","current-page",-101294180),new cljs.core.Keyword(null,"a","a",-2123407586)],["-",false,"","Bas",false,(0),new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"id","id",-1388402092),(1),new cljs.core.Keyword(null,"name","name",1843675177),"Test AB",new cljs.core.Keyword(null,"orgnr","orgnr",566375899),"12345-6789",new cljs.core.Keyword(null,"note","note",1426297904),"Mja"], null),"name",cljs.core.PersistentArrayMap.EMPTY,"Bagar Troll",new cljs.core.Keyword(null,"nil","nil",99600501),(1)]));
+}
+rente.client.db.set_value_BANG_ = (function rente$client$db$set_value_BANG_(id,value){
+cljs.core.swap_BANG_.call(null,rente.client.db.state,cljs.core.assoc,new cljs.core.Keyword(null,"saved?","saved?",-2027163192),false);
+
+return cljs.core.swap_BANG_.call(null,rente.client.db.state,cljs.core.assoc_in,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"doc","doc",1913296891),id], null),value);
+});
+rente.client.db.get_value = (function rente$client$db$get_value(id){
+return cljs.core.get_in.call(null,cljs.core.deref.call(null,rente.client.db.state),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"doc","doc",1913296891),id], null));
+});
+rente.client.db.put_BANG_ = (function rente$client$db$put_BANG_(k,v){
+return cljs.core.swap_BANG_.call(null,rente.client.db.state,cljs.core.assoc,k,v);
+});
+
+//# sourceMappingURL=db.js.map

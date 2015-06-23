@@ -1,79 +1,95 @@
-(defproject frejm "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3211"]
-                 [com.tvachon/core.async "0.2.0"]
-                 ;[org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 ;[org.clojure/tools.namespace "0.2.11-SNAPSHOT"]
+(defproject rente "1.0.0"
+  :description "A barebones Reagent+Sente app deployable to Heroku. Uses Figwheel (for development build) and Component (lifecycle management)."
+  :url "http://enterlab.com"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :min-lein-version "2.5.0"
+  :dependencies [[org.clojure/clojure "1.7.0-RC1"]
+                 [org.clojure/clojurescript "0.0-3308"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 ;[com.tvachon/core.async "0.2.0"]
+                 [com.stuartsierra/component "0.2.3"]
                  [environ "1.0.0"]
+                 [ch.qos.logback/logback-classic "1.1.3"]
+                 [org.clojure/tools.logging "0.3.1"]
+
+                 ; Server
+                 ;[liberator "0.12.0"]
+                 [ring/ring-core "1.3.2"]
+                 [ring/ring-defaults "0.1.5"]
+                 [compojure "1.3.4"]
+                 [http-kit "2.1.19"]
+                 ;[fogus/ring-edn "0.2.0"]
+                 ;[clj-json "0.5.3"]
+
+                 [com.datomic/datomic-free "0.9.5153"
+                  :exclusions [joda-time
+                               org.slf4j/jul-to-slf4j
+                               org.slf4j/slf4j-nop]]
+
+                 [com.taoensso/sente "1.5.0" :exclusions [org.clojure/tools.reader]]
+                 [com.cognitect/transit-clj "0.8.275" :exclusions [commons-codec]]
+                 [com.cognitect/transit-cljs "0.8.220"]
 
                  ; Klient
-                 [cljs-http "0.1.14"]
                  [reagent "0.5.0"]
                  [re-frame "0.4.1"]
                  [secretary "1.2.3"]
-
-                 ; Server
-                 [ring/ring-core "1.3.1"]
-                 [ring/ring-jetty-adapter "1.3.1"]
+                 [jayq "2.5.4"]
                  [cljs-http "0.1.14"]
-                 [compojure "1.1.8"]
-                 [liberator "0.12.0"]
-                 [fogus/ring-edn "0.2.0"]
-                 [clj-json "0.5.3"]
-                 [com.datomic/datomic-free "0.9.4899"]]
+                 ;[org.webjars/bootstrap "3.3.4"]
+                 ;[org.webjars/materialize ""]
+                 ]
 
-  :min-lein-version "2.5.0"
-  :env {:is-dev true}
-  :source-paths ["src/clj"]
+  :plugins [[lein-cljsbuild "1.0.5"]]
 
-  :plugins [[lein-cljsbuild "1.0.6"]
-            [lein-figwheel "0.3.3"]
-            [lein-ring "0.8.10"]]
-            ; :exclusions [cider/cider-nrepl]
+  :source-paths ["src"]
+  :resource-paths ["resources" "resources-index/prod"]
+  :target-path "target/%s"
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
+  :main ^:skip-aot rente.run
 
-  :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src/cljs"]
+  :cljsbuild
+  {:builds
+   {:client {:source-paths ["src/rente/client"]
+             :compiler
+             {:output-to "resources/public/js/app.js"
+              :output-dir "dev-resources/public/js/out"}}}}
 
-                        :figwheel {:on-jsload "frejm.core/mount-root"
-                                   :nrepl-port  7888
-                                   ;:repl false
-                                   :websocket-host "localhost"}
+  :profiles {:dev-config {}
 
-                        :repl-options {
-                                       :init-ns "frejm.core"
-                                       ;:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl{{{nrepl-middleware}}}]
-                                       }
+             :dev [:dev-config
+                   {:dependencies [[org.clojure/tools.namespace "0.2.7"]
+                                   [figwheel "0.2.5"]]
 
-                        :compiler {:main frejm.core
-                                   :output-to  "resources/public/js/compiled/app.js"
-                                   :output-dir "resources/public/js/compiled/out"
-                                   :asset-path "js/compiled/out"
-                                   :source-map-timestamp true}}
+                    :plugins [
+                              ;[lein-figwheel "0.2.5" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
+                              [lein-figwheel "0.3.3" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
+                              ;[lein-figwheel "0.3.3"]
+                              [lein-environ "1.0.0"]]
 
-                       {:id "min"
-                        :source-paths ["src/cljs"]
-                        :compiler {:main frejm.core
-                                   :output-to "resources/public/js/compiled/app.js"
-                                   :optimizations :advanced
-                                   :pretty-print false}}]}
+                    :source-paths ["dev"]
+                    :resource-paths ^:replace
+                    ["resources" "dev-resources" "resources-index/dev"]
 
-:figwheel {  :http-server-root "public" ;; default and assumes "resources" 
-             :server-port 3449
-             ;:css-dirs ["resources/public/css"]
-             ;:open-file-command "emacsclient"
-             :nrepl-port 7888
-             ;; :repl false
-             ;; :server-logfile "tmp/logs/test-server-logfile.log"
-             ;:ring-handler frejm.api/handler
-             }
+                    :cljsbuild
+                    {:builds
+                     {:client {:source-paths ["dev"]
+                               :compiler
+                               {:optimizations :none
+                                :source-map true}}}}
 
-; :ring {:handler frejm.api/handler
-;        :init frejm.api/init
-;        :nrepl {:start? false :port 4500}
-;        :port 8090}
+                    :figwheel {:http-server-root "public"
+                               :port 3449
+                               :repl false
+                               :css-dirs ["resources/public/css"]}}]
 
-; :main frejm.core
- :global-vars {*print-length* 20})
- :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
+             :prod {:cljsbuild
+                    {:builds
+                     {:client {:compiler
+                               {:optimizations :advanced
+                                :pretty-print false}}}}}}
+
+  :aliases {"package"
+            ["with-profile" "prod" "do"
+             "clean" ["cljsbuild" "once"]]})

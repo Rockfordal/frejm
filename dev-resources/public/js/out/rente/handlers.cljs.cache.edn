@@ -1,0 +1,2 @@
+;; Analyzed by ClojureScript 0.0-3308
+{:name rente.handlers, :doc nil, :excludes #{}, :use-macros nil, :require-macros nil, :uses nil, :requires {re-frame re-frame.core, re-frame.core re-frame.core, db rente.db, rente.db rente.db}, :imports nil, :cljs.analyzer/constants {:seen #{:initialize-db :projects :search-input :phones :messages :order-prop :initialise-db}, :order [:initialise-db :phones :projects :search-input :order-prop :messages :initialize-db]}}
