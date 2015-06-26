@@ -21,10 +21,14 @@
   ;; --------------------
 
   (defroute "/" []
+    ;(js/console.log "route dispatch home-panel")
     (re-frame/dispatch [:set-active-panel :home-panel]))
 
   (defroute "/parse" []
     (re-frame/dispatch [:set-active-panel :parse-panel]))
+
+  (defroute "/rente" []
+    (re-frame/dispatch [:set-active-panel :rente-panel]))
 
   (defroute "/companies" []
     (re-frame/dispatch [:set-active-panel :about-panel]))
@@ -34,6 +38,9 @@
 
   (defroute "/projekt" []
     (re-frame/dispatch [:set-active-panel :project-panel]))
+
+  (defroute "/krille" []
+    (re-frame/dispatch [:set-active-panel :krille-panel]))
 
   ;; --------------------
   (hook-browser-navigation!))
