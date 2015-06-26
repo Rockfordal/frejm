@@ -6,7 +6,7 @@
               [rente.client.handlers]
               [rente.client.subs]
               [rente.client.db :refer [state]]
-              [rente.client.views :as views]
+              [rente.client.views.main :as views]
               [rente.client.routes :as routes]
               [rente.client.ws :as ws]))
 

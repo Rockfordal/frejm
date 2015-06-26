@@ -4,6 +4,7 @@
 (def state (reagent/atom {
                       :active-panel :home-panel
                       :messages []
+                      :counter 0
                       :doc {} :saved? false
                       :re-render-flip false}))
 
