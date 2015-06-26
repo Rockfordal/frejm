@@ -7,3 +7,5 @@
 /figwheel_server.log
 /README.md
 /.gitignore
+/dev-resources
+*#*
