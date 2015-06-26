@@ -13,8 +13,7 @@
 (defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   (event-msg-handler ev-msg))
 
-(defmethod event-msg-handler :chsk/ws-ping
-  [_]
+(defmethod event-msg-handler :chsk/ws-ping [_]
     (swap! ping-counts inc)
     (when (= 0 (mod @ping-counts 10))
       (println "ping counts: " @ping-counts)))
@@ -62,7 +61,6 @@
     (assoc component
       :ch-recv nil :connected-uids nil :send-fn nil :ring-handlers nil)))
 
-
 (defn send! [ws-connection user-id event]
   ((:send-fn ws-connection) user-id event))
 
@@ -73,9 +71,5 @@
 (defn ring-handlers [ws-connection]
   (:ring-handlers ws-connection))
 
-
 (defn new-ws-connection []
   (map->WSConnection {}))
-
-
-
