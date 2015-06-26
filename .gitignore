@@ -2,10 +2,11 @@
 /*-init.clj
 /target/
 /resources/public/js/compiled
-/resources/public/js/app
+/resources/public/js/app.js
 /dev-resources
 /figwheel_server.log
 /.idea
 /.lein-env
 /.lein-repl-history
 /logs
+/
