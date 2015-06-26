@@ -7,4 +7,5 @@
 /figwheel_server.log
 /.idea
 /.lein-env
+/.lein-repl-history
 /logs
