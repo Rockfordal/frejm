@@ -1,7 +1,8 @@
-(ns rente.app
+(ns rente.core
   (:require [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]
-            [rente.ws :as ws]))
+            ;[rente.ws :as ws] ; ws verkar inte användas här /Anders
+            ))
 
 (defrecord App [ws-connection]
   component/Lifecycle
@@ -14,3 +15,4 @@
 
 (defn new-app []
   (map->App {}))
+
