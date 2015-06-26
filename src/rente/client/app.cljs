@@ -34,7 +34,7 @@
 (defn ^:export main []
   (parseinit)
   (routes/app-routes)
-  (re-frame/dispatch-sync [:initialize-db])
+  (re-frame/dispatch-sync [:initialize-db state])
   (mount-root)
   ;(.sideNav (js/$ ".button-collapse"))
   )
