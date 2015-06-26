@@ -2,7 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [rente.ws :as ws]
             [rente.server :as server]
-            [rente.app :as app]))
+            [rente.core :as core]))
 
 (defn system [config]
   (component/system-map
@@ -11,4 +11,4 @@
    :http-server
    (component/using (server/new-http-server (:port config)) [:ws-connection])
    :app
-   (component/using (app/new-app) [:ws-connection])))
+   (component/using (core/new-app) [:ws-connection])))
