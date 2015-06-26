@@ -2,7 +2,8 @@
   (:require [re-frame.core :as re-frame]
             ;[taoensso.sente :as sente]
             ;[taoensso.sente.packers.transit :as sente-transit]
-            [rente.client.db :as db]
+            ;[rente.client.db :as db]
+            [rente.client.db :refer [state]]
             [cljs-http.client :as http]
             [cljs.core.async :as async :refer [chan close! put! alts! <! >! timeout]])
   (:require-macros [cljs.core.async.macros :refer [go alt!]])
@@ -45,11 +46,15 @@
 (re-frame/register-handler
   :initialize-db
   (fn [_ _]
-    db/default-db))
+    @state))
 
 (re-frame/register-handler
   :set-active-panel
   (fn [db [_ active-panel]]
+    ;(if (= active-panel nil) ; (js/console.log "active panel är nil" ))
+    ;(if (= active-panel :home-panel)
+      ;(js/console.log "activepanel är redan satt till home-panel!"))
+      ;(js/console.log "activepanel sätts till" (clj->js active-panel))
     (assoc db :active-panel active-panel)))
 
 (re-frame/register-handler
@@ -92,8 +97,8 @@
  :process-getcourse-response
  (fn [db [_ res]]
    (if res
-     (assoc db :test (js->clj res.attributes :keywordize-keys true))
-     ;(assoc db :test {:name "kurser" :desc "mja"})
+     (assoc db :rentemsg (js->clj res.attributes :keywordize-keys true))
+     ;(assoc db :rentemsg {:name "kurser" :desc "mja"})
      ;(js/console.log res.attributes)
      (js/alert "fick ingen kurs"))))
 
@@ -119,7 +124,7 @@
      ;(js/console.log kurser)
      ;(for )
      ;(js/console.log ((js->clj (.toJSON (kurs)) :keywordize-keys true) :desc))
-     ;(assoc db :test {:name "kurser" :desc "mja"})
+     ;(assoc db :rentemsg {:name "kurser" :desc "mja"})
      )
      (js/alert "fick inga kurser"))
    db))
@@ -133,4 +138,3 @@
 ;      (js/console.log (str (:body response)))
 ;     ;(js/console.log (:status response))
 ;      ))))
-

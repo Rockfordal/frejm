@@ -30,11 +30,11 @@
   (defroute "/rente" []
     (re-frame/dispatch [:set-active-panel :rente-panel]))
 
-  (defroute "/companies" []
-    (re-frame/dispatch [:set-active-panel :about-panel]))
+;  (defroute "/companies" []
+;    (re-frame/dispatch [:set-active-panel :about-panel]))
 
-  (defroute "/samtal" []
-    (re-frame/dispatch [:set-active-panel :call-panel]))
+;  (defroute "/samtal" []
+;    (re-frame/dispatch [:set-active-panel :call-panel]))
 
   (defroute "/projekt" []
     (re-frame/dispatch [:set-active-panel :project-panel]))

@@ -3,14 +3,9 @@
     (:require [re-frame.core :as re-frame]))
 
 (re-frame/register-sub
- :name
- (fn [db]
-   (reaction (:name @db))))
-
-(re-frame/register-sub
-  :test
+  :rentemsg
   (fn [db]
-    (reaction (:test @db))))
+    (reaction (:rentemsg @db))))
 
 (re-frame/register-sub
  :active-panel
