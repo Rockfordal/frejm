@@ -39,6 +39,7 @@
                  [clj-json "0.5.3"]
                  [jayq "2.5.4"]
                  [cljsjs/highlight "8.4-0"]
+                 [matchbox "0.0.6"]
                  ;[org.webjars/bootstrap "3.3.4"]
                  ;[org.webjars/materialize ""]
                  ]

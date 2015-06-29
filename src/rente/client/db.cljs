@@ -1,5 +1,5 @@
 (ns rente.client.db
-    (:require [reagent.core :as reagent]))
+  (:require [reagent.core :as reagent]))
 
 (def state (reagent/atom {
                       :active-panel :home-panel

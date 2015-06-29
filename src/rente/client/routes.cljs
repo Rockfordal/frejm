@@ -33,5 +33,8 @@
   (defroute "/test" []
     (re-frame/dispatch [:set-active-panel :test-panel]))
 
+  (defroute "/firebase" []
+    (re-frame/dispatch [:set-active-panel :firebase-panel]))
+
   ;; --------------------
   (hook-browser-navigation!))

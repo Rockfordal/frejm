@@ -29,6 +29,12 @@
   db))
 
 ;(re-frame/register-handler
+;  :fire-reset
+;  (fn [db [_ person]]
+    ;(js/console.log (str "test: " (:test db)))
+;  db))
+
+;(re-frame/register-handler
 ;  :getclojure
 ;  (fn [db _]
 ;    (let [Course (.extend (.-Object js/Parse) "course")

@@ -7,6 +7,7 @@
             [cljsjs.highlight.langs.clojure] ; clojure-repl javascript css less dart elixir nginx bash
             [rente.client.ws :as socket]))
 
+;; --------- highlight --------- 
 (extend-type js/NodeList
     ISeqable
       (-seq [array] (array-seq array 0)))
@@ -17,6 +18,7 @@
 (defn init-highlight []
   (doseq [node (qsa "code")]
     (.highlightBlock js/hljs node)))
+;; ----------------------------- 
 
 (defn test-panel [data]
     (fn [data]

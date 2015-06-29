@@ -1,6 +1,7 @@
 (ns rente.client.views.main
   (:require [rente.client.views.layout :as layout :refer [navbar]]
             [rente.client.views.demo :as demo]
+            [rente.client.views.firebase :as firebase]
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
             [reagent.core    :as reagent  :refer [atom]]
             [clojure.string  :refer [join]]
@@ -18,10 +19,11 @@
 
 ;; --------------------
 (defmulti  panels identity)
-(defmethod panels :home-panel    [] [home-panel])
-(defmethod panels :rente-panel   [] [demo/rente-panel])
-(defmethod panels :test-panel    [] [demo/test-panel])
-(defmethod panels :default       [] [home-panel])
+(defmethod panels :home-panel     [] [home-panel])
+(defmethod panels :rente-panel    [] [demo/rente-panel])
+(defmethod panels :test-panel     [] [demo/test-panel])
+(defmethod panels :firebase-panel [] [firebase/firebase-panel])
+(defmethod panels :default        [] [home-panel])
 
 (defn main-panel []
   (let [active-panel (re-frame/subscribe [:active-panel])] ; reaction
