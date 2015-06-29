@@ -5,7 +5,7 @@
   [:div
     [:li {:class (if (= active-panel "rente-panel")  "active" "")} [:a {:href "#rente"} "Rente"]]
     [:li {:class (if (= active-panel "test-panel")   "active" "")} [:a {:href "#test"} "Test"]]
-    ;[:li {:class (if (= active-panel "parse-panel")   "active" "")} [:a {:href "#parse"} "Parse"]]
+    [:li {:class (if (= active-panel "parse-panel")   "active" "")} [:a {:href "#parse"} "Parse"]]
     [:li {:class (if (= active-panel "firebase-panel") "active" "")} [:a {:href "#firebase"} "Firebase"]]])
 
 (defn navbar []
