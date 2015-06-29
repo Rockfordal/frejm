@@ -36,6 +36,7 @@
                  [re-frame "0.4.1"]
                  [secretary "1.2.3"]
                  [cljs-http "0.1.14"]
+                 [clj-json "0.5.3"]
                  [jayq "2.5.4"]
                  [cljsjs/highlight "8.4-0"]
                  ;[org.webjars/bootstrap "3.3.4"]

@@ -7,6 +7,9 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.resource :refer (wrap-resource)]
             [org.httpkit.server :refer (run-server)]
+            [clj-json.core :as json]
+            [rente.db :as db]
+            [rente.animals :as animals]
             [rente.ws :as ws]))
 
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
@@ -14,7 +17,11 @@
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
+   ;(GET "/animalsinit" req (animals/init))
+   (GET "/animals" req (json/generate-string (map db/expand (animals/read))))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
+     ; wrap-params
+     ; wrap-edn-params
 
 (defn app [handler]
   (let [ring-defaults-config
@@ -26,7 +33,6 @@
     (-> handler
         (wrap-defaults ring-defaults-config)
         (wrap-resource "/META-INF/resources"))))
-
 
 (defrecord HttpServer [port ws-connection server-stop]
   component/Lifecycle
@@ -47,7 +53,6 @@
     (when server-stop (server-stop))
     (log/debug "HTTP server stopped")
     (assoc component :server-stop nil)))
-
 
 (defn new-http-server [port]
   (map->HttpServer {:port port}))
