@@ -12,13 +12,20 @@
             [rente.animals :as animals]
             [rente.ws :as ws]))
 
+;(db/init) ; TODO: skapa en komponent db med component
+
+(defn getanimalsjson [req]
+  (db/init)
+  (json/generate-string (map db/expand (animals/read))))
+
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
   (routes
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
-   ;(GET "/animalsinit" req (animals/init))
-   (GET "/animals" req (json/generate-string (map db/expand (animals/read))))
+   ;(GET "/dbinit" req (db/init))
+   (GET "/createanimals" req (animals/init))
+   (GET "/getanimalsjson" req (getanimalsjson req))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
      ; wrap-params
      ; wrap-edn-params
