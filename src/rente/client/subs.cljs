@@ -4,6 +4,11 @@
 
 
 (register-sub
+ :hela-db
+ (fn [db _]
+   (reaction @db)))
+
+(register-sub
  :active-panel
  (fn [db _]
    (reaction (:active-panel @db))))
@@ -17,3 +22,8 @@
  :messages
  (fn [db]
    (reaction (:messages @db))))
+
+(register-sub
+ :flippen
+ (fn [db]
+   (reaction (:re-render-flip @db))))

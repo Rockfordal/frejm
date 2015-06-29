@@ -9,7 +9,7 @@
     @state))
 
 (re-frame/register-handler
-  :set-active-panel
+  :set-active-panel          ; "routern triggar denna"
   (fn [db [_ active-panel]]
     ;(if (= active-panel nil) ; (js/console.log "active panel är nil" ))
     ;(if (= active-panel :home-panel)
@@ -17,11 +17,16 @@
       ;(js/console.log "activepanel sätts till" (clj->js active-panel))
     (assoc db :active-panel active-panel)))
 
-;(re-frame/register-handler
-;  :testa
-;  (fn [db [_ test]]
-;    (js/console.log (str "test: " (:test db)))
-;  db))
+(re-frame/register-handler
+  :test-flipp
+  (fn [db [_ nybool]]
+    (assoc db :re-render-flip (not (:re-render-flip db)))))
+
+(re-frame/register-handler
+  :get-flipp
+  (fn [db [_ _]]
+    (js/console.log (str "flipp: " (:re-render-flip db)))
+  db))
 
 ;(re-frame/register-handler
 ;  :getclojure
