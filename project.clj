@@ -38,6 +38,8 @@
                  [cljs-http "0.1.14"]
                  [clj-json "0.5.3"]
                  [jayq "2.5.4"]
+                 ;[cljsjs/jquery "2.1.4-0"]
+                 [cljsjs/jquery-ui "1.11.3-1"]
                  [cljsjs/highlight "8.4-0"]
                  [matchbox "0.0.6"]
                  ;[org.webjars/bootstrap "3.3.4"]
