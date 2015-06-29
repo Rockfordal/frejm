@@ -5,28 +5,17 @@
 (re-frame/register-handler
   :initialize-db
   (fn [_ [_  state]]
-    ;(js/console.log "initialize-db: " (clj->js state))
     @state))
 
 (re-frame/register-handler
   :set-active-panel          ; "routern triggar denna"
   (fn [db [_ active-panel]]
-    ;(if (= active-panel nil) ; (js/console.log "active panel är nil" ))
-    ;(if (= active-panel :home-panel)
-      ;(js/console.log "activepanel är redan satt till home-panel!"))
-      ;(js/console.log "activepanel sätts till" (clj->js active-panel))
     (assoc db :active-panel active-panel)))
 
 (re-frame/register-handler
-  :test-flipp
-  (fn [db [_ nybool]]
-    (assoc db :re-render-flip (not (:re-render-flip db)))))
-
-(re-frame/register-handler
-  :get-flipp
-  (fn [db [_ _]]
-    (js/console.log (str "flipp: " (:re-render-flip db)))
-  db))
+  :get-courses
+  (fn [db [_ msgs]]
+    (assoc db :messages msgs)))
 
 ;(re-frame/register-handler
 ;  :fire-reset

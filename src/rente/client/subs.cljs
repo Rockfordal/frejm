@@ -4,23 +4,13 @@
 
 
 (register-sub
- :hela-db
- (fn [db _]
-   (reaction @db)))
-
-(register-sub
  :active-panel
  (fn [db _]
    (reaction (:active-panel @db))))
 
 (register-sub
- :rentemsg
- (fn [db]
-   (reaction (:rentemsg @db))))
-
-(register-sub
  :messages
- (fn [db]
+ (fn [db _]
    (reaction (:messages @db))))
 
 (register-sub

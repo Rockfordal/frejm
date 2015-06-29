@@ -25,12 +25,10 @@
        [:div
         [navbar]
         [:div.container
-           [:h1 (str "Huula! från Test panel")]
-           [:br]
-        ]]))
+           [:h1 (str "Huula! från Test panelen")]
+           [:br]]]))
 
-(defn int-val
-  [e]
+(defn int-val [e]
   (let [num (js/parseInt (.. e -target -value))]
   (if (js/isNaN num) 0 num)))
 
@@ -39,26 +37,18 @@
 
 (defn rente-panel [data]
   (let [messages (subscribe [:messages])
-        flipp (subscribe [:flippen])
-        swappa (fn []
-                 #(swap! db/state update-in [:re-render-flip] true)
-                 (js/console.log "swappa!"))]
+        ;counter (subscribe [:counter])
+        ]
    (fn []
       (.setTimeout js/window init-highlight 100)
       [:div
        [navbar]
        [:div.container
         [:h1 "Sente"] [:br]
-        [:b (str "flipp: " @flipp)]
-        [:p
-         [:code.clojure "(defn adder [a b] \r\n (+ a b))"]]
-        ;[:div @messages]
-        ;[:div (str (:counter @state))] [:br]
-        ;[:button {:on-click #(dispatch [:test-get-projects "vill ha projekt"]) } "Hämta Projekt"] [:br] [:br]
-        [:p [:button {:on-click socket/test-socket-callback} "Send Message Callback"]]
-        [:p [:button {:on-click socket/test-socket-event}    "Send Message Event"]]
-        [:p [:button {:on-click #(dispatch [:test-flipp ])} "Flippa"]]
-        [:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-flipp])} "GetFlip"]]
-        [:a.waves-effect.waves-light.btn {:on-click swappa} "swappa"]
-        ;[:knapp {:on-click swappa} "swappa"]
+        [:p [:code.clojure "(defn adder [a b] \r\n (+ a b))"]]
+        [:div "Meddelanden: " (count @messages) ": " (pr-str @messages)]
+        [:p [:a.waves-effect.waves-light.btn {:on-click socket/test-socket-callback} "Skicka Meddelande Callback"]]
+        [:p [:a.waves-effect.waves-light.btn {:on-click socket/test-socket-event}    "Skicka Meddelande Event"]]
+        [:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-courses ["hej" "hoj"]])} "Skicka Meddelande"]]
+        ;[:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-courses])} "Hämta Kurser"]]
         ]])))
