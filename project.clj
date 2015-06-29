@@ -40,7 +40,7 @@
                  [jayq "2.5.4"]
                  [cljsjs/highlight "8.4-0"]
                  [org.webjars.bower/jquery "2.1.3"]
-                 [org.webjars.bower/materialize "0.96.1"]
+                 [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
                  [org.webjars.bower/highlightjs "8.5.0"]
                  ;[cljsjs/jquery "2.1.4-0"]
                  ;[cljsjs/jquery-ui "1.11.3-1"]
