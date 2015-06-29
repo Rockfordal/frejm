@@ -48,7 +48,7 @@
       [:div
        [navbar]
        [:div.container
-        [:h1 "Pjr"] [:br]
+        [:h1 "Sente"] [:br]
         [:b (str "flipp: " @flipp)]
         [:p
          [:code.clojure "(defn adder [a b] \r\n (+ a b))"]]
