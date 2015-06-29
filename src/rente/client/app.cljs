@@ -21,20 +21,28 @@
   (swap! data update-in [:messages] #(conj % msg)))
 
 (defn app [data]
-  (:re-render-flip @data)
-  ;(js/console.log "denna körs två gånger!")
-  [views/main-panel])
+  (let [flipp (re-frame/subscribe [:flippen])]
+     ;(js/console.log @flipp)
+     (js/console.log "app data:" (clj->js @data))
+      ;@flipp
+     ;(:re-render-flip @data) ;utan den så uppdateras inte vyn
+     ;(js/console.log "denna körs två gånger!")
+     [views/main-panel]))
 
 (defn mount-root []
-  (when-let [root (.getElementById js/document "main")]
-    (reagent/render [app state] root)))
+  (let [root (.getElementById js/document "main")
+        state (re-frame/subscribe [:hela-db])]
+    ;(js/console.log "mount-root") ; körs bara en gång
+    ;(reagent/render [app state] root)
+    (reagent/render [app state] root)
+))
 
 (def $body ($ :body))
 
 (defn ^:export main []
-  (parseinit)
-  (routes/app-routes)
-  (re-frame/dispatch-sync [:initialize-db state])
+  ;(parseinit)
+  (routes/app-routes) ; lyssnar på webläsarn och dispatchar set-active-panel handlern
+  (re-frame/dispatch-sync [:initialize-db state]) ; populera databasen med seed-data
   (mount-root)
   ;(.sideNav (js/$ ".button-collapse"))
   )
