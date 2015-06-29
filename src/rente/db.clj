@@ -7,15 +7,12 @@
 
 (defonce connection (atom nil))
 
-(defn conn
-  []
+(defn conn []
   (if (nil? @connection)
     (throw (RuntimeException. "No database connection."))
     @connection))
 
-(defn init
-  []
-  ;(let [uri "datomic:mem://frejm"
+(defn init []
   (let [uri "datomic:free://frejm"
         schema (read-string (slurp (resource "schema.edn")))]
     (d/create-database uri)
@@ -23,24 +20,22 @@
     (d/transact (conn) schema)
     nil))
 
-(defn close
-  []
+(defn close []
   (d/release (conn))
   (reset! connection nil))
 
-(defn db
-  []
+(defn db []
   (d/db (conn)))
+
 
 ;; db api
 
 (defonce max-id (atom 0))
 
-(defn next-id
-  [] (swap! max-id inc))
+(defn next-id []
+  (swap! max-id inc))
 
-(defn create!
-  [m]
+(defn create! [m]
   (let [id (next-id)
         dbid (d/tempid :db.part/user)]
     @(d/transact (conn) (list (assoc m :db/id dbid :id id)))
@@ -55,16 +50,14 @@
      (let [found (d/q '[:find ?e :in $ ?k ?v :where [?e ?k ?v]] (db) k v)]
        (map (comp (partial d/entity (db)) first) found))))
 
-(defn update!
-  [id m]
+(defn update! [id m]
   (if-let [found (read id)]
     (do @(d/transact (conn) (map (fn [k v] [:db/add (:db/id found) k v])
                                  (keys m) (vals m)))
         true)
     false))
 
-(defn delete!
-  [id]
+(defn delete! [id]
   (if-let [found (read id)]
     (do @(d/transact (conn) [[:db.fn/retractEntity (:db/id found)]])
         true)

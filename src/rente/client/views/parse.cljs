@@ -4,6 +4,8 @@
   (:require-macros [cljs.core.async.macros :refer [go alt!]])
   (:refer-clojure :exclude [find count]))
 
+;(parseinit)
+
 ;(def Query (.-Query js/Parse))
 
 ; (defn fix-arguments
