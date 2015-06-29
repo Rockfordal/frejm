@@ -14,11 +14,11 @@
                  [org.clojure/tools.logging "0.3.1"]
 
                  ; Server
-                 ;[liberator "0.12.0"]
                  [ring/ring-core "1.3.2"]
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.3.4"]
                  [http-kit "2.1.19"]
+                 ;[liberator "0.12.0"]
                  ;[fogus/ring-edn "0.2.0"]
                  ;[clj-json "0.5.3"]
 
@@ -38,12 +38,14 @@
                  [cljs-http "0.1.14"]
                  [clj-json "0.5.3"]
                  [jayq "2.5.4"]
-                 ;[cljsjs/jquery "2.1.4-0"]
-                 [cljsjs/jquery-ui "1.11.3-1"]
                  [cljsjs/highlight "8.4-0"]
+                 [org.webjars.bower/jquery "2.1.3"]
+                 [org.webjars.bower/materialize "0.96.1"]
+                 [org.webjars.bower/highlightjs "8.5.0"]
+                 ;[cljsjs/jquery "2.1.4-0"]
+                 ;[cljsjs/jquery-ui "1.11.3-1"]
+                 ;[org.webjars.bower/jquery-ui "1.11.4"]
                  [matchbox "0.0.6"]
-                 ;[org.webjars/bootstrap "3.3.4"]
-                 ;[org.webjars/materialize ""]
                  ]
 
   :plugins [[lein-cljsbuild "1.0.5"]]
