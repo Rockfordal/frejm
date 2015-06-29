@@ -2,20 +2,18 @@
   (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]
             [clojure.java.io :refer (resource)]))
-
 ;; Datomic
-
 (defonce connection (atom nil))
 
 (defn conn []
   (if (nil? @connection)
-    (throw (RuntimeException. "No database connection."))
+    (throw (RuntimeException. "Ingen databasanslutning."))
     @connection))
 
 (defn init []
-  (let [uri "datomic:free://frejm"
+  (let [uri "datomic:free://localhost:4334/frejm"
         schema (read-string (slurp (resource "schema.edn")))]
-    (d/create-database uri)
+    ;(d/create-database uri)
     (reset! connection (d/connect uri))
     (d/transact (conn) schema)
     nil))
@@ -26,7 +24,6 @@
 
 (defn db []
   (d/db (conn)))
-
 
 ;; db api
 
