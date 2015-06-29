@@ -54,6 +54,9 @@
 
   :main ^:skip-aot rente.run
 
+  :datomic {:schemas ["resources" ["schema.edn"]]
+            :install-location "/opt/datomic"}
+
   :cljsbuild
   {:builds
    {:client {:source-paths ["src/rente/client"]
@@ -61,16 +64,20 @@
              {:output-to "resources/public/js/app.js"
               :output-dir "dev-resources/public/js/out"}}}}
 
-  :profiles {:dev-config {}
 
-             :dev [:dev-config
-                   {:dependencies [[org.clojure/tools.namespace "0.2.7"]
+  :profiles {
+             ;:dev-config {}
+             :dev {
+                   :datomic {:config "resources/free-transactor.properties"
+                             :db-uri "datomic:free://localhost:4334/frejm"}
+
+                   ;:dev-config {
+                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                    [figwheel "0.2.5"]]
 
-                    :plugins [
-                              ;[lein-figwheel "0.2.5" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
-                              [lein-figwheel "0.3.3" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
-                              ;[lein-figwheel "0.3.3"]
+                    :plugins [[cider/cider-nrepl "0.9.1"]
+                              [lein-datomic "0.2.0"]
+                              [lein-figwheel "0.3.5" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
                               [lein-environ "1.0.0"]]
 
                     :source-paths ["dev"]
@@ -86,8 +93,11 @@
 
                     :figwheel {:http-server-root "public"
                                :port 3449
-                               :repl false
-                               :css-dirs ["resources/public/css"]}}]
+                               :nrepl-port 7888
+                               :repl true
+                               :css-dirs ["resources/public/css"]}
+                    ; }
+                   }
 
              :prod {:cljsbuild
                     {:builds
