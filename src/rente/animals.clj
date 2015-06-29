@@ -24,8 +24,7 @@
   [id]
   (db/delete! id))
 
-(defn init
-  []
+(defn init []
   (do
     (create! {:name    "Painted-snipe"
               :class   :aves
