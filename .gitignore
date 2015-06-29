@@ -3,7 +3,7 @@
 /target/
 /resources/public/js/compiled
 /resources/public/js/app.js
-/dev-resources
+/dev-resources/public
 /figwheel_server.log
 /.idea
 /.lein-env
