@@ -12,10 +12,20 @@
 (defn jslog [& data]
   (js/console.log (clj->js (join " " data))))
 
+(defn notfound-panel [data]
+  [:div [navbar] [:div.container
+    [:div.card.blue-grey.darken-1
+     [:div.card-content.white-text
+      [:span.card-title "Sorry!"]
+      [:p "Sidan kunde inte hittas"]
+      [:div.card-action
+       [:a {:href "#"} "Gå Hem"]]]]]])
+
 (defn home-panel [data]
   (fn []
     [:div [navbar] [:div.container
-      [:h1 (str "Hajj från Reagent, Re-frame")] [:br]]]))
+        [:h1 "Hej från Reagent"]
+        [:br]]]))
 
 ;; --------------------
 (defmulti  panels identity)
@@ -23,17 +33,9 @@
 (defmethod panels :rente-panel    [] [demo/rente-panel])
 (defmethod panels :test-panel     [] [demo/test-panel])
 (defmethod panels :firebase-panel [] [firebase/firebase-panel])
-(defmethod panels :default        [] [home-panel])
+(defmethod panels :default        [] [notfound-panel])
 
 (defn main-panel []
-  (let [active-panel (re-frame/subscribe [:active-panel])] ; reaction
-    (fn []
-      (if (= nil @active-panel)
-        (do
-        (jslog "main-panel är nil")
-        (panels :default))
-        (do
-          ;(jslog "main-panel: " @active-panel)
-          (panels @active-panel)
-          ;(demo/rente-panel (:re-render-flip db/state))
-          )))))
+  (let [active-panel (subscribe [:active-panel])]
+    (panels @active-panel)
+))
