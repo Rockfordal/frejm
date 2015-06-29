@@ -27,8 +27,11 @@
   (defroute "/rente" []
     (re-frame/dispatch [:set-active-panel :rente-panel]))
 
-;  (defroute "/parse" []
-;    (re-frame/dispatch [:set-active-panel :parse-panel]))
+  (defroute "/parse" []
+    (re-frame/dispatch [:set-active-panel :parse-panel]))
+
+  (defroute "/test" []
+    (re-frame/dispatch [:set-active-panel :test-panel]))
 
   ;; --------------------
   (hook-browser-navigation!))
