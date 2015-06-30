@@ -5,6 +5,14 @@
                       :active-panel :home-panel
                       :messages []
                       :counter 0
+
+;                      :routes [{:url "/"
+;                                :panel :home-panel
+;                                :label "Hem"}
+;                                {:url "/demo"
+;                                :panel :demo-panel
+;                                :label "Rente"}]
+
                       :doc {} :saved? false
                       :re-render-flip false}))
 
