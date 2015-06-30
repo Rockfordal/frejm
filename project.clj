@@ -43,7 +43,7 @@
                  [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
                  [org.webjars.bower/highlightjs "8.5.0"]
                  ;[cljsjs/jquery "2.1.4-0"]
-                 ;[cljsjs/jquery-ui "1.11.3-1"]
+                 [cljsjs/jquery-ui "1.11.3-1"]
                  ;[org.webjars.bower/jquery-ui "1.11.4"]
                  [matchbox "0.0.6"]
                  ]
