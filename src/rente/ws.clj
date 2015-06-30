@@ -18,11 +18,16 @@
     (when (= 0 (mod @ping-counts 10))
       (println "ping counts: " @ping-counts)))
 
+(defn getanimalsjson [req]
+  ;(db/init)
+  (json/generate-string (map db/expand (animals/read))))
+
 (defmethod event-msg-handler :rente/testevent
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (if ?reply-fn
-    (?reply-fn [:rente/testevent {:message (str "Hello socket from server Callback, received: " ?data)}])
-    (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Hello socket from server Event (no callback), received: " ?data)}])))
+   ; (?reply-fn [:rente/testevent {:message (str "Hej socket från server Callback, jag fick: " ?data)}])
+    (?reply-fn [:rente/testevent (getanimalsjson nil)])
+    (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Tjena socket from server Event (no callback), received: " ?data)}])))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]

@@ -41,7 +41,7 @@
 
 (defn test-socket-callback []
   (chsk-send!
-    [:rente/testevent {:message "Hello socket Callback!"}]
+    [:rente/testevent {:message "klienten säger Callback!"}]
     2000
       ;#(js/console.log "CALLBACK from server: " (pr-str %))
       #(dispatch [:get-courses [(str (:message (second %)))]])
