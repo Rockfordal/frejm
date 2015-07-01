@@ -5,7 +5,6 @@
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
             [reagent.core    :as reagent  :refer [atom]]
             [clojure.string  :refer [join]]
-            [rente.client.db :as db]
             [rente.client.ws :as socket]
             [rente.client.db :refer [state put! get-value set-value!]]))
 
