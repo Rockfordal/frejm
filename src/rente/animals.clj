@@ -17,17 +17,21 @@
   ([k v]
      (db/read k v)))
 
-(defn update!
-  [id m]
+(defn update! [id m]
   (db/update! id m))
 
-(defn delete!
-  [id]
+(defn delete! [id]
   (db/delete! id))
 
-(defn getanimalsjson [req]
-  (db/init)
+(defn getanimalsjson []
+  ;(db/init)
   (json/generate-string (map db/expand (read))))
+
+(defn getedn []
+  (->
+    ;[{:id 5 :class "cephalopoda"} {:id 4 :class "Gnu"}]
+    (map db/expand (read))
+))
 
 (defn init []
   (do
@@ -61,5 +65,4 @@
 
     (create! {:name    "Atlantic salmon"
               :class   :osteichthyes
-              :species "Salmo salar"})
-    ))
+              :species "Salmo salar"})))

@@ -4,6 +4,13 @@
             [cognitect.transit :as t]
             [re-frame.core :as re-frame :refer [subscribe dispatch]]))
 
+(def j (t/reader :json))
+
+(defn jsonreader [data]
+  (js->clj
+  (t/read j data)
+  :keywordize-keys true))
+
 (defmulti push-msg-handler (fn [[id _]] id)) ; Dispatch on event key which is 1st elem in vector
 
 (defmethod push-msg-handler :rente/testevent
@@ -29,8 +36,7 @@
 
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   (event-msg-handler ev-msg))
-
-(let [packer (sente-transit/get-flexi-packer :edn)
+  (let [packer (sente-transit/get-flexi-packer :edn)
       {:keys [chsk ch-recv send-fn state]}
       (sente/make-channel-socket! "/chsk" {:type :auto :packer packer})]
   (def chsk       chsk)
@@ -44,9 +50,8 @@
   (chsk-send!
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
-      ;#(js/console.log (str "fick animals:" (first (t/read (t/reader :json) (js->clj (second %))) )))
-      ;#(js/console.log (str "vi fick animals: " %))
-      #(dispatch [:get-animals-success (t/read (t/reader :json) (js->clj (second %)))])))
+    ;#(js/console.log (str "vi fick : " %))
+    #(dispatch [:get-animals-success (second %)])))
 
 (defn test-socket-event []
   (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))

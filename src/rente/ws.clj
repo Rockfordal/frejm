@@ -3,6 +3,7 @@
             [com.stuartsierra.component :as component]
             [clojure.core.async :as async]
             [rente.animals :as animals]
+            [rente.db :as db]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]))
@@ -23,7 +24,8 @@
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (if ?reply-fn
    ; (?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
-    (?reply-fn [:rente/testevent (rente.animals/getanimalsjson nil)])
+    ;(?reply-fn [:rente/testevent (rente.animals/getanimalsjson nil)])
+    (?reply-fn [:rente/testevent (db/expand (animals/getedn))])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Tja från server Event, jag fick: " ?data)}])))
 
 (defmethod event-msg-handler :default ; Fallback
