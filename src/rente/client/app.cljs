@@ -5,7 +5,7 @@
               ;[jayq.core :refer [$ delegate]] ; :append data
               [rente.client.handlers]
               [rente.client.subs]
-              [rente.client.db :refer [state]]
+              [rente.client.appstate :refer [state]]
               [rente.client.views.main :as views :refer [main-panel]]
               [rente.client.routes :as routes :refer [app-routes]]
               [rente.client.ws :as ws]))

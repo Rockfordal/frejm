@@ -1,9 +1,10 @@
-(ns rente.client.db
+(ns rente.client.appstate
   (:require [reagent.core :as reagent]))
 
 (def state (reagent/atom {
                       :active-panel :home-panel
                       :messages []
+                      :animals []
                       :counter 0
 
 ;                      :routes [{:url "/"
