@@ -27,10 +27,7 @@
   (json/generate-string (map db/expand (read))))
 
 (defn getedn []
-  (->
-    ;[{:id 5 :class "cephalopoda"} {:id 4 :class "Gnu"}]
-    (map db/expand (read))
-))
+  (map db/expand (read)))
 
 (defn init []
   (do

@@ -21,7 +21,9 @@
   :get-animals-success
   (fn [db [_ animals]]
     ;(js/console.log (clj->js (str "animals success: " animals)))
-    (assoc db :animals animals)))
+    ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
+    (assoc db :animals animals)
+)) 
 
 ;(re-frame/register-handler
 ;  :fire-reset

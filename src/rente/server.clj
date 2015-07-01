@@ -11,19 +11,14 @@
             [rente.animals :as animals]
             [rente.ws :as ws]))
 
-;(db/init) ; TODO: skapa en komponent db med component
-
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
   (routes
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
-   ;(GET "/dbinit" req (db/init))
    (GET "/createanimals" req (animals/init))
    (GET "/getanimalsjson" _ (animals/getanimalsjson))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
-     ; wrap-params
-     ; wrap-edn-params
 
 (defn app [handler]
   (let [ring-defaults-config
@@ -35,6 +30,7 @@
     (-> handler
         (wrap-defaults ring-defaults-config)
         (wrap-resource "/META-INF/resources"))))
+        ;wrap-edn-params  ; vi använder ju sente å transit via ws så detta behövs ej
 
 (defrecord HttpServer [port ws-connection server-stop]
   component/Lifecycle
