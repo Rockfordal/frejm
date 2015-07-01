@@ -8,4 +8,4 @@
 (defn -main [& args]
   (let [config (config/get-config)]
     (component/start (system config))
-    (log/info "rente started")))
+    (log/info "Frejm har startats")))

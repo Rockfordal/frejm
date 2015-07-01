@@ -6,6 +6,8 @@
 
 (defn system [config]
   (component/system-map
+   :datomic
+   (core/new-datomic)
    :ws-connection
    (ws/new-ws-connection)
    :http-server
