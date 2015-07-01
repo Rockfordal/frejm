@@ -14,6 +14,11 @@
    (reaction (:messages @db))))
 
 (register-sub
+ :animals
+ (fn [db _]
+   (reaction (:animals @db))))
+
+(register-sub
  :flippen
  (fn [db]
    (reaction (:re-render-flip @db))))

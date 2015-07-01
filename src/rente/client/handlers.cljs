@@ -13,9 +13,15 @@
     (assoc db :active-panel active-panel)))
 
 (re-frame/register-handler
-  :get-courses
+  :get-animals
   (fn [db [_ msgs]]
-    (assoc db :messages msgs)))
+    (assoc db :animals msgs)))
+
+(re-frame/register-handler
+  :get-animals-success
+  (fn [db [_ animals]]
+    ;(js/console.log (clj->js (str "animals success: " animals)))
+    (assoc db :animals animals)))
 
 ;(re-frame/register-handler
 ;  :fire-reset

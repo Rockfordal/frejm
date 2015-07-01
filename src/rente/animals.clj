@@ -1,6 +1,7 @@
 (ns rente.animals
   (:refer-clojure :exclude [read])
-  (:require [rente.db :as db]))
+  (:require [rente.db :as db]
+            [clj-json.core :as json]))
 
 (defn create!
   ([]
@@ -23,6 +24,10 @@
 (defn delete!
   [id]
   (db/delete! id))
+
+(defn getanimalsjson [req]
+  (db/init)
+  (json/generate-string (map db/expand (read))))
 
 (defn init []
   (do

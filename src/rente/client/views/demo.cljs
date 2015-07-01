@@ -35,7 +35,8 @@
   [:a.waves-effect.waves-light.btn a])
 
 (defn rente-panel [data]
-  (let [messages (subscribe [:messages])
+  (let [animals (subscribe [:animals])
+        ;messages (subscribe [:messages])
         ;counter (subscribe [:counter])
         ]
    (fn []
@@ -45,9 +46,17 @@
        [:div.container
         [:h1 "Sente"] [:br]
         [:p [:code.clojure "(defn adder [a b] \r\n (+ a b))"]]
-        [:div "Meddelanden: " (count @messages) ": " (pr-str @messages)]
+        ;[:div "Meddelanden: " (count @messages) ": " (str @messages)]
+        ;[:p (str "djur: " @animals)]
+        [:div (map (fn [animal] @animals))
+         [:p (str "djur: " animal)]
+        ]
+        ;[:table
+        ; [:tr
+        ;  [:td ]]]
+        [:input {:value "" :placeholder "Namn på nytt djur"}]
         [:p [:a.waves-effect.waves-light.btn {:on-click socket/test-socket-callback} "Skicka Meddelande Callback"]]
         [:p [:a.waves-effect.waves-light.btn {:on-click socket/test-socket-event}    "Skicka Meddelande Event"]]
-        [:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-courses ["hej" "hoj"]])} "Skicka Meddelande"]]
+        [:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-animals ["hej" "hoj"]])} "Skicka Meddelande"]]
         ;[:p [:a.waves-effect.waves-light.btn {:on-click #(dispatch [:get-courses])} "Hämta Kurser"]]
         ]])))

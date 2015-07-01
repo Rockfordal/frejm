@@ -1,6 +1,7 @@
 (ns rente.client.ws
   (:require [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]
+            [cognitect.transit :as t]
             [re-frame.core :as re-frame :refer [subscribe dispatch]]))
 
 (defmulti push-msg-handler (fn [[id _]] id)) ; Dispatch on event key which is 1st elem in vector
@@ -43,9 +44,9 @@
   (chsk-send!
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
-      ;#(js/console.log "CALLBACK from server: " (pr-str %))
-      #(dispatch [:get-courses [(str (:message (second %)))]])
-    ))
+      ;#(js/console.log (str "fick animals:" (first (t/read (t/reader :json) (js->clj (second %))) )))
+      ;#(js/console.log (str "vi fick animals: " %))
+      #(dispatch [:get-animals-success (t/read (t/reader :json) (js->clj (second %)))])))
 
 (defn test-socket-event []
   (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
