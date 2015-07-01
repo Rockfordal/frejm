@@ -20,7 +20,7 @@
    (POST "/chsk" req (ajax-post-fn req))
    ;(GET "/dbinit" req (db/init))
    (GET "/createanimals" req (animals/init))
-   (GET "/getanimalsjson" req (animals/getanimalsjson req))
+   (GET "/getanimalsjson" _ (animals/getanimalsjson))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
      ; wrap-params
      ; wrap-edn-params

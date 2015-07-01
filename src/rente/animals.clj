@@ -24,7 +24,6 @@
   (db/delete! id))
 
 (defn getanimalsjson []
-  ;(db/init)
   (json/generate-string (map db/expand (read))))
 
 (defn getedn []
