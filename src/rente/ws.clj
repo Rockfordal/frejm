@@ -8,23 +8,22 @@
             [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]))
 
-;(def ping-counts (atom 0))
+(def ping-counts (atom 0))
 
 (defmulti event-msg-handler :id) ; Dispatch on event-id
 
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}] ;; Wrap for logging, catching, etc.:
   (event-msg-handler ev-msg))
 
-;(defmethod event-msg-handler :chsk/ws-ping [_]
-;    (swap! ping-counts inc)
-;    (when (= 0 (mod @ping-counts 10))
-;      (println "ping counts: " @ping-counts)))
+(defmethod event-msg-handler :chsk/ws-ping [_]
+    (swap! ping-counts inc)
+    (when (= 0 (mod @ping-counts 10))
+      (println "ping counts: " @ping-counts)))
 
 (defmethod event-msg-handler :rente/testevent
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (if ?reply-fn
-   ; (?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
-    ;(?reply-fn [:rente/testevent (rente.animals/getanimalsjson nil)])
+   ;(?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
     (?reply-fn [:rente/testevent (db/expand (animals/getedn))])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Tja från server Event, jag fick: " ?data)}])))
 
