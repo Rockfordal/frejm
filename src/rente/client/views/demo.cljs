@@ -1,7 +1,7 @@
 (ns rente.client.views.demo
   (:require [re-frame.core :as re-frame :refer [subscribe dispatch]]
             [rente.client.views.layout :as layout :refer [navbar]]
-            [cljsjs.jquery-ui]
+            ;[cljsjs.jquery-ui]
             [cljsjs.highlight :as highlight]
             [cljsjs.highlight.langs.clojure] ; clojure-repl javascript css less dart elixir nginx bash
             [rente.client.ws :as socket]))
