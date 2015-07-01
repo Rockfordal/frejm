@@ -5,8 +5,7 @@
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
             [reagent.core    :as reagent  :refer [atom]]
             [clojure.string  :refer [join]]
-            [rente.client.ws :as socket]
-            [rente.client.db :refer [state put! get-value set-value!]]))
+            [rente.client.ws :as socket]))
 
 (defn jslog [& data]
   (js/console.log (clj->js (join " " data))))
@@ -20,8 +19,8 @@
       [:div.card-action
        [:a {:href "#"} "Gå Hem"]]]]]])
 
-(defn home-panel [data]
-  (fn []
+(defn home-panel []
+  (fn [data]
     [:div [navbar] [:div.container
         [:h1 "Hej från Reagent"]
         [:br]]]))
@@ -36,5 +35,4 @@
 
 (defn main-panel []
   (let [active-panel (subscribe [:active-panel])]
-    (panels @active-panel)
-))
+    (panels @active-panel)))
