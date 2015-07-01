@@ -34,6 +34,11 @@
 (defn knapp [& a]
   [:a.waves-effect.waves-light.btn a])
 
+(def fakedata
+    [{:id 1
+      :name "klättermus"
+      :species "mus"}])
+
 (defn rente-panel [data]
   (let [animals (subscribe [:animals])]
    (fn []
@@ -65,7 +70,7 @@
         [:div.col.s4
         [:div.collection.with-header
         [:div.collection-header "Actions"]
-        [:a.collection-item {:on-click socket/test-socket-callback} "Hämta edn med ws"]
-        [:a.collection-item {:on-click socket/test-socket-event}    "Skicka Event test"]
-        [:a.collection-item {:on-click #(dispatch [:get-animals [{:id 1 :name "klättermus" :species "mus"}]])} "Test med handler"]
+        [:a.collection-item {:on-click socket/test-socket-callback} "Hämta edn (ws)"]
+        [:a.collection-item {:on-click #(dispatch [:get-animals fakedata])} "Fakedata (handler)"]
+        [:a.collection-item {:on-click socket/test-socket-event}    "Skicka Event (ws)"]
         ]]]]])))
