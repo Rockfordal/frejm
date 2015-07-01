@@ -70,7 +70,8 @@
         [:div.col.s4
         [:div.collection.with-header
         [:div.collection-header "Actions"]
-        [:a.collection-item {:on-click socket/test-socket-callback} "Hämta edn (ws)"]
         [:a.collection-item {:on-click #(dispatch [:get-animals fakedata])} "Fakedata (handler)"]
-        [:a.collection-item {:on-click socket/test-socket-event}    "Skicka Event (ws)"]
+        [:a.collection-item {:on-click socket/get-animals} "Hämta med edn (ws)"]
+        [:a.collection-item {:on-click socket/test-socket-callback} "Testa CB (ws)"]
+        [:a.collection-item {:on-click socket/test-socket-event}    "Testa Event (ws)"]
         ]]]]])))

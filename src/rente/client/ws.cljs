@@ -46,12 +46,17 @@
 
 (sente/start-chsk-router! ch-chsk event-msg-handler*)
 
+(defn test-socket-event []
+  (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
+
 (defn test-socket-callback []
   (chsk-send!
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
-    ;#(js/console.log (str "vi fick : " %))
-    #(dispatch [:get-animals-success (second %)])))
+    #(js/console.log (str "vi fick : " %))))
 
-(defn test-socket-event []
-  (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
+(defn get-animals []
+  (chsk-send!
+    [:rente/get-animals {:message "klient vill ha animals som edn"}]
+    2000
+    #(dispatch [:get-animals-success (second %)])))

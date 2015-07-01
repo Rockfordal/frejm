@@ -23,10 +23,15 @@
 (defmethod event-msg-handler :rente/testevent
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (if ?reply-fn
-   ;(?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
-    (?reply-fn [:rente/testevent (db/expand (animals/getedn))])
+    (?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Tja från server Event, jag fick: " ?data)}])))
+;-------------------------------------------------------
 
+(defmethod event-msg-handler :rente/get-animals
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (?reply-fn [:rente/get-animals (db/expand (animals/getedn))]))
+
+;-------------------------------------------------------
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
