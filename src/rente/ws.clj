@@ -23,13 +23,25 @@
 (defmethod event-msg-handler :rente/testevent
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (if ?reply-fn
-    (?reply-fn [:rente/testevent {:message (str "Hej från server (Callback), jag fick: " ?data)}])
-    (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Tja från server Event, jag fick: " ?data)}])))
+    (?reply-fn [:rente/testevent {:message (str "Server Callback fick: " ?data)}])
+    (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
 ;-------------------------------------------------------
 
 (defmethod event-msg-handler :rente/get-animals
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
     (?reply-fn [:rente/get-animals (db/expand (animals/getedn))]))
+
+(defmethod event-msg-handler :rente/del-animal
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (if (animals/delete! (:id ?data))
+      (?reply-fn [:rente/del-animal {:message (str "lyckades radera") :id (:id ?data)}])
+      (?reply-fn [:rente/del-animal {:message (str "misslyckades radera")}])))
+
+(defmethod event-msg-handler :rente/add-animal
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (if-let [id (animals/create! (:animal ?data))]
+      (?reply-fn [:rente/add-animal {:message (str "lyckades adda") :id id :animal (:animal ?data)}])
+      (?reply-fn [:rente/add-animal {:message (str "misslyckades adda")}])))
 
 ;-------------------------------------------------------
 (defmethod event-msg-handler :default ; Fallback
