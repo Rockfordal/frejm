@@ -54,9 +54,27 @@
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
     #(js/console.log (str "vi fick : " %))))
+;--------------------------------------------------
 
 (defn get-animals []
   (chsk-send!
-    [:rente/get-animals {:message "klient vill ha animals som edn"}]
+    [:rente/get-animals {:message "vill hämta animals"}]
     2000
     #(dispatch [:get-animals-success (second %)])))
+
+(defn del-animal [id]
+  (chsk-send!
+    [:rente/del-animal
+     {:message "vill radera animal" :id id}]
+     2000
+     #(dispatch [:del-animal-success (second %)])))
+     ;first %   :rente/del-animal
+     ;second %  
+
+(defn add-animal [animal]
+  (chsk-send!
+    [:rente/add-animal
+     {:message "vill skapa animal" :animal animal}]
+     2000
+     #(dispatch [:add-animal-success (second %)])))
+     ;first %   :rente/del-animal
