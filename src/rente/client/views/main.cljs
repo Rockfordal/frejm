@@ -4,11 +4,7 @@
             [rente.client.views.firebase :as firebase]
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
             [reagent.core    :as reagent  :refer [atom]]
-            [clojure.string  :refer [join]]
             [rente.client.ws :as socket]))
-
-(defn jslog [& data]
-  (js/console.log (clj->js (join " " data))))
 
 (defn notfound-panel [data]
   [:div [navbar] [:div.container
