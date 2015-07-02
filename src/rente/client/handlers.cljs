@@ -1,6 +1,10 @@
 (ns rente.client.handlers
-  (:require [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as re-frame]
+            [clojure.string  :refer [join]]
+            [rente.client.ws :as socket]))
 
+(defn jslog [& data]
+  (js/console.log (clj->js (join " " data))))
 
 (re-frame/register-handler
   :initialize-db
@@ -22,9 +26,34 @@
   (fn [db [_ animals]]
     ;(js/console.log (clj->js (str "animals success: " animals)))
     ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
-    (assoc db :animals animals)
-)) 
+    (assoc db :animals animals))) 
 
+(re-frame/register-handler
+  :add-animal
+  (fn [db [_ animal]]
+    ;(js/console.log (clj->js (str "animals success: " animals)))
+    ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
+    #(socket/add-animal animal)
+    (assoc db :animal {:name "" :species ""}))) 
+
+(re-frame/register-handler
+  :del-animal-success
+  (fn [db [_ animal]]
+    (jslog "del animal success: " (:id animal))
+    ;(assoc db (disj (:animals db) animal))
+    (jslog (type db))
+    (dissoc db :animals (:id animal))
+    ;db
+    )) 
+
+(re-frame/register-handler
+  :add-animal-success
+  (fn [db [_ data]]
+    (let [animal {:id (:id data) :name (:name(:animal data)) :species (:species(:animal data))}]
+    (jslog "add animal success: " animal)
+    (assoc db :animals (merge (:animals db) animal))
+    ;db
+    ))) 
 ;(re-frame/register-handler
 ;  :fire-reset
 ;  (fn [db [_ person]]
