@@ -1,2 +1,1 @@
-#lein run
 rlwrap lein figwheel
