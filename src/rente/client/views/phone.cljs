@@ -1,5 +1,6 @@
 (ns rente.client.views.phone
-  (:require [rente.client.appstate :as appstate :refer [state put! get-value set-value!]]))
+ ; (:require [rente.client.appstate :as appstate :refer [state put! get-value set-value!]]))
+)
 
 
 ;(defn list-item [id k v selections]
