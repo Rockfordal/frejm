@@ -1,4 +1,21 @@
 [
+
+{:db/id #db/id[:db.part/db]
+ :db/ident :todo/title
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "en Uppgifts namn"
+ :db.install/_attribute :db.part/db}
+
+{:db/id #db/id[:db.part/db]
+ :db/ident :todo/done
+ :db/valueType :db.type/boolean
+ :db/cardinality :db.cardinality/one
+ :db/doc "En uppgifts beskrivning"
+ :db.install/_attribute :db.part/db}
+
+;----------------------------------------
+
  {:db/id #db/id [:db.part/db]
   :db/ident :animal
   :db/valueType :db.type/ref
