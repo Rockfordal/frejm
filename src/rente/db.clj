@@ -13,7 +13,7 @@
 (defn init []
   (let [uri "datomic:free://localhost:4334/frejm"
         schema (read-string (slurp (resource "schema.edn")))]
-    ;(d/create-database uri)
+    (d/create-database uri)
     (reset! connection (d/connect uri))
     (d/transact (conn) schema)
     nil))
