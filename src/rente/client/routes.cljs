@@ -27,6 +27,9 @@
   (defroute "/rente" []
     (re-frame/dispatch [:set-active-panel :rente-panel]))
 
+  (defroute "/todo" []
+    (re-frame/dispatch [:set-active-panel :todo-panel]))
+
   (defroute "/parse" []
     (re-frame/dispatch [:set-active-panel :parse-panel]))
 
