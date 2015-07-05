@@ -76,5 +76,15 @@
     [:rente/add-animal
      {:message "vill skapa animal" :animal animal}]
      2000
-     #(dispatch [:add-animal-success (second %)])))
-     ;first %   :rente/del-animal
+  #(dispatch [:add-animal-success (second %)])
+ ))
+ ;first %   :rente/del-animal
+
+(defn add-todo [todo]
+  (chsk-send!
+    [:rente/add-todo {:todo todo}]
+     2000
+  #(dispatch [:add-todo-success (second %)]))
+  ;(println "latmask: " todo)
+  ;#(dispatch [:add-todo-success todo])
+  )

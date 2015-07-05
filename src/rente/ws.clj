@@ -3,6 +3,7 @@
             [com.stuartsierra.component :as component]
             [clojure.core.async :as async]
             [rente.animals :as animals]
+            [rente.todos :as todos]
             [rente.db :as db]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
@@ -34,7 +35,7 @@
 (defmethod event-msg-handler :rente/del-animal
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
     (if (animals/delete! (:id ?data))
-      (?reply-fn [:rente/del-animal {:message (str "lyckades radera") :id (:id ?data)}])
+      (?reply-fn [:rente/del-animal {:message (str "lyckades radera") :id (:id ?data) :animal ?data }])
       (?reply-fn [:rente/del-animal {:message (str "misslyckades radera")}])))
 
 (defmethod event-msg-handler :rente/add-animal
@@ -42,6 +43,14 @@
   (if-let [id (animals/create! (:animal ?data))]
       (?reply-fn [:rente/add-animal {:message (str "lyckades adda") :id id :animal (:animal ?data)}])
       (?reply-fn [:rente/add-animal {:message (str "misslyckades adda")}])))
+
+
+(defmethod event-msg-handler :rente/add-todo
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (if-let [id (todos/create! (:todo ?data))]
+      (?reply-fn [:rente/add-todo {:message (str "lyckades adda") :id id :todo (:todo ?data)}])
+      (?reply-fn [:rente/add-todo {:message (str "misslyckades adda")}])))
+
 
 ;-------------------------------------------------------
 (defmethod event-msg-handler :default ; Fallback
