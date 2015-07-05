@@ -5,7 +5,7 @@
               ;[jayq.core :refer [$ delegate]] ; :append data
               [rente.client.handlers]
               [rente.client.subs]
-              [rente.client.appstate :refer [state]]
+              [rente.client.appstate :refer [default-value]]
               [rente.client.views.main :as views :refer [main-panel]]
               [rente.client.routes :as routes :refer [app-routes]]
               [rente.client.ws :as ws]))
@@ -24,9 +24,9 @@
 
 (defn mount-root []
   (let [root (.getElementById js/document "main")]
-    (reagent/render [app state] root)))
+    (reagent/render [app nil] root)))
 
 (defn ^:export main []
   (app-routes)                           ; lyssnar på webläsarn och dispatchar :set-active-panel handler
-  (dispatch-sync [:initialize-db state]) ; populera databasen med seed-data
+  (dispatch-sync [:initialize-db default-value]) ; populera databasen med seed-data
   (mount-root))
