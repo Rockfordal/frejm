@@ -5,7 +5,7 @@
             ;[cljsjs.jquery-ui]
             [cljsjs.highlight :as highlight]
             [cljsjs.highlight.langs.clojure] ; clojure-repl javascript css less dart elixir nginx bash
-            [rente.client.ws :as socket]))
+            [rente.client.ws :as ws]))
 
 ;; --------- highlight --------- 
 (extend-type js/NodeList
