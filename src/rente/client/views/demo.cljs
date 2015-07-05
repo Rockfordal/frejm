@@ -74,7 +74,7 @@
              [:tr {:key (:id animal)}
               [:td (:name animal)]
               [:td (:species animal)]
-              [:td [:a.btn.red.darken-2 {:on-click #(socket/del-animal (:id animal))} "Radera"]]])
+              [:td [:a.btn.red.darken-2 {:on-click #(ws/del-animal (:id animal))} "Radera"]]])
            @animals)]
 
           [atom-input name]
@@ -85,8 +85,8 @@
         [:div.collection.with-header
         [:div.collection-header "Actions"]
         [:a.collection-item {:on-click #(dispatch [:get-animals fakedata])} "Fakedata (handler)"]
-         [:a.collection-item {:on-click #(add-animal) } "Skapa med edn (ws)"]
-        [:a.collection-item {:on-click socket/get-animals} "Hämta med edn (ws)"]
-        [:a.collection-item {:on-click socket/test-socket-callback} "Testa CB (ws)"]
-        [:a.collection-item {:on-click socket/test-socket-event}    "Testa Event (ws)"]
+        [:a.collection-item {:on-click #(add-animal) }              "Skapa med edn (ws)"]
+        [:a.collection-item {:on-click ws/get-animals}          "Hämta med edn (ws)"]
+        [:a.collection-item {:on-click ws/test-socket-callback} "Testa CB (ws)"]
+        [:a.collection-item {:on-click ws/test-socket-event}    "Testa Event (ws)"]
         ]]]]])))
