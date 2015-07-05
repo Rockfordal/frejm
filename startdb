@@ -1,2 +1,2 @@
-/opt/datomic/bin/transactor -Xms128m -Xmx192m /home/andersl/dev/cs/frejm/resources/free-transactor.properties
+/opt/datomic/bin/transactor -Xms196m -Xmx256m ~/dev/cs/frejm/resources/free-transactor.properties
 
