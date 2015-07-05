@@ -44,12 +44,16 @@
            :value @value
            :on-change #(reset! value (-> % .-target .-value))}])
 
+(def getanimalsonce
+  (memoize (fn []
+    (ws/get-animals))))
+
 (defn rente-panel [data]
   (let [animals (subscribe [:animals])
         name    (atom "")
         species (atom "")
-        add-animal #(do (socket/add-animal {:name @name :species @species}) (reset! name "") (reset! species ""))
-        ]
+        add-animal #(do (ws/add-animal {:name @name :species @species}) (reset! name "") (reset! species ""))]
+    (getanimalsonce)
    (fn []
       (.setTimeout js/window init-highlight 100)
       [:div
