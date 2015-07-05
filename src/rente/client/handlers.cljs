@@ -1,59 +1,181 @@
 (ns rente.client.handlers
-  (:require [re-frame.core :as re-frame]
+  (:require [re-frame.core :as re-frame :refer [register-handler path trim-v after]]
+            [rente.client.appstate :refer [default-value ls->todos todos->ls!]]
             [clojure.string  :refer [join]]
-            [rente.client.ws :as socket]))
+            [rente.client.ws :as ws]))
 
 (defn jslog [& data]
   (js/console.log (clj->js (join " " data))))
 
-(re-frame/register-handler
-  :initialize-db
-  (fn [_ [_  state]]
-    @state))
+;; -- Middleware --------------------------------------------------------------
+;;
 
-(re-frame/register-handler
+(def ->ls (after todos->ls!))    ;; middleware to store todos into local storage
+
+;; middleware for any handler that manipulates todos
+(def todo-middleware [(path :todos)   ;; 1st param to handler will be value from this path
+                      ->ls            ;; write to localstore each time
+                      trim-v])        ;; remove event id from event vec
+
+;; -- Helpers -----------------------------------------------------------------
+
+(defn next-id
+  [todos]
+  ((fnil inc 0) (last (keys todos))))
+
+;; -- Handlers ----------------------------------------------------------------
+
+                                  ;; usage:  (dispatch [:initialise-db])
+(register-handler ;; On app startup, ceate initial state
+  :initialize-db  ;; event id being handled
+  (fn [_ _]       ;; the handler being registered
+    (merge default-value (ls->todos))
+                                        ;(merge default-value {:id "apa"})
+                                        ;(todos->ls!)
+                                        ;(println "ls->todos: " (ls->todos))
+    ))                                  ;; all hail the new state
+
+
+; test för att sköta val av filter i handler istället för via url:
+(register-handler
+  :set-filter
+  (fn [todos t]
+    ;(println "filter:" (second t))
+    ;(println (:showing todos))
+    ;(update-in todos [id :done] not)
+    ;(println (:showing todos))
+    ;(update-in todos [:showing] :done)
+    ;(println (assoc todos :showing :apa))
+    (assoc todos :showing (second t))
+    ;todos
+    ))
+
+
+(register-handler                 ;; this handler changes the footer filter
+  :set-showing                    ;; event-id
+  [(path :showing) trim-v]        ;; middleware  (wraps the handler)
+
+  ;; Because of the path middleware above, the 1st parameter to
+  ;; the handler below won't be the entire 'db', and instead will
+  ;; be the value at a certain path within db.
+  ;; Also, the use of the 'trim-v' middleware means we can omit
+  ;; the leading underscore from the 2nd parameter (event vector).
+  (fn [old-kw [new-filter-kw]]    ;; handler
+    new-filter-kw))               ;; return new state for the path
+
+
+(register-handler                  ;; given the text, create a new todo
+  :add-todo
+  todo-middleware
+  (fn [todos [text]]               ;; "path" middlware means we are given :todo
+    (let [id  (next-id todos)
+          nytodo {:id id :title text :done false}]
+      (ws/add-todo nytodo)
+      (assoc todos id nytodo))))
+
+(register-handler   
+  :add-todo-success
+  (fn [todos [todo]]
+    (let [id (:id todo)]
+      (assoc todos id todo)
+      )))
+
+(register-handler
+  :toggle-done
+  todo-middleware
+  (fn [todos [id]]
+    (update-in todos [id :done] not)))
+
+
+(register-handler
+  :save
+  todo-middleware
+  (fn [todos [id title]]
+    (assoc-in todos [id :title] title)))
+
+
+(register-handler
+  :delete-todo
+  todo-middleware
+  (fn [todos [id]]
+    (dissoc todos id)))
+
+
+(register-handler
+  :clear-completed
+  todo-middleware
+  (fn [todos _]
+    (->> (vals todos)                ;; remove all todos where :done is true
+         (filter :done)
+         (map :id)
+         (reduce dissoc todos))))    ;; returns the new version of todos
+
+
+(register-handler
+  :complete-all-toggle
+  todo-middleware
+  (fn [todos]
+    (let [new-done (not-every? :done (vals todos))]   ;; toggle true or false?
+      (reduce #(assoc-in %1 [%2 :done] new-done)
+              todos
+              (keys todos)))))
+
+;; --- våra gamla handlers -------
+
+;(re-frame/register-handler
+;  :initialize-db
+;  (fn [_ [_  state]]
+;    @state))
+
+(register-handler
   :set-active-panel          ; "routern triggar denna"
   (fn [db [_ active-panel]]
     (assoc db :active-panel active-panel)))
 
-(re-frame/register-handler
+(register-handler
   :get-animals
   (fn [db [_ msgs]]
     (assoc db :animals msgs)))
 
-(re-frame/register-handler
+(register-handler         ;; given the text, create a new todo
+  :add-animal
+  ;todo-middleware
+  (fn [todos [text]]               ;; "path" middlware means we are given :todo
+    (let [id  (next-id todos)]
+      (assoc todos id {:id id :title text :done false}))))
+
+(register-handler
   :get-animals-success
   (fn [db [_ animals]]
     ;(js/console.log (clj->js (str "animals success: " animals)))
     ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
     (assoc db :animals animals))) 
 
-(re-frame/register-handler
-  :add-animal
-  (fn [db [_ animal]]
-    ;(js/console.log (clj->js (str "animals success: " animals)))
-    ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
-    #(socket/add-animal animal)
-    (assoc db :animal {:name "" :species ""}))) 
-
-(re-frame/register-handler
+(register-handler
   :del-animal-success
-  (fn [db [_ animal]]
-    (jslog "del animal success: " (:id animal))
+  (fn [db [_ data]]
+    (jslog "del animal success: " (:id data))
+    
     ;(assoc db (disj (:animals db) animal))
-    (jslog (type db))
-    (dissoc db :animals (:id animal))
-    ;db
-    )) 
+    ;(jslog (type db))
+    (println "returdata: " data)
 
-(re-frame/register-handler
+    (def db {:animals [{:id 1 :name "katt"} {:id 2 :name "hund"}]})
+
+    (dissoc db :animals ())
+
+    ;db
+    )
+  ) 
+
+(register-handler
   :add-animal-success
   (fn [db [_ data]]
     (let [animal {:id (:id data) :name (:name(:animal data)) :species (:species(:animal data))}]
     (jslog "add animal success: " animal)
     (assoc db :animals (merge (:animals db) animal))
-    ;db
     ))) 
+
 ;(re-frame/register-handler
 ;  :fire-reset
 ;  (fn [db [_ person]]
