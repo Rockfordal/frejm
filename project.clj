@@ -4,7 +4,9 @@
   `leiningen.core.eval/get-os` for that system. Temporarily disabled
   options can be kept under `:disabled`."
   {:any
-   ["-Xms512m" "-Xmx1g"           ; Minimum and maximum sizes of the heap
+   [
+    ;"-server"                     ; -server = optimized for speed ;  client = optimized for startup time
+    "-Xms512m" "-Xmx1g"           ; Minimum and maximum sizes of the heap
     "-XX:+UseParNewGC"            ; Use the new parallel GC in conjunction with
     "-XX:+UseConcMarkSweepGC"     ;  the concurrent garbage collector
     "-XX:+CMSConcurrentMTEnabled" ; Enable multi-threaded concurrent gc work (ParNewGC)
@@ -52,6 +54,7 @@
                  [environ "1.0.0"]
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [org.clojure/tools.logging "0.3.1"]
+                 [org.clojure/tools.nrepl "0.2.10"]
 
                  ; Server
                  [ring/ring-core "1.3.2"]
@@ -78,6 +81,7 @@
                  [cljs-http "0.1.14"]
                  [clj-json "0.5.3"]
                  [jayq "2.5.4"]
+                 [datascript "0.11.5"]
                  [cljsjs/highlight "8.4-0"]
                  [org.webjars.bower/jquery "2.1.3"]
                  [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
@@ -85,8 +89,7 @@
                  ;[cljsjs/jquery "2.1.4-0"]
                  ;[cljsjs/jquery-ui "1.11.3-1"]
                  ;[org.webjars.bower/jquery-ui "1.11.4"]
-                 [matchbox "0.0.6"]
-                 ]
+                 [matchbox "0.0.6"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]]
 
@@ -114,12 +117,16 @@
                              :db-uri "datomic:free://localhost:4334/frejm"}
 
                    ;:dev-config {
-                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
-                                   [figwheel "0.2.5"]]
+                   :dependencies [
+                                   [org.clojure/tools.namespace "0.2.7"]
+                                   [org.clojure/tools.nrepl "0.2.10"]
+                                   ;[figwheel "0.2.5"]
+                                   [datascript "0.11.5"]
+                                   ]
 
-                    :plugins [[cider/cider-nrepl "0.9.1"]
+                    :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
                               [lein-datomic "0.2.0"]
-                              [lein-figwheel "0.3.5" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
+                              [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
                               [lein-environ "1.0.0"]]
 
                     :source-paths ["dev"]
@@ -139,7 +146,7 @@
                                :repl true
                                :css-dirs ["resources/public/css"]}
                     ; }
-                   }
+             }
 
              :prod {:cljsbuild
                     {:builds
