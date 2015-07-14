@@ -1,7 +1,6 @@
 (ns rente.client.views.company
   (:require [reagent.core  :as reagent :refer [atom]]
             [rente.client.views.layout :as layout :refer [navbar]]
-            [cljs.pprint :refer [pprint]]
             [rente.client.ws :as ws]
             [re-frame.core :refer [subscribe dispatch]]))
 
@@ -9,7 +8,7 @@
 
 (def hasmounted (atom false))
 
-(def getdata
+(def getcompanies
   (with-meta noob
     {:component-did-mount
      (fn [_]
@@ -40,24 +39,12 @@
 
 (defn company-item []
   (let [editing (atom false)]
-    ;(fn [{:keys [id name]}]
-;    (fn [{:keys [name type id orgnr]}]
     (fn [company]
       [:tr
       [:td (:id company)]
       [:td (:company/name company)]
-;    [:td (:orgnr company)]
-;    [:td (:note company)]
-     ; [:td {:class (str (if @editing "editing"))}
-     ;  (if @editing
-     ;    [company-edit {:class "edit"
-     ;                ;   :title name
-     ;                   :on-save #(dispatch [:save-project id %])
-     ;                   :on-stop #(reset! editing false)}]
-     ;    [:div {:for id :on-double-click #(reset! editing true)} name])]
        [:td [:a {:href "/#company" :on-click #(ws/del-company (:id company))} [:i.material-icons "delete"]]]
-       ]
-      )))
+       ])))
 
 (defn company-list [companies]
   (let [namn (atom "")]
@@ -83,10 +70,9 @@
   [:div
    [navbar]
    [:div.container
-    [getdata]
+    [getcompanies]
     [:header#header
      [:h2 "Företag"]
-     ;[:b (count @companies) " st"]
          [company-input {:id "new-todo"
                         :placeholder "Nytt företag?"
                         :on-save #(ws/add-company %)}]]
