@@ -59,12 +59,11 @@
                         :on-change #(dispatch [:toggle-done id])}]
         [:label {:for id :on-double-click #(reset! editing true)} title]
 
-        [:a {:on-click #(dispatch [:delete-todo id])} [:i.material-icons "delete"]]
-        ]
+        [:a {:on-click #(dispatch [:delete-todo id])} [:i.material-icons "delete"]]]
        (when @editing
          [todo-edit {:class "edit"
                      :title title
-                     :on-save #(dispatch [:save id %])
+                     :on-save #(dispatch [:save-todo id %])
                      :on-stop #(reset! editing false)}])])))
 
 (defn todo-list [visible-todos]
