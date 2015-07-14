@@ -17,6 +17,18 @@
       (count (filter :done (vals todos))))
 
 
+;; Projekt
+(register-sub
+  :projects
+  (fn [db _]
+      (reaction (vals (:projects @db)))))
+
+;; Företag
+(register-sub
+  :companies
+  (fn [db _]
+      (reaction (:companies @db))))
+
 ;; -- Subscription handlers and registration  ---------------------------------
 
 (register-sub

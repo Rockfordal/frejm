@@ -9,6 +9,8 @@
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
             [rente.animals :as animals]
+            [rente.projects :as projects]
+            [rente.companies :as companies]
             [rente.ws :as ws]))
 
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
@@ -17,7 +19,10 @@
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
    (GET "/createanimals" req (animals/init))
-   (GET "/getanimalsjson" _ (animals/getanimalsjson))
+   (GET "/createprojects" req (projects/init))
+   (GET "/getanimals" _ (animals/getjson))
+   (GET "/getprojects" _ (projects/getjson))
+   ;(GET "/getcompanies" _ (projects/getjson))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
 
 (defn app [handler]

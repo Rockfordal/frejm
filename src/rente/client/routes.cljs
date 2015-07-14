@@ -30,6 +30,12 @@
   (defroute "/todo" []
     (re-frame/dispatch [:set-active-panel :todo-panel]))
 
+  (defroute "/project" []
+    (re-frame/dispatch [:set-active-panel :project-panel]))
+
+  (defroute "/company" []
+    (re-frame/dispatch [:set-active-panel :company-panel]))
+
   (defroute "/parse" []
     (re-frame/dispatch [:set-active-panel :parse-panel]))
 

@@ -1,62 +1,101 @@
-(ns rente.client.views.company)
+(ns rente.client.views.company
+  (:require [reagent.core  :as reagent :refer [atom]]
+            [rente.client.views.layout :as layout :refer [navbar]]
+            [cljs.pprint :refer [pprint]]
+            [rente.client.ws :as ws]
+            [re-frame.core :refer [subscribe dispatch]]))
 
-;(defn project-component [project]
-;  [:tr
-;    [:td (:id project)]
-;    [:td (:name project)]
-;    [:td (:startdate project)]
-;    [:td (:status project)]
-;    [:td [:button.btn.btn-xs.btn-success { :on-click #(select-project (:name project))} "Välj"]]
-;    [:td [:button.btn.btn-xs.btn-danger { :on-click #(dispatch [:delete-project (:id project) ])} "Radera"]]])
+(defn noob [] [:div])
 
-;(defn projects-component []
-;  (let [projects (subscribe [:projects])
-;        namn (atom "")
-;        ]
-;    (fn []
-;      [:div
-;      [:table.table
-;       [:tr
-;        [:th "Id"]
-;        [:th "Namn"]
-;        [:th "Startdatum"]
-;        [:th "Status"]
-;        [:th]
-;        [:th]]
-;        (for [project (->> @projects)]
-;                                        ;          ^{:key (:id project)} [project-component project])
-;       ]
-;       ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
-;       [:span " "]
-;       [atom-input namn]
-;       ])))
+(def hasmounted (atom false))
 
-;(defn company-component [company]
-;  [:tr
-;    [:td (:name company)]
+(def getdata
+  (with-meta noob
+    {:component-did-mount
+     (fn [_]
+       (when-not @hasmounted
+         (ws/get-companies)
+         (reset! hasmounted true)))}))
+
+(defn company-input [{:keys [title on-save on-stop]}]
+  (let [val (atom title)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)))
+        save #(let [v (-> @val str clojure.string/trim)]
+               (if-not (empty? v) (on-save v))
+               (stop))]
+    (fn [props]
+      [:input (merge props
+                     {:type "text"
+                      :value @val
+                      :on-blur save
+                      :on-change #(reset! val (-> % .-target .-value))
+                      :on-key-down #(case (.-which %)
+                                     13 (save)
+                                     27 (stop)
+                                     nil)})])))
+
+(def company-edit (with-meta company-input
+  {:component-did-mount #(.focus (reagent/dom-node %))}))
+
+(defn company-item []
+  (let [editing (atom false)]
+    ;(fn [{:keys [id name]}]
+;    (fn [{:keys [name type id orgnr]}]
+    (fn [company]
+      [:tr
+      [:td (:id company)]
+      [:td (:company/name company)]
 ;    [:td (:orgnr company)]
 ;    [:td (:note company)]
-;    [:td [:button.btn.btn-xs.btn-success "Välj"]]
-;    [:td [:button.btn.btn-xs.btn-danger "Radera"]]])
+     ; [:td {:class (str (if @editing "editing"))}
+     ;  (if @editing
+     ;    [company-edit {:class "edit"
+     ;                ;   :title name
+     ;                   :on-save #(dispatch [:save-project id %])
+     ;                   :on-stop #(reset! editing false)}]
+     ;    [:div {:for id :on-double-click #(reset! editing true)} name])]
+       [:td [:a {:href "/#company" :on-click #(ws/del-company (:id company))} [:i.material-icons "delete"]]]
+       ]
+      )))
 
-;(defn companies-component []
-;  (let [companies (subscribe [:companies])]
-;    (fn []
-;      [:table.table
-;       [:tr
-;        [:th "Namn"]
+(defn company-list [companies]
+  (let [namn (atom "")]
+    (fn []
+      [:table
+       [:tr
+        [:th "Id"]
+        [:th "Namn"]
 ;        [:th "Orgnr"]
 ;        [:th "Info"]
-;        [:th]
-;        [:th]]
-;        (for [company (->> @companies)]
-;          ^{:key (:name company)} [company-component company])])))
+        [:th]
+       ]
+       (for [company @companies]
+           ^{:key (:id company)} [company-item company])
+       ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
+       [:span " "
+        ]
+       ;[atom-input namn]
+       ])))
 
-;(defn project-panel []
-;  [:div
-;   [navbar] [:div.container
-;   [:h2 "Projekt"]
-;    [:div]
-;    [:div {:class "col-md-10"}  ;bläää bootstrap funkar ju inte här!
-;     ;[projects-component]
-;     ]]])
+(defn company-panel []
+  (let [companies (subscribe [:companies])]
+  [:div
+   [navbar]
+   [:div.container
+    [getdata]
+    [:header#header
+     [:h2 "Företag"]
+     ;[:b (count @companies) " st"]
+         [company-input {:id "new-todo"
+                        :placeholder "Nytt företag?"
+                        :on-save #(ws/add-company %)}]]
+    [:div.row
+      [company-list companies]
+      ;(clj->js (first @companies))
+     ]
+    ;[:a.btn {:on-click #(println (count @companies))} "antal"]
+    ;[:a.btn {:on-click #(js/alert "tjo")} "Alert"]
+    ;[:a.btn {:on-click #(js/console.log "tjo")} "Log"]
+    ]
+   ]))

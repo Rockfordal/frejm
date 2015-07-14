@@ -4,6 +4,8 @@
             [clojure.core.async :as async]
             [rente.animals :as animals]
             [rente.todos :as todos]
+            [rente.projects :as projects]
+            [rente.companies :as companies]
             [rente.db :as db]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
@@ -51,6 +53,32 @@
       (?reply-fn [:rente/add-todo {:message (str "lyckades adda") :id id :todo (:todo ?data)}])
       (?reply-fn [:rente/add-todo {:message (str "misslyckades adda")}])))
 
+(defmethod event-msg-handler :rente/add-project
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (if-let [id (projects/create! (:project ?data))]
+      (?reply-fn [:rente/add-project {:message (str "lyckades adda projektet ") :id id :project (:project ?data)}])
+      (?reply-fn [:rente/add-project {:message (str "misslyckades adda projekt ")}])))
+
+(defmethod event-msg-handler :rente/add-company
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (if-let [id (companies/create! (:company ?data))]
+      (?reply-fn [:rente/add-company {:id id :company (:company ?data)}])
+      ;(?reply-fn [:rente/add-company (assoc {:id id} ((:company ?data)))
+      (?reply-fn [:rente/add-company {:message (str "misslyckades adda företag ")}])))
+
+(defmethod event-msg-handler :rente/get-projects
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
+
+(defmethod event-msg-handler :rente/get-companies
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (?reply-fn [:rente/get-companies (db/expand (companies/getedn))]))
+
+(defmethod event-msg-handler :rente/del-company
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (if (companies/delete! (:id ?data))
+      (?reply-fn [:rente/del-company {:id (:id ?data)}])
+      (?reply-fn [:rente/del-company {:message (str "misslyckades radera")}])))
 
 ;-------------------------------------------------------
 (defmethod event-msg-handler :default ; Fallback

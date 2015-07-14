@@ -1,4 +1,69 @@
 [
+{:db/id #db/id[:db.part/db]
+ :db/ident :project/name
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett projekts namn"
+ :db.install/_attribute :db.part/db}
+
+{:db/id #db/id[:db.part/db]
+ :db/ident :project/description
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett projekts beskrivning"
+ :db.install/_attribute :db.part/db}
+
+{:db/id #db/id[:db.part/db]
+ :db/ident :project/companies
+ :db/valueType :db.type/ref
+ :db/cardinality :db.cardinality/many
+ :db/doc "Alla företag för ett projekt"
+ :db.install/_attribute :db.part/db}
+
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/name
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags namn"
+ :db.install/_attribute :db.part/db}
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/note
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags anteckning"
+ :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+ :db/ident :company/phone
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags telefon"
+ :db.install/_attribute :db.part/db}
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/orgnr
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags organisationsnummer"
+ :db.install/_attribute :db.part/db}
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/stad
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags stad"
+ :db.install/_attribute :db.part/db}
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/verksamhet
+ :db/valueType :db.type/string
+ :db/cardinality :db.cardinality/one
+ :db/doc "Ett företags verksamhet"
+ :db.install/_attribute :db.part/db}
+{:db/id #db/id[:db.part/db]
+ :db/ident :company/nix
+ :db/valueType :db.type/boolean
+ :db/cardinality :db.cardinality/one
+ :db/doc "Har NIX?"
+ :db.install/_attribute :db.part/db}
+
+;----------------------------------------
 
 {:db/id #db/id[:db.part/db]
  :db/ident :todo/title
@@ -6,7 +71,6 @@
  :db/cardinality :db.cardinality/one
  :db/doc "en Uppgifts namn"
  :db.install/_attribute :db.part/db}
-
 {:db/id #db/id[:db.part/db]
  :db/ident :todo/done
  :db/valueType :db.type/boolean
@@ -22,7 +86,7 @@
   :db/cardinality :db.cardinality/one
   :db/index true
   :db.install/_attribute :db.part/db}
- 
+
  {:db/id #db/id [:db.part/db]
   :db/ident :authors
   :db/valueType :db.type/string
