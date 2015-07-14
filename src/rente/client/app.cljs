@@ -27,6 +27,6 @@
     (reagent/render [app nil] root)))
 
 (defn ^:export main []
-  (app-routes)                           ; lyssnar på webläsarn och dispatchar :set-active-panel handler
-  (dispatch-sync [:initialize-db default-value]) ; populera databasen med seed-data
+  (app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
+  (dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
   (mount-root))
