@@ -48,11 +48,8 @@
   (memoize (fn []
     (ws/get-animals))))
 
-(defn rente-panel [data]
-  (let [animals (subscribe [:animals])
-        name    (atom "")
-        species (atom "")
-        add-animal #(do (ws/add-animal {:name @name :species @species}) (reset! name "") (reset! species ""))]
+(defn rente-panel []
+        ;add-animal #(do (ws/add-animal {:name @name :species @species}) (reset! name "") (reset! species ""))]
     (getanimalsonce)
    (fn []
       (.setTimeout js/window init-highlight 100)
@@ -62,31 +59,34 @@
         [:h1 "Sente"]
         [:p [:code.clojure "(defn adder [a b] \r\n (+ a b))"]]
 
+        ;[route-test]
+
         [:div.row
          [:div.col.s8
-        [:table
-         [:thead
-          [:tr
-           [:th "Namn"]
-           [:th "Art"]]]
+        ;[:table
+        ; [:thead
+        ;  [:tr
+        ;   [:th "Namn"]
+        ;   [:th "Art"]]]
 
-         (map (fn [animal]
-             [:tr {:key (:id animal)}
-              [:td (:name animal)]
-              [:td (:species animal)]
-              [:td [:a.btn.red.darken-2 {:on-click #(ws/del-animal (:id animal))} "Radera"]]])
-           @animals)]
+         ;(map (fn [animal]
+         ;    [:tr {:key (:id animal)}
+         ;     [:td (:name animal)]
+         ;     [:td (:species animal)]
+         ;     ;[:td [:a.btn.red.darken-2 {:on-click #(ws/del-animal (:id animal))} "Radera"]]])
+         ;     ;@animals
+         ;     )]
 
-          [atom-input name]
-          [atom-input species]
-          ]
+          ;[atom-input name]
+          ;[atom-input species]
+        ;  ]
 
         [:div.col.s4
         [:div.collection.with-header
-        [:div.collection-header "Actions"]
-        [:a.collection-item {:on-click #(dispatch [:get-animals fakedata])} "Fakedata (handler)"]
-        [:a.collection-item {:on-click #(add-animal) }              "Skapa med edn (ws)"]
-        [:a.collection-item {:on-click ws/get-animals}          "Hämta med edn (ws)"]
+        [:div.collection-header "Åtgärder"]
+        ;[:a.collection-item {:on-click #(dispatch [:get-animals fakedata])} "Fakedata (handler)"]
+        ;[:a.collection-item {:on-click #(add-animal) }              "Skapa med edn (ws)"]
+        ;[:a.collection-item {:on-click ws/get-animals}          "Hämta med edn (ws)"]
         [:a.collection-item {:on-click ws/test-socket-callback} "Testa CB (ws)"]
         [:a.collection-item {:on-click ws/test-socket-event}    "Testa Event (ws)"]
-        ]]]]])))
+        ]]]]]]))
