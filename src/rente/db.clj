@@ -27,6 +27,9 @@
 
 ;; db api
 
+;(defn pulla []
+;  (d/pull (db) '[*] 17592186045647))
+
 (defonce max-id (atom 0))
 
 (defn next-id []
