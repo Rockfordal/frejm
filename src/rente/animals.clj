@@ -23,7 +23,7 @@
 (defn delete! [id]
   (db/delete! id))
 
-(defn getanimalsjson []
+(defn getjson []
   (json/generate-string (map db/expand (read))))
 
 (defn getedn []
@@ -61,4 +61,6 @@
 
     (create! {:name    "Atlantic salmon"
               :class   :osteichthyes
-              :species "Salmo salar"})))
+              :species "Salmo salar"})
+     "Skapat animals"
+    ))
