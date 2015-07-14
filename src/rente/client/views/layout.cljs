@@ -1,14 +1,15 @@
 (ns rente.client.views.layout
   (:require [re-frame.core :as re-frame :refer [subscribe dispatch]]))
 
+(defn route-item [route panel]
+  [:li {:class (if (= panel (:panel route)) "active" "")}
+    [:a {:href (:url route)} (:label route)]])
+
 (defn navbar-items [panel]
-  [:div
-    [:li {:class (if (= panel :rente-panel)    "active" "")} [:a {:href "#rente"}    "Rente"]]
-    [:li {:class (if (= panel :todo-panel)     "active" "")} [:a {:href "#todo"}     "Todo"]]
-    [:li {:class (if (= panel :project-panel)  "active" "")} [:a {:href "#project"}  "Projekt"]]
-    [:li {:class (if (= panel :company-panel)  "active" "")} [:a {:href "#company"}  "Företag"]]
-    [:li {:class (if (= panel :parse-panel)    "active" "")} [:a {:href "#parse"}    "Parse"]]
-    [:li {:class (if (= panel :firebase-panel) "active" "")} [:a {:href "#firebase"} "Firebase"]]])
+  (let [routes (subscribe [:routes])]
+    [:div
+     (for [route @routes]
+       [route-item route panel])]))
 
 (defn navbar []
   (let [active-panel (subscribe [:active-panel])]
