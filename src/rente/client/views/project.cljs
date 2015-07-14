@@ -1,10 +1,20 @@
 (ns rente.client.views.project
   (:require [reagent.core  :as reagent :refer [atom]]
             [rente.client.views.layout :as layout :refer [navbar]]
-            [cljs.pprint :refer [pprint]]
             [rente.client.ws :as ws]
             [re-frame.core :refer [subscribe dispatch]]))
 
+(defn noob [] [:div])
+
+(def hasmounted (atom false))
+
+(def getprojects
+  (with-meta noob
+    {:component-did-mount
+     (fn [_]
+       (when-not @hasmounted
+         (ws/get-projects)
+         (reset! hasmounted true)))}))
 
 (defn project-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -29,75 +39,48 @@
 
 (defn project-item []
   (let [editing (atom false)]
-    (fn [{:keys [id name]}]
+    (fn [project]
       [:tr
-      [:td id]
-      [:td {:class (str (if @editing "editing"))}
-       (if @editing
-         [project-edit {:class "edit"
-                        :title name
-                        :on-save #(dispatch [:save-project id %])
-                        :on-stop #(reset! editing false)}]
-         [:div {:for id :on-double-click #(reset! editing true)} name])]
-       [:td
-        [:a {:href "/#project" :on-click #(dispatch [:delete-project id])} [:i.material-icons "delete"]]]])))
-;[:td (:startdate project)]
-;[:td (:status project)]
-;[:td [:button.btn.btn-xs.btn-success { :on-click #(select-project (:name project))} "Välj"]]
+      [:td (:id project)]
+      [:td (:project/name project)]
+     ; [:td {:class (str (if @editing "editing"))}
+     ;  (if @editing
+     ;    [project-edit {:class "edit"
+     ;                ;   :title name
+     ;                   :on-save #(dispatch [:save-project id %])
+     ;                   :on-stop #(reset! editing false)}]
+     ;    [:div {:for id :on-double-click #(reset! editing true)} name])]
+       [:td [:a {:href "/#project" :on-click #(ws/del-project (:id project))} [:i.material-icons "delete"]]]
+       ]
+      )))
 
-(defn project-list [projects]
+(defn project-list []
   (let [namn (atom "")]
-    (fn []
+    (fn [projects]
       [:table
        [:tr
         [:th "Id"]
         [:th "Namn"]
-        ;[:th "Startdatum"]
-        ;[:th "Status"]
-        ;[:th]
+        [:th]
        ]
+
        (for [project @projects]
-           ^{:key (:id project)} [project-item project])
-       ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
-       [:span " "
-        ]
-       ;[atom-input namn]
+         ^{:key (:id project)} [project-item project])
+       
+       [:span " "]
        ])))
 
-;(defn company-component [company]
-;  [:tr
-;    [:td (:name company)]
-;    [:td (:orgnr company)]
-;    [:td (:note company)]
-;    [:td [:button.btn.btn-xs.btn-success "Välj"]]
-;    [:td [:button.btn.btn-xs.btn-danger "Radera"]]])
-
-;(defn companies-component []
-;  (let [companies (subscribe [:companies])]
-;    (fn []
-;      [:table.table
-;       [:tr
-;        [:th "Namn"]
-;        [:th "Orgnr"]
-;        [:th "Info"]
-;        [:th]
-;        [:th]]
-;        (for [company (->> @companies)]
-;          ^{:key (:name company)} [company-component company])])))
-
 (defn project-panel []
- (let [projects (subscribe [:projects])]
+  (let [projects (subscribe [:projects])]
   [:div
    [navbar]
    [:div.container
+    [getprojects]
     [:header#header
-        [:h2 "Projekt"]
-        [project-input {:id "new-todo"
-                        :placeholder "Nytt projekt?"
-                        :on-save #(dispatch [:add-project %])}]]
+     [:h2 "Projekt"]
+         [project-input {:id "new-todo"
+                         :placeholder "Nytt projekt?"
+                         :on-save #(ws/add-project %)}]]
     [:div.row
-     [project-list projects]]
-    [:a.btn {:on-click ws/get-projects} "Hämta data"]
-    ;[:a.collection-item {:on-click #(dispatch [:get-projects])} "Hämta data"]
-    ]
+      [project-list projects]]]
    ]))

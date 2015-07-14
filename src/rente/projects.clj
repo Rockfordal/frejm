@@ -4,18 +4,13 @@
             [clj-json.core :as json]))
 
 (defn create!
-  ([]
-     (db/create! {:type :project}))
-  ([m]
-   (db/create! (assoc m :type :project))))
+  ([]  (db/create! {:type :project}))
+  ([m] (db/create! (assoc m :type :project))))
 
 (defn read
-  ([]
-     (db/read :type :project))
-  ([id]
-     (db/read id))
-  ([k v]
-     (db/read k v)))
+  ([]    (db/read :type :project))
+  ([id]  (db/read id))
+  ([k v] (db/read k v)))
 
 (defn update! [id m]
   (db/update! id m))
