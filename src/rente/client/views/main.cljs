@@ -1,12 +1,8 @@
 (ns rente.client.views.main
   (:require [rente.client.views.layout :as layout :refer [navbar]]
-            [rente.client.views.demo :as demo]
-            [rente.client.views.todo :as todo]
-            [rente.client.views.project :as project]
-            [rente.client.views.company :as company]
-            [rente.client.views.firebase :as firebase]
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
             [reagent.core    :as reagent  :refer [atom]]))
+;(enable-console-print!)
 
 (defn notfound-panel [data]
   (let [active-panel (subscribe [:active-panel])]
@@ -42,13 +38,15 @@
 ;; --------------------
 (defmulti  panels identity)
 (defmethod panels :home-panel     [] [home-panel])
-(defmethod panels :rente-panel    [] [demo/rente-panel])
-;(defmethod panels :todo-panel      [] [todo/todo-panel])
-(defmethod panels :project-panel   [] [project/project-panel])
-(defmethod panels :company-panel   [] [company/company-panel])
-;(defmethod panels :test-panel     [] [demo/test-panel])
-(defmethod panels :firebase-panel [] [firebase/firebase-panel])
-(defmethod panels :default         [] [notfound-panel])
+
+(defn create-my-routes []
+(let [routes (subscribe [:routes])]
+  (doseq [route @routes]
+    (let [panel (:panel route)
+          run   (:run route)]
+      (defmethod panels panel [] run)))))
+
+(defmethod panels :default [] [notfound-panel])
 
 (defn main-panel []
   (let [active-panel (subscribe [:active-panel])]

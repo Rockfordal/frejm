@@ -4,7 +4,8 @@
     (:require [secretary.core :as secretary]
               [goog.events :as events]
               [goog.history.EventType :as EventType]
-              [re-frame.core :as re-frame]))
+              [clojure.string :refer [replace]]
+              [re-frame.core :as re-frame :refer [dispatch subscribe]]))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -17,33 +18,14 @@
 (defn app-routes []
   (secretary/set-config! :prefix "#")
 
-  ;; client routes
-  ;; --------------------
-
   (defroute "/" []
-    ;(js/console.log "route dispatch home-panel")
-    (re-frame/dispatch [:set-active-panel :home-panel]))
+    (dispatch [:set-active-panel :home-panel]))
 
-  (defroute "/rente" []
-    (re-frame/dispatch [:set-active-panel :rente-panel]))
+  (let [routes (subscribe [:routes])]
+    (doseq [route @routes]
+      (let [panel   (:panel route)
+            hashurl (:url route)
+            url     (replace hashurl "#" "/")]
+      (defroute [url] [] (dispatch [:set-active-panel panel])))))
 
-  (defroute "/todo" []
-    (re-frame/dispatch [:set-active-panel :todo-panel]))
-
-  (defroute "/project" []
-    (re-frame/dispatch [:set-active-panel :project-panel]))
-
-  (defroute "/company" []
-    (re-frame/dispatch [:set-active-panel :company-panel]))
-
-  (defroute "/parse" []
-    (re-frame/dispatch [:set-active-panel :parse-panel]))
-
-  (defroute "/test" []
-    (re-frame/dispatch [:set-active-panel :test-panel]))
-
-  (defroute "/firebase" []
-    (re-frame/dispatch [:set-active-panel :firebase-panel]))
-
-  ;; --------------------
   (hook-browser-navigation!))

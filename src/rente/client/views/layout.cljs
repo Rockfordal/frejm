@@ -1,26 +1,25 @@
 (ns rente.client.views.layout
   (:require [re-frame.core :as re-frame :refer [subscribe dispatch]]))
 
-(defn route-item [route panel]
+(defn navbar-item [route panel]
   [:li {:class (if (= panel (:panel route)) "active" "")}
     [:a {:href (:url route)} (:label route)]])
 
-(defn navbar-items [panel]
-  (let [routes (subscribe [:routes])]
+(defn navbar-items [panel routes]
     [:div
      (for [route @routes]
-       [route-item route panel])]))
+       ^{:key (:panel route)} [navbar-item route panel])])
 
 (defn navbar []
-  (let [active-panel (subscribe [:active-panel])]
+  (let [active-panel (subscribe [:active-panel])
+        routes (subscribe [:routes])]
   [:nav.light-blue.lighten-1 {:role "navigation"}
-    ;(js/Parse.initialize "mWR3FuLC0MB5Q1gm9rtKEfXeKoC6zuk4R7Ds66XG" "0csWP1KiUZEwfZeearVtfp9gfnChIDGBoxozln9P")
     [:div.nav-wrapper.container
       [:a#logo-container.brand-logo {:href "#"} "SolidCall"]
       [:ul.right.hide-on-med-and-down
-        [navbar-items @active-panel]]
+        [navbar-items @active-panel routes]]
       [:ul#nav-mobile.side-nav
-        [navbar-items @active-panel]]
+        [navbar-items @active-panel routes]]
       [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
        [:i.mdi-navigation-menu]]]]))
 ;       [:li [:a [:div (@state :current-project)]]]]

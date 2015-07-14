@@ -6,7 +6,7 @@
               [rente.client.handlers]
               [rente.client.subs]
               [rente.client.appstate :refer [default-value]]
-              [rente.client.views.main :as views :refer [main-panel]]
+              [rente.client.views.main :as main :refer [main-panel]]
               [rente.client.routes :as routes :refer [app-routes]]
               [rente.client.ws :as ws]))
 
@@ -27,6 +27,8 @@
     (reagent/render [app nil] root)))
 
 (defn ^:export main []
-  (app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
   (dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
-  (mount-root))
+  (app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
+  (main/create-my-routes)
+  (mount-root)
+  )
