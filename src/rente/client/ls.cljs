@@ -1,4 +1,4 @@
-(ns rente.client.appstate
+(ns rente.client.ls
   (:require [reagent.core :as reagent]
             [cljs.reader]))
 
