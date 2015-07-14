@@ -80,6 +80,12 @@
       (?reply-fn [:rente/del-company {:id (:id ?data)}])
       (?reply-fn [:rente/del-company {:message (str "misslyckades radera")}])))
 
+(defmethod event-msg-handler :rente/del-project
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (if (projects/delete! (:id ?data))
+      (?reply-fn [:rente/del-project {:id (:id ?data)}])
+      (?reply-fn [:rente/del-project {:message (str "misslyckades radera")}])))
+
 ;-------------------------------------------------------
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]

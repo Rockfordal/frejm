@@ -1,14 +1,14 @@
 (ns rente.client.handlers
   (:require [re-frame.core :as re-frame :refer [register-handler path trim-v after]]
-            ;[rente.client.appstate :refer [default-value ]]
-            [rente.client.appstate :refer [default-value ls->todos todos->ls! ls->projects projects->ls!]]
-            [clojure.string  :refer [join]]
+            [rente.client.appstate :refer [default-value]]
+            [rente.client.ls :refer [ls->todos todos->ls! ls->projects projects->ls!]]
             [rente.client.ws :as ws]))
+            ;[clojure.string  :refer [join]]
 ; (:require-macros [my.macros :as my])
 ; (defmacro unless [& args] `(when-not ~@args))
 
 
-;; -- Middleware --------------------------------------------------------------
+;; -- Middleware för todo -----------------------------------------------------
 ;;
 
 (def ->ls (after todos->ls!))    ;; middleware to store todos into local storage
@@ -23,7 +23,7 @@
                          (after projects->ls!)
                          trim-v])
 
-;; -- Helpers -----------------------------------------------------------------
+;; -- Helpers för todo --------------------------------------------------------
 
 (defn next-id [todos]
   ((fnil inc 0) (last (keys todos))))
@@ -33,50 +33,23 @@
 
 ;; -- Handlers ----------------------------------------------------------------
 
-(def companydata
- [{:company/name "Ika"
-   :type :company
-   :id 2
-   :company/orgnr "12-3"}
-  {:company/name "Kop"
-   :type :company
-   :id 1
-   :company/orgnr "123-4"}])
-
-(re-frame/register-handler
+(register-handler
   :initialize-db
   (fn [_ [_  default]]
-    ;(assoc default :companies companydata)
-    default
+    (merge default (ls->todos))
     ))
 
-;; usage:  (dispatch [:initialise-db])
-;(register-handler ;; On app startup, ceate initial state
-;  :initialize-db  ;; event id being handled
-;  (fn [_ _]       ;; the handler being registered
-    ;(merge default-value (ls->todos))
-    ;(merge default-value (ls->projects))
-    ;db
-                                        ;(merge default-value {:id "apa"})
-                                        ;(todos->ls!)
-                                        ;(println "ls->todos: " (ls->todos))
-;    ))                                  ;; all hail the new state
+(register-handler
+  :set-active-panel          ; "routern triggar denna"
+  (fn [db [_ active-panel]]
+    (assoc db :active-panel active-panel)))
 
 
 ; test för att sköta val av filter i handler istället för via url:
 (register-handler
   :set-filter
   (fn [todos t]
-    ;(println "filter:" (second t))
-    ;(println (:showing todos))
-    ;(update-in todos [id :done] not)
-    ;(println (:showing todos))
-    ;(update-in todos [:showing] :done)
-    ;(println (assoc todos :showing :apa))
-    (assoc todos :showing (second t))
-    ;todos
-    ))
-
+    (assoc todos :showing (second t))))
 
 (register-handler                 ;; this handler changes the footer filter
   :set-showing                    ;; event-id
@@ -97,7 +70,6 @@
   (fn [todos [text]]               ;; "path" middlware means we are given :todo
     (let [id  (next-id todos)
           nytodo {:id id :title text :done false}]
-      ;(ws/add-todo nytodo)
       ;(println "todos: " todos)  {1 {:id :title "hej" :done false} 2 {:id 2 :title "hur" :done false}}
       ;(println "nytodo: " nytodo)   {:id 5 :title "mango" :done false}
       (assoc todos id nytodo))))
@@ -145,7 +117,7 @@
               (keys todos)))))
 
 
-;; --- testar nya handlers -------
+;; Företag
 
 (register-handler
   :get-companies-success
@@ -168,152 +140,33 @@
           new (remove #(when (= id (:id %)) %) old)]
     (assoc db :companies new))))
 
-;(register-handler
-;  :add-company
-;  ;project-middleware
-;  (fn [db [_ name]]
-;    (ws/add-company {:company/name name})
-;    ;(let [id (next-project-id projects)
-;         ;newproj {:id id :name name}
-;     ;     ]
-;      ;(assoc db :companies {:id 1 :name name})
-;    ;(println "db:" db)
-;    (println "name:" name)
-;      db
-;     ; )
-;))
-
-;(register-handler
-;  :save-project
-;  ;project-middleware
-;  (fn [companies [id name]]
-;    (println "id:" id "name: " name)
-;    (println "projects: " companies)
-;    ;(assoc-in companies [id :name] name)
-;    companies
-;    ))
-
-;(register-handler
-;  :add-company
-;  todo-middleware
-;  (fn [companies [text]]
-;    (let [id  (next-id todos)]
-;      (assoc todos id {:id id :title text :done false}))))
-
-(register-handler                  ;; given the text, create a new todo
-  :add-project
-  ;project-middleware
-  (fn [projects [_ name]]            ;; "path" middlware means we are given :todo
-    (ws/add-project {:name name :description ""})
-    (let [id (next-project-id projects)
-          newproj {:id id :name name}]
-      (assoc projects id newproj)
-      ;projects
-     )))
+;; Projekt
 
 (register-handler
   :get-projects-success
   (fn [db [_ projects]]
-    ;(js/console.log (clj->js (str "animals success: " animals)))
-    ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
-    (println "projects:" projects)
-    (println "db:" db)
     ;(assoc db :projects projects)
-     ;(assoc projects id nytodo)
-    db)) 
-
-(register-handler   
-  :add-project-success
-  (fn [projects [project]]
-    (let [id (:id project)]
-      (assoc projects id project))))
-
-(register-handler
-  :delete-project
-  project-middleware
-  (fn [projects [id]]
-    (dissoc projects id)))
-
-(register-handler
-  :save-project
-  project-middleware
-  (fn [projects [id name]]
-    ;(println "id:" id "name: " name)
-    (println projects)
-    (assoc-in projects [id :name] name)
-    ))
-
-;; --- våra gamla handlers -------
-
-(register-handler
-  :set-active-panel          ; "routern triggar denna"
-  (fn [db [_ active-panel]]
-    (assoc db :active-panel active-panel)))
-
-(register-handler
-  :get-animals
-  (fn [db [_ msgs]]
-    (assoc db :animals msgs)))
-
-(register-handler         ;; given the text, create a new todo
-  :add-animal
-  ;todo-middleware
-  (fn [todos [text]]               ;; "path" middlware means we are given :todo
-    (let [id  (next-id todos)]
-      (assoc todos id {:id id :title text :done false}))))
-
-(register-handler
-  :get-animals-success
-  (fn [db [_ animals]]
-    ;(js/console.log (clj->js (str "animals success: " animals)))
-    ;(assoc db :animals [{"class" "sdfsfd"} {"class" "123"}])
-    (assoc db :animals animals))) 
-
-(register-handler
-  :del-animal-success
-  (fn [db [_ data]]
-    (println "del animal success: " (:id data))
-    ;(assoc db (disj (:animals db) animal))
-    ;(println (type db))
-    (println "returdata: " data)
-    (def db {:animals [{:id 1 :name "katt"} {:id 2 :name "hund"}]})
-    (dissoc db :animals ())
+    ;(println "get project success antal: " (count projects))
+    ;(println "get project success: " projects)
+    (assoc db :projects projects)
     ;db
     )) 
 
 (register-handler
-  :add-animal-success
+  :add-project-success
   (fn [db [_ data]]
-    (let [animal {:id (:id data) :name (:name(:animal data)) :species (:species(:animal data))}]
-    (println "add animal success: " animal)
-    (assoc db :animals (merge (:animals db) animal))
-    ))) 
+    (let [project (assoc (:project data) :id (:id data))]
+    (assoc db :projects (merge (:projects db) project)))))
 
-;(re-frame/register-handler
-;  :fire-reset
-;  (fn [db [_ person]]
-    ;(js/console.log (str "test: " (:test db)))
-;  db))
+(register-handler
+  :del-project-success
+  (fn [db [_ id]]
+    (let [old (:projects db)
+          new (remove #(when (= id (:id %)) %) old)]
+    (assoc db :projects new))))
 
-;(re-frame/register-handler
-;  :getclojure
-;  (fn [db _]
-;    (let [Course (.extend (.-Object js/Parse) "course")
-;        query (Query. Course)]
-;        (.get query "W8uc91QYJL" (clj->js {
-;            "success" (fn [kurs]    (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
-;            "error"   (fn [obj err] (js/console.log (str "Fel i :getclojure!" err)))})))
-;  db))
 
-;(re-frame/register-handler
-;  :getjs
-;  (fn [db _]
-;    (let [Course (.extend (.-Object js/Parse) "course")
-;        query (Query. Course)]
-;        (.get query "NXp23QnLVW" (clj->js {
-;            "success" (fn [kurs]    (re-frame/dispatch [:process-getcourse-response (js->clj kurs)]))
-;            "error"   (fn [obj err] (js/console.log (str "Fel i :getjs!" err)))})))
-;  db))
+;; Parse.com
 
 ;(re-frame/register-handler
 ;  :getcourses
@@ -333,11 +186,6 @@
 ;     ;(assoc db :rentemsg {:name "kurser" :desc "mja"})
 ;     ;(js/console.log res.attributes)
 ;     (js/alert "fick ingen kurs"))))
-
-;(re-frame/register-handler
-;  :getkurssnabb
-;  (fn [db [_] nyakurser]
-;    (assoc db :kurser nyakurser)))
 
 ;(re-frame/register-handler
 ; :process-getcourses-response

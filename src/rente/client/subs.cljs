@@ -2,8 +2,38 @@
     (:require-macros [reagent.ratom :refer [reaction]])
     (:require [re-frame.core :refer [register-sub]]))
 
-;; -- Helpers -----------------------------------------------------------------
+;; Projekt
+(register-sub
+  :projects
+  (fn [db _]
+    (reaction (:projects @db))))
 
+;; Företag
+(register-sub
+  :companies
+  (fn [db _]
+    (reaction (:companies @db))))
+
+;; Firebase
+(register-sub
+ :messages
+ (fn [db _]
+   (reaction (:messages @db))))
+
+;; Aktuell sida
+(register-sub
+  :active-panel
+  (fn [db _]
+     (reaction (:active-panel @db))))
+
+;; Dynamiska routes
+(register-sub
+  :routes
+  (fn [db _]
+     (reaction (:routes @db))))
+
+
+;; Todo
 (defn filter-fn-for
       [showing-kw]
       (case showing-kw
@@ -16,20 +46,6 @@
       [todos]
       (count (filter :done (vals todos))))
 
-
-;; Projekt
-(register-sub
-  :projects
-  (fn [db _]
-      (reaction (vals (:projects @db)))))
-
-;; Företag
-(register-sub
-  :companies
-  (fn [db _]
-      (reaction (:companies @db))))
-
-;; -- Subscription handlers and registration  ---------------------------------
 
 (register-sub
   :todos                ;; usage:  (subscribe [:todos])
@@ -57,28 +73,3 @@
               active-count    (- (count todos) completed-count)
               showing         (:showing @db)]
              [active-count completed-count showing]))))  ;; tuple
-
-(register-sub
-  :active-panel
-  (fn [db _]
-     (reaction (:active-panel @db))))
-
-(register-sub
-  :routes
-  (fn [db _]
-     (reaction (:routes @db))))
-
-;(register-sub
-; :messages
-; (fn [db _]
-;   (reaction (:messages @db))))
-
-;(register-sub
-; :animals
-; (fn [db _]
-;   (reaction (:animals @db))))
-
-;(register-sub
-; :flippen
-; (fn [db]
-;   (reaction (:re-render-flip @db))))

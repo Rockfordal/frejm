@@ -89,30 +89,14 @@
     ;#(dispatch [:add-todo-success todo])
 )
 
-(defn get-projects []
-  (chsk-send!
-    [:rente/get-projects {:message "vill hämta projekt"}]
-    2000
-    #(dispatch [:get-projects-success (second %)])))
-
 (defn get-companies []
   (println "hämtar företag!")
   (chsk-send!
     [:rente/get-companies {:message "vill hämta företag"}]
     2000
-    ;(println "ws get-companies: " (second %))
     #(dispatch [:get-companies-success (second %)])))
 
-(defn add-project [project]
-  (chsk-send!
-    [:rente/add-project {:project project}]
-    2000
-    ;#(dispatch [:add-project-success (second %)]))
-    ;#(dispatch [:add-todo-success project])
-    (println "add-project reply: " project)))
-
 (defn add-company [company]
-  ;(println "add-company" company)
   (chsk-send!
     [:rente/add-company {:company {:company/name company :company/orgnr "010"}}]
     2000
@@ -122,5 +106,25 @@
   (chsk-send!
     [:rente/del-company {:id id}]
     2000
-    ;#(println "del-company reply: " id)))
     #(dispatch [:del-company-success (:id (second %))])))
+
+;; Projects
+
+(defn get-projects []
+  (chsk-send!
+    [:rente/get-projects {:message "vill hämta projekt"}]
+    2000
+    #(dispatch [:get-projects-success (second %)])))
+
+(defn add-project [project]
+  (chsk-send!
+    [:rente/add-project {:project {:project/name project}}]
+    2000
+    #(dispatch [:add-project-success (second %)])))
+
+(defn del-project [id]
+  (chsk-send!
+    [:rente/del-project {:id id}]
+    2000
+    ;#(println "del-project reply: " id)))
+    #(dispatch [:del-project-success (:id (second %))])))
