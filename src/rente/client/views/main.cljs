@@ -42,12 +42,12 @@
 ;; --------------------
 (defmulti  panels identity)
 (defmethod panels :home-panel     [] [home-panel])
-;(defmethod panels :rente-panel    [] [demo/rente-panel])
-(defmethod panels :todo-panel      [] [todo/todo-panel])
+(defmethod panels :rente-panel    [] [demo/rente-panel])
+;(defmethod panels :todo-panel      [] [todo/todo-panel])
 (defmethod panels :project-panel   [] [project/project-panel])
 (defmethod panels :company-panel   [] [company/company-panel])
 ;(defmethod panels :test-panel     [] [demo/test-panel])
-;(defmethod panels :firebase-panel [] [firebase/firebase-panel])
+(defmethod panels :firebase-panel [] [firebase/firebase-panel])
 (defmethod panels :default         [] [notfound-panel])
 
 (defn main-panel []

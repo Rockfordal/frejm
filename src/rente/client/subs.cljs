@@ -63,6 +63,11 @@
   (fn [db _]
      (reaction (:active-panel @db))))
 
+(register-sub
+  :routes
+  (fn [db _]
+     (reaction (:routes @db))))
+
 ;(register-sub
 ; :messages
 ; (fn [db _]
