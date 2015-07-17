@@ -37,7 +37,7 @@
   "Return a complete vector of jvm-opts for the current os."
   [] (let [os (leiningen.core.utils/get-os)]
        (vec (set (concat (get JVMOPTS :any)
-                   (get JVMOPTS os)))))) 
+                         (get JVMOPTS os)))))) 
 
 (defproject rente "1.0.0"
   :description "A barebones Reagent+Sente app deployable to Heroku. Uses Figwheel (for development build) and Component (lifecycle management)."
@@ -70,7 +70,7 @@
                                org.slf4j/jul-to-slf4j
                                org.slf4j/slf4j-nop]]
 
-                 [com.taoensso/sente "1.5.0" :exclusions [org.clojure/tools.reader]]
+                 [com.taoensso/sente "1.5.0"          :exclusions [org.clojure/tools.reader]]
                  [com.cognitect/transit-clj "0.8.275" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.220"]
 
