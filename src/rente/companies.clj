@@ -1,6 +1,7 @@
 (ns rente.companies
   (:refer-clojure :exclude [read])
-  (:require [rente.db :as db]
+  (:require [rente.db :as db :refer [conn]]
+            [datomic.api :as d]
             [clj-json.core :as json]))
    ;[clojure.tools.namespace.repl :refer [refresh refresh-all]]
 
@@ -23,7 +24,34 @@
   (json/generate-string (map db/expand (read))))
 
 (defn getedn []
-  (map db/expand (read)))
+  ;(map db/expand (read)))
+  (map d/touch (read)))
+
+(comment
+  (defn pull-all []
+    (d/pull (db) '[*] 17592186045647)))
+
+
+(defn find-with-eid []
+  (d/touch (d/entity (db/db) (ffirst (d/q '[:find ?e :in $ ?project/name
+                                            :where [?e :project/name ?name]]
+                                            (db/db) "ica")))))
+
+(defn find-project-eid-by-name [project-name]
+  (ffirst (d/q '[:find ?eid
+         :in $ ?project-name
+         :where [?eid :project/name ?project-name]]
+       (db/db)
+       project-name)))
+
+(defn create-for-project-name [company-name project-name]
+  (let [company-id (d/tempid :db.part/user)]
+  ;@(d/transact conn [{:db/id company-id
+  @(d/transact (db/conn) [{:db/id company-id
+                           :company/name company-name
+                           :type :company}
+                          {:db/id (find-project-eid-by-name project-name)
+                           :project/companies company-id}])))
 
 (defn init []
   (do
