@@ -3,6 +3,7 @@
   (:require [rente.db :as db]
             [clj-json.core :as json]))
 
+
 (defn create!
   ([]  (db/create! {:type :project}))
   ([m] (db/create! (assoc m :type :project))))

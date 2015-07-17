@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]
             [rente.db :as db]
-            [rente.animals :as animals]))
+           ;[rente.animals :as animals]
+            ))
 
 
 ;; Mailing.clj för pedestal:

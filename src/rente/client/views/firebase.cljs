@@ -43,7 +43,7 @@
 
 (defn firebase-panel [data]
   (let [messages (subscribe [:messages])
-        alert (js/console.log "pang")
+        ;alert (js/console.log "firebase")
         ;setkids (m/reset! (get-mikes-friends) [{:name "Kid A"} {:name "Kid B"}])
         ;getkids (m/deref (get-mikes-friends) safe-prn)
         ]
