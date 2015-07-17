@@ -47,6 +47,7 @@
 
 (defn rente-panel []
    (fn []
+     (let [messages (subscribe [:messages])]
       (.setTimeout js/window init-highlight 100)
       [:div
        [navbar]
@@ -63,4 +64,7 @@
         [:div.collection-header "Åtgärder"]
         [:a.collection-item {:on-click ws/test-socket-callback} "Testa CB (ws)"]
         [:a.collection-item {:on-click ws/test-socket-event}    "Testa Event (ws)"]
-        ]]]]]]))
+         ]]]]
+        [:b "Meddelanden: "]
+        [:span @messages]
+        ]])))

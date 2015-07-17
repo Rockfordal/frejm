@@ -14,7 +14,7 @@
    :showing :all
    :active-panel :home-panel
    :current-project nil
-   ;:message ""
+   :messages ""
    :routes [
             {:url "#rente"    :panel :rente-panel    :label "Rente"    :run [demo/rente-panel]}
             {:url "#todo"     :panel :todo-panel     :label "Att göra" :run [todo/todo-panel]}
