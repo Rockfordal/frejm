@@ -40,11 +40,11 @@
 (defmethod panels :home-panel     [] [home-panel])
 
 (defn create-my-routes []
-(let [routes (subscribe [:routes])]
-  (doseq [route @routes]
-    (let [panel (:panel route)
-          run   (:run route)]
-      (defmethod panels panel [] run)))))
+  (let [routes (subscribe [:routes])]
+    (doseq [route @routes]
+       (let [panel (:panel route)
+             run   (:run route)]
+         (defmethod panels panel [] run)))))
 
 (defmethod panels :default [] [notfound-panel])
 
