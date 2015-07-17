@@ -1,3 +1,5 @@
+; Valuetypes: string double keyword instant 
+
 [
 {:db/id #db/id[:db.part/db]
  :db/ident :project/name
