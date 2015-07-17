@@ -2,15 +2,13 @@
     (:require-macros [cljs.core.async.macros :refer [go-loop]])
     (:require [reagent.core :as reagent]
               [re-frame.core :as re-frame :refer [dispatch-sync]]
-              ;[jayq.core :refer [$ delegate]] ; :append data
               [rente.client.handlers]
               [rente.client.subs]
               [rente.client.appstate :refer [default-value]]
               [rente.client.views.main :as main :refer [main-panel]]
               [rente.client.routes :as routes :refer [app-routes]]
-              [rente.client.ws :as ws]))
+              [rente.client.ws :as ws])
 
-;(def $body ($ :body)) ; jayq
 
 (defmulti handle-event (fn [data [ev-id ev-data]] ev-id))
 
@@ -19,7 +17,6 @@
   (swap! data update-in [:messages] #(conj % msg)))
 
 (defn app [data]
-  ; här hade vi nå re-render flip som vi inte verkar behöva
   [main-panel])
 
 (defn mount-root []
@@ -30,5 +27,4 @@
   (dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
   (app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
   (main/create-my-routes)
-  (mount-root)
-  )
+  (mount-root))
