@@ -31,6 +31,11 @@
   (fn [db _]
      (reaction (:active-panel @db))))
 
+(register-sub
+  :active-panel-id
+  (fn [db _]
+     (reaction (:active-panel-id @db))))
+
 ;; Dynamiska routes
 (register-sub
   :routes
