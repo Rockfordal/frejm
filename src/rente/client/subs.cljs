@@ -8,6 +8,11 @@
   (fn [db _]
     (reaction (:projects @db))))
 
+(register-sub
+  :active-project
+  (fn [db _]
+    (reaction (:active-project @db))))
+
 ;; Företag
 (register-sub
   :companies
