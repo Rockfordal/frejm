@@ -33,6 +33,9 @@
 (defn next-id []
   (swap! max-id inc))
 
+;(defn resolve-tempid [tempids tempid]
+;  (d/resolve-tempid (db) tempids tempid))
+
 (defn create! [m]
   (let [id (next-id)
         dbid (d/tempid :db.part/user)]
@@ -40,14 +43,18 @@
     id))
 
 (defn create-eid [m]
-  (let [dbid (d/tempid :db.part/user)]
-    @(d/transact (conn) (list (assoc m :db/id dbid)))
-    dbid
-    ))
+  (let [dbid (d/tempid :db.part/user)]                ; #db/id[:db.part/user -1000027]
+    @(d/transact (conn) (list (assoc m :db/id dbid))) ; {:db}
+    dbid))
+
+(defn create-entity [m]
+  (let [temp-id (d/tempid :db.part/user)
+        tx @(d/transact (conn) (list (assoc m :db/id temp-id)))]
+    (d/resolve-tempid (db) (:tempids tx) temp-id)))
 
 (defn read
   ([id]
-     (let [found (d/q '[:find ?e :in $ ?id :where [?e :id ?id]] (db) id)]
+     (let [found (d/q '[:find ?e :in $ ?id :where [?event :id ?id]] (db) id)]
        (if (seq found)
          (d/entity (db) (ffirst found)))))
   ([k v]

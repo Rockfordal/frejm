@@ -173,14 +173,30 @@
 (register-handler
   :add-name-success
   (fn [db [_ data]]
-    (let [id    (:id data)
-          val   (:data data)
-          key   (:key data)
-          item  {:db/id id key val}
-          types (:types data)]
-      (assoc db types (merge (types db) item))
-      (println "data:" data)
-      )))
+    (let [id    (:db/id (:data data)) ; 17592186045543
+          val   (:data (:data data)) ; "hej"
+          key   (:key data)          ; :company/name
+          types (:types data)        ; :companies
+          ;item  {:db/id id :type :company key val}
+          item  {:db/id id key val}] ;
+      (do
+        ;(println "db:" db)
+        ;(println "val: " val)
+        ;(println "key: " key)
+        ;(println "data:" data)
+        ;(println "item:" item)
+        ;(println "types:" types)
+        (assoc db types (merge (types db) item))
+        ;db
+      ))))
+
+
+;; Sente demo
+(register-handler
+  :get-message
+  (fn [db [_ msg]]
+    (let [text (str (:message msg))]
+          (assoc db :messages text))))
 
 
 ;; Parse.com

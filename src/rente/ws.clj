@@ -76,16 +76,12 @@
         typ (keyword (:type ?data))
         dat (:data ?data)
         ;id (db/create! {:type typ kw dat})]
-        id (db/create-eid {:type typ kw dat})]
+        ;id (db/create-eid {:type typ kw dat})]    ; {:type :company :company/name "ica" }
+        id (db/create-entity {:type typ kw dat})]  ; {:type :company :company/name "ica" }
    (if id
-     (do
-       (println "success")
      (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
-       )
-     (do
-       (println "fail")
-       (?reply-fn [:rente/add-name {:message (str "misslyckades adda")}]))
-     )))
+     (?reply-fn [:rente/add-name {:message "misslyckades adda"}]))
+))
 
 ;-------------------------------------------------------
 

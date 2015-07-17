@@ -6,7 +6,7 @@
 
 (def getprojects
   (memoize #((ws/get-all :project :projects)
-             nil)))
+    nil)))
 
 (defn project-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -31,7 +31,7 @@
 
 (defn project-item [project] ; obs vet inte om vi ska ta emot projekt här eller i fn []
   (let [editing (atom false)
-        id (:id project)]
+        id (:db/id project)]
     (fn []
       [:tr
       [:td id]
@@ -44,7 +44,7 @@
      ;                   :on-stop #(reset! editing false)}]
      ;    [:div {:for id :on-double-click #(reset! editing true)} name])]
        [:td
-        [:a {:href "/#project" :on-click #(ws/delete id :projects)} [:i.material-icons "delete"]]
+        [:a {:href "/#project" :on-click #(ws/delete (:db/id project) :projects)} [:i.material-icons "delete"]]
         [:span " "] [:span " "]
         [:a {:href "/#project" :on-click #(dispatch [:select-project project])} [:i.material-icons "airplay"]]]])))
 
@@ -59,7 +59,7 @@
             [:th]
         ]
         (for [project @projects]
-            ^{:key (:id project)} [project-item project])
+            ^{:key (:db/id project)} [project-item project])
         [:span " "]]])))
 
 (defn project-panel []

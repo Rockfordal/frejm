@@ -4,16 +4,10 @@
             [rente.client.ws :as ws]
             [re-frame.core :refer [subscribe dispatch]]))
 
-(def hasmounted (atom false))
-(defn noob [] [:div])
-
 (def getcompanies
-  (with-meta noob
-    {:component-did-mount
-     (fn [_]
-       (when-not @hasmounted
-         (ws/get-all :company :companies)
-         (reset! hasmounted true)))}))
+  (memoize #((ws/get-all :company :companies)
+    ;(println "getcompanies")
+    nil)))
 
 (defn company-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -42,8 +36,7 @@
       [:tr
       [:td (:db/id company)]
       [:td (:company/name company)]
-       [:td [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]]
-       ])))
+       [:td [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]]])))
 
 (defn company-list []
   (let [namn (atom "")]
@@ -67,7 +60,7 @@
   [:div
    [navbar]
    [:div.container
-    [getcompanies]
+    (getcompanies)
     [:header#header
      [:h2 "Företag"]
        "Valt Projekt: " (:project/name @active-project)

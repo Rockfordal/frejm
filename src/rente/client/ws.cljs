@@ -53,7 +53,8 @@
   (chsk-send!
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
-    #(js/console.log (str "vi fick : " %))))
+    ;#(js/console.log (str "vi fick : " %))
+    #(dispatch [:get-message (second %)])))
 
 ;--------------------------------------------------
 
@@ -100,11 +101,12 @@
   (chsk-send!
     [:rente/add-name {:data item :key key :type type}]
     2000
-    (fn [x]
-      (println "x:" x)
-    ;  (let [data (second x)
-    ;        id   (:db/id data)
-    ;        data (:data data)
-    ;        r    {:db/id id :data data :key key :type type :types types}]
-    ;    (dispatch [:add-name-success r]))))
-  )))
+    #(let [data (second %)
+            id   (:db/id data)
+            dat (:data data)
+            r    {:data data :key key :type type :types types}]
+       (do
+         (println "ws:" data id dat r)
+         (dispatch [:add-name-success r])
+         )
+        )))
