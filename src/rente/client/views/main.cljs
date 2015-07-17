@@ -1,8 +1,10 @@
 (ns rente.client.views.main
   (:require [rente.client.views.layout :as layout :refer [navbar]]
             [re-frame.core   :as re-frame :refer [subscribe dispatch]]
-            [reagent.core    :as reagent  :refer [atom]]))
+            [rente.client.views.companyedit :as companyedit]
+            [reagent.core    :as reagnt  :refer [atom]]))
 ;(enable-console-print!)
+
 
 (defn notfound-panel [data]
   (let [active-panel (subscribe [:active-panel])]
@@ -37,7 +39,8 @@
 
 ;; --------------------
 (defmulti  panels identity)
-(defmethod panels :home-panel     [] [home-panel])
+(defmethod panels :home-panel        [] [home-panel])
+(defmethod panels :companyedit-panel [] [companyedit/companyedit-panel])
 
 (defn create-my-routes []
   (let [routes (subscribe [:routes])]

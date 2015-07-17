@@ -21,6 +21,10 @@
   (defroute "/" []
     (dispatch [:set-active-panel :home-panel]))
 
+  (defroute "/companies/:id" {:as params}
+    ;(println "Företag: " (:id params))
+    (dispatch [:set-active-panel :companyedit-panel (:id params)]))
+
   (let [routes (subscribe [:routes])]
     (doseq [route @routes]
       (let [panel   (:panel route)
