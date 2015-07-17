@@ -4,16 +4,15 @@
             [rente.client.ws :as ws]
             [re-frame.core :refer [subscribe dispatch]]))
 
-(defn noob [] [:div])
-
 (def hasmounted (atom false))
+(defn noob [] [:div])
 
 (def getcompanies
   (with-meta noob
     {:component-did-mount
      (fn [_]
        (when-not @hasmounted
-         (ws/get-companies)
+         (ws/get-all :company :companies)
          (reset! hasmounted true)))}))
 
 (defn company-input [{:keys [title on-save on-stop]}]
@@ -41,41 +40,42 @@
   (let [editing (atom false)]
     (fn [company]
       [:tr
-      [:td (:id company)]
+      [:td (:db/id company)]
       [:td (:company/name company)]
-       [:td [:a {:href "/#company" :on-click #(ws/del-company (:id company))} [:i.material-icons "delete"]]]
+       [:td [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]]
        ])))
 
-(defn company-list [companies]
+(defn company-list []
   (let [namn (atom "")]
-    (fn []
+    (fn [companies]
       [:table
+       [:tbody
        [:tr
         [:th "Id"]
         [:th "Namn"]
 ;        [:th "Orgnr"]
 ;        [:th "Info"]
-        [:th]
-       ]
+        [:th]]
        (for [company @companies]
-           ^{:key (:id company)} [company-item company])
+           ^{:key (:db/id company)} [company-item company])
        ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
-       [:span " "
-        ]
-       ;[atom-input namn]
-       ])))
+       [:span " "]]])))
 
 (defn company-panel []
-  (let [companies (subscribe [:companies])]
+  (let [companies (subscribe [:companies])
+        active-project (subscribe [:active-project])]
   [:div
    [navbar]
    [:div.container
     [getcompanies]
     [:header#header
      [:h2 "Företag"]
-         [company-input {:id "new-todo"
-                        :placeholder "Nytt företag?"
-                        :on-save #(ws/add-company %)}]]
+       "Valt Projekt: " (:project/name @active-project)
+       [company-input {:id "new-todo"
+                       :placeholder "Nytt företag?"
+                       :on-save #(ws/add-name % :company/name :company :companies)}]]
+                       ;:on-save #(ws/add-company2project % "ica")}]]
+
     [:div.row
       [company-list companies]
       ;(clj->js (first @companies))
