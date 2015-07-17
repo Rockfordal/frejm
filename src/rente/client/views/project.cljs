@@ -26,8 +26,8 @@
                                      27 (stop)
                                      nil)})])))
 
-(def project-edit (with-meta project-input
-  {:component-did-mount #(.focus (reagent/dom-node %))}))
+;(def project-edit (with-meta project-input
+;  {:component-did-mount #(.focus (reagent/dom-node %))}))
 
 (defn project-item [project] ; obs vet inte om vi ska ta emot projekt här eller i fn []
   (let [editing (atom false)
