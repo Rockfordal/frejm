@@ -46,6 +46,7 @@
 
 (sente/start-chsk-router! ch-chsk event-msg-handler*)
 
+;------------ test -------------------------------------
 (defn test-socket-event []
   (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
 
@@ -57,8 +58,6 @@
     #(dispatch [:get-message (second %)])))
 
 ;--------------------------------------------------
-
-
 ;(defn get-projects []
 ;  (chsk-send!
 ;    [:rente/get-projects {:message "vill hämta projekt"}]
@@ -71,7 +70,6 @@
 ;    2000
 ;    #(dispatch [:add-project-success (second %)])))
 
-
 (defn add-company2project [companyname projectname]
   (chsk-send!
     [:rente/add-company2project {:company/name companyname :project/name projectname}]
@@ -81,7 +79,6 @@
     ))
 
 ;(defmethod event-msg-handler :rente/add-company-for-project
-
 
 ;; Polymorfiska
 
@@ -102,11 +99,5 @@
     [:rente/add-name {:data item :key key :type type}]
     2000
     #(let [data (second %)
-            id   (:db/id data)
-            dat (:data data)
-            r    {:data data :key key :type type :types types}]
-       (do
-         (println "ws:" data id dat r)
-         (dispatch [:add-name-success r])
-         )
-        )))
+           r    {:data data :key key :type type :types types}]
+      (dispatch [:add-name-success r]))))

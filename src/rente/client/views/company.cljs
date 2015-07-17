@@ -2,12 +2,21 @@
   (:require [reagent.core  :as reagent :refer [atom]]
             [rente.client.views.layout :as layout :refer [navbar]]
             [rente.client.ws :as ws]
+            [secretary.core :refer [IRenderRoute render-route encode-query-params]]
             [re-frame.core :refer [subscribe dispatch]]))
 
 (def getcompanies
   (memoize #((ws/get-all :company :companies)
     ;(println "getcompanies")
     nil)))
+
+(defrecord Company [id]
+  IRenderRoute
+  (render-route [_]
+    (str "/#companies/" id))
+  (render-route [this params]
+    (str (render-route this) "?"
+         (encode-query-params params))))
 
 (defn company-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -27,8 +36,8 @@
                                      27 (stop)
                                      nil)})])))
 
-(def company-edit (with-meta company-input
-  {:component-did-mount #(.focus (reagent/dom-node %))}))
+;(def company-edit (with-meta company-input
+;  {:component-did-mount #(.focus (reagent/dom-node %))}))
 
 (defn company-item []
   (let [editing (atom false)]
@@ -36,8 +45,13 @@
       [:tr
       [:td (:db/id company)]
       [:td (:company/name company)]
-       [:td [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]]])))
-
+      [:td (:company/orgnr company)]
+       [:td
+        [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]
+        [:a {:href (render-route (Company. (:db/id company)))} [:i.material-icons "view_headline"]]
+        ;[:P (:db/id company)]
+        ]])))
+  
 (defn company-list []
   (let [namn (atom "")]
     (fn [companies]
@@ -46,7 +60,7 @@
        [:tr
         [:th "Id"]
         [:th "Namn"]
-;        [:th "Orgnr"]
+        [:th "Orgnr"]
 ;        [:th "Info"]
         [:th]]
        (for [company @companies]
@@ -73,7 +87,7 @@
       [company-list companies]
       ;(clj->js (first @companies))
      ]
-    ;[:a.btn {:on-click #(println (count @companies))} "antal"]
+    ;[:a.btn {:on-click #(println (count @companies))} "antal"]   
     ;[:a.btn {:on-click #(js/alert "tjo")} "Alert"]
     ;[:a.btn {:on-click #(js/console.log "tjo")} "Log"]
     ]

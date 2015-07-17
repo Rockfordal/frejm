@@ -9,7 +9,6 @@
 
 
 ;; -- Middleware för todo -----------------------------------------------------
-;;
 
 (def ->ls (after todos->ls!))    ;; middleware to store todos into local storage
 
@@ -34,16 +33,73 @@
 ;; -- Handlers ----------------------------------------------------------------
 
 (register-handler
-  :initialize-db
+  :initialize-db                           ; app.cljs triggar denna
   (fn [_ [_  default]]
-    (merge default (ls->todos))
-    ))
+    (merge default (ls->todos))))
 
 (register-handler
-  :set-active-panel          ; "routern triggar denna"
-  (fn [db [_ active-panel]]
-    (assoc db :active-panel active-panel)))
+  :set-active-panel                         ; routern triggar denna
+  (fn [db [_ active-panel id]]
+    (-> db
+      (assoc :active-panel active-panel)
+      (assoc :active-panel-id id))))
 
+(register-handler 
+  :select-project
+  (fn [db [_ project]]
+    (assoc db :active-project project))) 
+
+(register-handler                           ; ej klar
+  :add-company2project-success
+  (fn [db [_ data]]
+    ;(let [company (assoc (:company data) :id (:id data))]
+    ;(assoc db :companies (merge (:companies db) company)))
+    (println "add2")
+    db))
+
+;; Sente demo
+(register-handler
+  :get-message
+  (fn [db [_ msg]]
+    (let [text (str (:message msg))]
+          (assoc db :messages text))))
+
+
+;; -- Handlers Globala --------------------------------------------------------
+(register-handler
+  :get-success
+  (fn [db [_ coll typ]]
+    (assoc db typ coll))) 
+
+(register-handler
+  :delete-success
+  (fn [db [_ id type]]
+    (let [old (type db)
+          new (remove #(when (= id (:db/id %)) %) old)]
+      (assoc db type new))))
+
+(register-handler
+  :add-name-success
+  (fn [db [_ data]]
+    (let [id    (:db/id (:data data)) ; 17592186045543
+          val   (:data (:data data)) ; "hej"
+          key   (:key data)          ; :company/name
+          types (:types data)        ; :companies
+          ;item  {:db/id id :type :company key val}
+          item  {:db/id id key val}] ;
+      (do
+        ;(println "db:" db)
+        ;(println "val: " val)
+        ;(println "key: " key)
+        ;(println "data:" data)
+        ;(println "item:" item)
+        ;(println "types:" types)
+        (assoc db types (merge (types db) item))
+        ;db
+      ))))
+
+
+;; -- Handlers Todos ----------------------------------------------------------
 
 ; test för att sköta val av filter i handler istället för via url:
 (register-handler
@@ -116,8 +172,9 @@
               todos
               (keys todos)))))
 
-;; Exempel på get add del
+;; -- Handlers Exempel ----------------------------------------------------------
 
+;; Exempel på get add del
 ;(register-handler
 ;  :get-projects-success
 ;  (fn [db [_ projects]]
@@ -125,7 +182,7 @@
     ;(println "antal: " (count projects))
     ;(println "project: " projects)
 ;    (assoc db :projects projects) ; returnera db fast med nya projekten
-    ;db                            ; ändra inget - returnera samma db
+;    db                            ; ändra inget - returnera samma db
 ;    )) 
 
 ;(register-handler
@@ -141,66 +198,8 @@
 ;          new (remove #(when (= id (:id %)) %) old)]
 ;    (assoc db :projects new))))
 
-(register-handler
-  :select-project
-  (fn [db [_ project]]
-    (assoc db :active-project project))) 
 
-;; Relationer
-(register-handler
-  :add-company2project-success
-  (fn [db [_ data]]
-    ;(let [company (assoc (:company data) :id (:id data))]
-    ;(assoc db :companies (merge (:companies db) company)))
-    (println "add2")
-    db
-    ))
-
-;; funkar på allt
-
-(register-handler
-  :get-success
-  (fn [db [_ coll typ]]
-    (assoc db typ coll))) 
-
-(register-handler
-  :delete-success
-  (fn [db [_ id type]]
-    (let [old (type db)
-          new (remove #(when (= id (:db/id %)) %) old)]
-      (assoc db type new))))
-
-(register-handler
-  :add-name-success
-  (fn [db [_ data]]
-    (let [id    (:db/id (:data data)) ; 17592186045543
-          val   (:data (:data data)) ; "hej"
-          key   (:key data)          ; :company/name
-          types (:types data)        ; :companies
-          ;item  {:db/id id :type :company key val}
-          item  {:db/id id key val}] ;
-      (do
-        ;(println "db:" db)
-        ;(println "val: " val)
-        ;(println "key: " key)
-        ;(println "data:" data)
-        ;(println "item:" item)
-        ;(println "types:" types)
-        (assoc db types (merge (types db) item))
-        ;db
-      ))))
-
-
-;; Sente demo
-(register-handler
-  :get-message
-  (fn [db [_ msg]]
-    (let [text (str (:message msg))]
-          (assoc db :messages text))))
-
-
-;; Parse.com
-
+;; -- Handlers Parse.com --------------------------------------------------------
 ;(re-frame/register-handler
 ;  :getcourses
 ;  (fn [db _]
@@ -243,8 +242,7 @@
 ;   db))
 
 
-;; http get
-
+;; -- Handlers http get ---------------------------------------------------------
 ;(defn getstart []
 ;  (let [txt "http://textfiles.com/100/914bbs.txt"
 ;        git "https://api.github.com/users"

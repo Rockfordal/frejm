@@ -17,6 +17,8 @@
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}] ;; Wrap for logging, catching, etc.:
   (event-msg-handler ev-msg))
 
+;------------- test ------------------------------------
+
 (defmethod event-msg-handler :chsk/ws-ping [_]
     (swap! ping-counts inc)
     (when (= 0 (mod @ping-counts 10))
@@ -30,18 +32,13 @@
 
 ;-------------------------------------------------------
 
-(defmethod event-msg-handler :rente/get-projects
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
+;(defmethod event-msg-handler :rente/get-projects
+;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+;    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
 
-(defmethod event-msg-handler :rente/get-companies
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (?reply-fn [:rente/get-companies (db/expand (companies/getedn))]))
-
-(defmethod event-msg-handler :rente/get
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (let [data (map d/touch (db/read :type (:type ?data)))]
-    (?reply-fn [:rente/get data])))
+;(defmethod event-msg-handler :rente/get-companies
+;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+;    (?reply-fn [:rente/get-companies (db/expand (companies/getedn))]))
 
 ;(defmethod event-msg-handler :rente/add-project
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -49,19 +46,26 @@
 ;      (?reply-fn [:rente/add-project {:id id :project (:project ?data)}])
 ;      (?reply-fn [:rente/add-project {:message (str "misslyckades adda")}])))
 
-(defmethod event-msg-handler :rente/add-company2project
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  ;(if-let [id (companies/create! (:company ?data))]
-  ;(if-let [id (companies/create-for-project-name "yahoo" "ica")]
-  (if-let [id (companies/create-for-project-name (:company/name ?data) "ica")]
-  ;(if-let [id (companies/create-for-project-name (:company/name (:company ?data)) (:project/name ?data))]
-      ;(?reply-fn [:rente/add-company2project {:id id :company (:company ?data)}])
-      (?reply-fn [:rente/add-company2project {:id id}])
-      (?reply-fn [:rente/add-company2project {:message (str "misslyckades adda")}])))
+(comment
+  (defmethod event-msg-handler :rente/add-company2project
+    [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    ;(if-let [id (companies/create! (:company ?data))]
+    ;(if-let [id (companies/create-for-project-name "yahoo" "ica")]
+    (if-let [id (companies/create-for-project-name (:company/name ?data) "ica")]
+    ;(if-let [id (companies/create-for-project-name (:company/name (:company ?data)) (:project/name ?data))]
+        ;(?reply-fn [:rente/add-company2project {:id id :company (:company ?data)}])
+        (?reply-fn [:rente/add-company2project {:id id}])
+        (?reply-fn [:rente/add-company2project {:message (str "misslyckades adda")}])))
+)
 
 ;(defn create-for-project-name [company-name project-name]
 
 ;------------ generella --------------------------------
+
+(defmethod event-msg-handler :rente/get
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (let [data (map d/touch (db/read :type (:type ?data)))]
+    (?reply-fn [:rente/get data])))
 
 (defmethod event-msg-handler :rente/delete
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -75,13 +79,10 @@
   (let [kw (keyword (:key ?data))
         typ (keyword (:type ?data))
         dat (:data ?data)
-        ;id (db/create! {:type typ kw dat})]
-        ;id (db/create-eid {:type typ kw dat})]    ; {:type :company :company/name "ica" }
         id (db/create-entity {:type typ kw dat})]  ; {:type :company :company/name "ica" }
    (if id
      (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
-     (?reply-fn [:rente/add-name {:message "misslyckades adda"}]))
-))
+     (?reply-fn [:rente/add-name {:message "misslyckades adda"}]))))
 
 ;-------------------------------------------------------
 
