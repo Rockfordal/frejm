@@ -7,7 +7,7 @@
               [rente.client.appstate :refer [default-value]]
               [rente.client.views.main :as main :refer [main-panel]]
               [rente.client.routes :as routes :refer [app-routes]]
-              [rente.client.ws :as ws])
+              [rente.client.ws :as ws]))
 
 
 (defmulti handle-event (fn [data [ev-id ev-data]] ev-id))
