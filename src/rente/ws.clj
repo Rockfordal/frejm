@@ -2,11 +2,10 @@
   (:require [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]
             [clojure.core.async :as async]
-            [rente.animals :as animals]
-            [rente.todos :as todos]
+            [datomic.api :as d]
+            [rente.db :as db]
             [rente.projects :as projects]
             [rente.companies :as companies]
-            [rente.db :as db]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]))
@@ -28,43 +27,8 @@
   (if ?reply-fn
     (?reply-fn [:rente/testevent {:message (str "Server Callback fick: " ?data)}])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
+
 ;-------------------------------------------------------
-
-(defmethod event-msg-handler :rente/get-animals
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (?reply-fn [:rente/get-animals (db/expand (animals/getedn))]))
-
-(defmethod event-msg-handler :rente/del-animal
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (if (animals/delete! (:id ?data))
-      (?reply-fn [:rente/del-animal {:message (str "lyckades radera") :id (:id ?data) :animal ?data }])
-      (?reply-fn [:rente/del-animal {:message (str "misslyckades radera")}])))
-
-(defmethod event-msg-handler :rente/add-animal
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (if-let [id (animals/create! (:animal ?data))]
-      (?reply-fn [:rente/add-animal {:message (str "lyckades adda") :id id :animal (:animal ?data)}])
-      (?reply-fn [:rente/add-animal {:message (str "misslyckades adda")}])))
-
-
-(defmethod event-msg-handler :rente/add-todo
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (if-let [id (todos/create! (:todo ?data))]
-      (?reply-fn [:rente/add-todo {:message (str "lyckades adda") :id id :todo (:todo ?data)}])
-      (?reply-fn [:rente/add-todo {:message (str "misslyckades adda")}])))
-
-(defmethod event-msg-handler :rente/add-project
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (if-let [id (projects/create! (:project ?data))]
-      (?reply-fn [:rente/add-project {:message (str "lyckades adda projektet ") :id id :project (:project ?data)}])
-      (?reply-fn [:rente/add-project {:message (str "misslyckades adda projekt ")}])))
-
-(defmethod event-msg-handler :rente/add-company
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (if-let [id (companies/create! (:company ?data))]
-      (?reply-fn [:rente/add-company {:id id :company (:company ?data)}])
-      ;(?reply-fn [:rente/add-company (assoc {:id id} ((:company ?data)))
-      (?reply-fn [:rente/add-company {:message (str "misslyckades adda företag ")}])))
 
 (defmethod event-msg-handler :rente/get-projects
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -74,19 +38,57 @@
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
     (?reply-fn [:rente/get-companies (db/expand (companies/getedn))]))
 
-(defmethod event-msg-handler :rente/del-company
+(defmethod event-msg-handler :rente/get
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (if (companies/delete! (:id ?data))
-      (?reply-fn [:rente/del-company {:id (:id ?data)}])
-      (?reply-fn [:rente/del-company {:message (str "misslyckades radera")}])))
+  (let [data (map d/touch (db/read :type (:type ?data)))]
+    (?reply-fn [:rente/get data])))
 
-(defmethod event-msg-handler :rente/del-project
+;(defmethod event-msg-handler :rente/add-project
+;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+;  (if-let [id (projects/create! (:project ?data))]
+;      (?reply-fn [:rente/add-project {:id id :project (:project ?data)}])
+;      (?reply-fn [:rente/add-project {:message (str "misslyckades adda")}])))
+
+(defmethod event-msg-handler :rente/add-company2project
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (if (projects/delete! (:id ?data))
-      (?reply-fn [:rente/del-project {:id (:id ?data)}])
-      (?reply-fn [:rente/del-project {:message (str "misslyckades radera")}])))
+  ;(if-let [id (companies/create! (:company ?data))]
+  ;(if-let [id (companies/create-for-project-name "yahoo" "ica")]
+  (if-let [id (companies/create-for-project-name (:company/name ?data) "ica")]
+  ;(if-let [id (companies/create-for-project-name (:company/name (:company ?data)) (:project/name ?data))]
+      ;(?reply-fn [:rente/add-company2project {:id id :company (:company ?data)}])
+      (?reply-fn [:rente/add-company2project {:id id}])
+      (?reply-fn [:rente/add-company2project {:message (str "misslyckades adda")}])))
+
+;(defn create-for-project-name [company-name project-name]
+
+;------------ generella --------------------------------
+
+(defmethod event-msg-handler :rente/delete
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    ;(if (db/delete! (:id ?data))
+    (if (db/delete-eid (:db/id ?data))
+      (?reply-fn [:rente/delete {:db/id (:db/id ?data)}])
+      (?reply-fn [:rente/delete {:message (str "misslyckades radera")}])))
+
+(defmethod event-msg-handler :rente/add-name
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (let [kw (keyword (:key ?data))
+        typ (keyword (:type ?data))
+        dat (:data ?data)
+        ;id (db/create! {:type typ kw dat})]
+        id (db/create-eid {:type typ kw dat})]
+   (if id
+     (do
+       (println "success")
+     (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
+       )
+     (do
+       (println "fail")
+       (?reply-fn [:rente/add-name {:message (str "misslyckades adda")}]))
+     )))
 
 ;-------------------------------------------------------
+
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)

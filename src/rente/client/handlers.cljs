@@ -116,54 +116,71 @@
               todos
               (keys todos)))))
 
+;; Exempel på get add del
 
-;; Företag
-
-(register-handler
-  :get-companies-success
-  (fn [db [_ companies]]
-    ;(println "företag:" companies)
-    (assoc db :companies companies)
-    ;db
-    )) 
-
-(register-handler
-  :add-company-success
-  (fn [db [_ data]]
-    (let [company (assoc (:company data) :id (:id data))]
-    (assoc db :companies (merge (:companies db) company)))))
-
-(register-handler
-  :del-company-success
-  (fn [db [_ id]]
-    (let [old (:companies db)
-          new (remove #(when (= id (:id %)) %) old)]
-    (assoc db :companies new))))
-
-;; Projekt
-
-(register-handler
-  :get-projects-success
-  (fn [db [_ projects]]
+;(register-handler
+;  :get-projects-success
+;  (fn [db [_ projects]]
     ;(assoc db :projects projects)
-    ;(println "get project success antal: " (count projects))
-    ;(println "get project success: " projects)
-    (assoc db :projects projects)
-    ;db
-    )) 
+    ;(println "antal: " (count projects))
+    ;(println "project: " projects)
+;    (assoc db :projects projects) ; returnera db fast med nya projekten
+    ;db                            ; ändra inget - returnera samma db
+;    )) 
+
+;(register-handler
+;  :add-project-success
+;  (fn [db [_ data]]
+;    (let [project (assoc (:project data) :id (:id data))]
+;    (assoc db :projects (merge (:projects db) project)))))
+
+;(register-handler
+;  :del-project-success
+;  (fn [db [_ id]]
+;    (let [old (:projects db)
+;          new (remove #(when (= id (:id %)) %) old)]
+;    (assoc db :projects new))))
 
 (register-handler
-  :add-project-success
+  :select-project
+  (fn [db [_ project]]
+    (assoc db :active-project project))) 
+
+;; Relationer
+(register-handler
+  :add-company2project-success
   (fn [db [_ data]]
-    (let [project (assoc (:project data) :id (:id data))]
-    (assoc db :projects (merge (:projects db) project)))))
+    ;(let [company (assoc (:company data) :id (:id data))]
+    ;(assoc db :companies (merge (:companies db) company)))
+    (println "add2")
+    db
+    ))
+
+;; funkar på allt
 
 (register-handler
-  :del-project-success
-  (fn [db [_ id]]
-    (let [old (:projects db)
-          new (remove #(when (= id (:id %)) %) old)]
-    (assoc db :projects new))))
+  :get-success
+  (fn [db [_ coll typ]]
+    (assoc db typ coll))) 
+
+(register-handler
+  :delete-success
+  (fn [db [_ id type]]
+    (let [old (type db)
+          new (remove #(when (= id (:db/id %)) %) old)]
+      (assoc db type new))))
+
+(register-handler
+  :add-name-success
+  (fn [db [_ data]]
+    (let [id    (:id data)
+          val   (:data data)
+          key   (:key data)
+          item  {:db/id id key val}
+          types (:types data)]
+      (assoc db types (merge (types db) item))
+      (println "data:" data)
+      )))
 
 
 ;; Parse.com
@@ -208,6 +225,9 @@
 ;     )
 ;     (js/alert "fick inga kurser"))
 ;   db))
+
+
+;; http get
 
 ;(defn getstart []
 ;  (let [txt "http://textfiles.com/100/914bbs.txt"

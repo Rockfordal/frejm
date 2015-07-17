@@ -54,77 +54,57 @@
     [:rente/testevent {:message "klienten säger Callback!"}]
     2000
     #(js/console.log (str "vi fick : " %))))
+
 ;--------------------------------------------------
 
-(defn get-animals []
+
+;(defn get-projects []
+;  (chsk-send!
+;    [:rente/get-projects {:message "vill hämta projekt"}]
+;    2000
+;    #(dispatch [:get-projects-success (second %)])))
+
+;(defn add-project [project]
+;  (chsk-send!
+;    [:rente/add-project {:project {:project/name project}}]
+;    2000
+;    #(dispatch [:add-project-success (second %)])))
+
+
+(defn add-company2project [companyname projectname]
   (chsk-send!
-    [:rente/get-animals {:message "vill hämta animals"}]
+    [:rente/add-company2project {:company/name companyname :project/name projectname}]
     2000
-    #(dispatch [:get-animals-success (second %)])))
+    #(println "mja:" %)
+    ;#(dispatch [:add-company2project-success "jultomte"])
+    ))
 
-(defn del-animal [id]
-  (chsk-send!
-    [:rente/del-animal
-     {:message "vill radera animal" :id id}]
-     2000
-     #(dispatch [:del-animal-success (second %)])))
-     ;first %   :rente/del-animal
-     ;second %  
+;(defmethod event-msg-handler :rente/add-company-for-project
 
-(defn add-animal [animal]
-  (chsk-send!
-    [:rente/add-animal
-     {:message "vill skapa animal" :animal animal}]
-     2000
-  #(dispatch [:add-animal-success (second %)])
-))
- ;first %   :rente/del-animal
 
-(defn add-todo [todo]
+;; Polymorfiska
+
+(defn get-all [type types]
   (chsk-send!
-    [:rente/add-todo {:todo todo}]
+    [:rente/get {:type type}]
     2000
-    #(dispatch [:add-todo-success (second %)]))
-    ;(println "add-todo: " todo)
-    ;#(dispatch [:add-todo-success todo])
-)
+    #(dispatch [:get-success (second %) types])))
 
-(defn get-companies []
-  (println "hämtar företag!")
+(defn delete [id type]
   (chsk-send!
-    [:rente/get-companies {:message "vill hämta företag"}]
+    [:rente/delete {:db/id id :type type}]
     2000
-    #(dispatch [:get-companies-success (second %)])))
+    #(dispatch [:delete-success (:db/id (second %)) type])))
 
-(defn add-company [company]
+(defn add-name [item key type types]
   (chsk-send!
-    [:rente/add-company {:company {:company/name company :company/orgnr "010"}}]
+    [:rente/add-name {:data item :key key :type type}]
     2000
-    #(dispatch [:add-company-success (second %)])))
-
-(defn del-company [id]
-  (chsk-send!
-    [:rente/del-company {:id id}]
-    2000
-    #(dispatch [:del-company-success (:id (second %))])))
-
-;; Projects
-
-(defn get-projects []
-  (chsk-send!
-    [:rente/get-projects {:message "vill hämta projekt"}]
-    2000
-    #(dispatch [:get-projects-success (second %)])))
-
-(defn add-project [project]
-  (chsk-send!
-    [:rente/add-project {:project {:project/name project}}]
-    2000
-    #(dispatch [:add-project-success (second %)])))
-
-(defn del-project [id]
-  (chsk-send!
-    [:rente/del-project {:id id}]
-    2000
-    ;#(println "del-project reply: " id)))
-    #(dispatch [:del-project-success (:id (second %))])))
+    (fn [x]
+      (println "x:" x)
+    ;  (let [data (second x)
+    ;        id   (:db/id data)
+    ;        data (:data data)
+    ;        r    {:db/id id :data data :key key :type type :types types}]
+    ;    (dispatch [:add-name-success r]))))
+  )))
