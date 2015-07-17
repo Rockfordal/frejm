@@ -5,6 +5,9 @@
 ;; Datomic
 (defonce connection (atom nil))
 
+;(def conn (d/connect uri))
+;(def db (d/db conn))
+
 (defn conn []
   (if (nil? @connection)
     (throw (RuntimeException. "Ingen databasanslutning."))
@@ -25,11 +28,6 @@
 (defn db []
   (d/db (conn)))
 
-;; db api
-
-;(defn pulla []
-;  (d/pull (db) '[*] 17592186045647))
-
 (defonce max-id (atom 0))
 
 (defn next-id []
@@ -40,6 +38,12 @@
         dbid (d/tempid :db.part/user)]
     @(d/transact (conn) (list (assoc m :db/id dbid :id id)))
     id))
+
+(defn create-eid [m]
+  (let [dbid (d/tempid :db.part/user)]
+    @(d/transact (conn) (list (assoc m :db/id dbid)))
+    dbid
+    ))
 
 (defn read
   ([id]
@@ -52,16 +56,25 @@
 
 (defn update! [id m]
   (if-let [found (read id)]
-    (do @(d/transact (conn) (map (fn [k v] [:db/add (:db/id found) k v])
-                                 (keys m) (vals m)))
+    (do @(d/transact (conn)
+       (map (fn [k v] [:db/add (:db/id found) k v])
+                (keys m) (vals m)))
         true)
     false))
+
+(defn delete-entity [eid]
+  (do @(d/transact (conn) [[:db.fn/retractEntity eid]])
+    true))
 
 (defn delete! [id]
   (if-let [found (read id)]
     (do @(d/transact (conn) [[:db.fn/retractEntity (:db/id found)]])
         true)
     false))
+
+(defn delete-eid [eid]
+  (do @(d/transact (conn) [[:db.fn/retractEntity eid]])
+  true))
 
 (defn expand
   ([e]
