@@ -4,17 +4,9 @@
             [rente.client.ws :as ws]
             [re-frame.core :refer [subscribe dispatch]]))
 
-(defn noob [] [:div])
-
-(def hasmounted (atom false))
-
 (def getprojects
-  (with-meta noob
-    {:component-did-mount
-     (fn [_]
-       (when-not @hasmounted
-         (ws/get-projects)
-         (reset! hasmounted true)))}))
+  (memoize #((ws/get-all :project :projects)
+             nil)))
 
 (defn project-input [{:keys [title on-save on-stop]}]
   (let [val (atom title)
@@ -37,11 +29,12 @@
 (def project-edit (with-meta project-input
   {:component-did-mount #(.focus (reagent/dom-node %))}))
 
-(defn project-item []
-  (let [editing (atom false)]
-    (fn [project]
+(defn project-item [project] ; obs vet inte om vi ska ta emot projekt här eller i fn []
+  (let [editing (atom false)
+        id (:id project)]
+    (fn []
       [:tr
-      [:td (:id project)]
+      [:td id]
       [:td (:project/name project)]
      ; [:td {:class (str (if @editing "editing"))}
      ;  (if @editing
@@ -50,37 +43,38 @@
      ;                   :on-save #(dispatch [:save-project id %])
      ;                   :on-stop #(reset! editing false)}]
      ;    [:div {:for id :on-double-click #(reset! editing true)} name])]
-       [:td [:a {:href "/#project" :on-click #(ws/del-project (:id project))} [:i.material-icons "delete"]]]
-       ]
-      )))
+       [:td
+        [:a {:href "/#project" :on-click #(ws/delete id :projects)} [:i.material-icons "delete"]]
+        [:span " "] [:span " "]
+        [:a {:href "/#project" :on-click #(dispatch [:select-project project])} [:i.material-icons "airplay"]]]])))
 
 (defn project-list []
   (let [namn (atom "")]
     (fn [projects]
       [:table
-       [:tr
-        [:th "Id"]
-        [:th "Namn"]
-        [:th]
-       ]
-
-       (for [project @projects]
-         ^{:key (:id project)} [project-item project])
-       
-       [:span " "]
-       ])))
+       [:tbody
+        [:tr
+            [:th "Id"]
+            [:th "Namn"]
+            [:th]
+        ]
+        (for [project @projects]
+            ^{:key (:id project)} [project-item project])
+        [:span " "]]])))
 
 (defn project-panel []
-  (let [projects (subscribe [:projects])]
+  (let [projects (subscribe [:projects])
+        active-project (subscribe [:active-project])]
   [:div
    [navbar]
    [:div.container
-    [getprojects]
+    (getprojects)
     [:header#header
      [:h2 "Projekt"]
+       "Valt Projekt: " (:project/name @active-project)
          [project-input {:id "new-todo"
                          :placeholder "Nytt projekt?"
-                         :on-save #(ws/add-project %)}]]
+                         :on-save #(ws/add-name % :project/name :project :projects)}]]
     [:div.row
       [project-list projects]]]
    ]))
