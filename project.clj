@@ -46,10 +46,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.5.1"
 
-  :dependencies [[org.clojure/clojure "1.7.0-RC1"]
+  :dependencies [[org.clojure/clojure "1.7.0-RC2"]
                  [org.clojure/clojurescript "0.0-3308"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 ;[com.tvachon/core.async "0.2.0"]
                  [com.stuartsierra/component "0.2.3"]
                  [environ "1.0.0"]
                  [ch.qos.logback/logback-classic "1.1.3"]
@@ -62,16 +61,14 @@
                  [compojure "1.3.4"]
                  [http-kit "2.1.19"]
                  ;[liberator "0.12.0"]
-                 ;[fogus/ring-edn "0.2.0"]
-                 ;[clj-json "0.5.3"]
 
                  [com.datomic/datomic-free "0.9.5153"
                   :exclusions [joda-time
                                org.slf4j/jul-to-slf4j
                                org.slf4j/slf4j-nop]]
 
-                 [com.taoensso/sente "1.5.0"          :exclusions [org.clojure/tools.reader]]
-                 [com.cognitect/transit-clj "0.8.275" :exclusions [commons-codec]]
+                 [com.taoensso/sente "1.5.0" :exclusions [org.clojure/tools.reader]]
+                 [com.cognitect/transit-clj  "0.8.275" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.220"]
 
                  ; Klient
@@ -91,28 +88,45 @@
                  ;[org.webjars.bower/jquery-ui "1.11.4"]
                  [matchbox "0.0.6"]]
 
-  :plugins [[lein-cljsbuild "1.0.5"]]
+  :plugins [[lein-cljsbuild "1.0.6"] ;
+            ;[lein-bin "0.3.4"]      ; kör uberjars enklare!  target/runs -h  (istället för java -jar target/..)
+            ]
+
+  ;:bin { :name "runs" })
 
   :source-paths ["src"]
   :resource-paths ["resources" "resources-index/prod"]
   :target-path "target/%s"
 
-  :main ^:skip-aot rente.run
+  ;:main ^:skip-aot rente.run
+  :main rente.run
 
   :datomic {:schemas ["resources" ["schema.edn"]]
             :install-location "/opt/datomic"}
 
   :cljsbuild
   {:builds
-   {:client {:source-paths ["src/rente/client"]
-             :compiler
-             {:output-to "resources/public/js/app.js"
-              :output-dir "dev-resources/public/js/out"}}}}
+     {:client {:source-paths ["src/rente/client"]
+               :compiler
+               {:output-to "resources/public/js/app.js"
+                :output-dir "dev-resources/public/js/out"}}}
 
+      :deploy {:source-paths ["src/cljs"]
+                ;:jar true ; DON'T DO THIS
+                :compiler
+                {:output-to "dev-resources/public/js/deploy.js"
+                 :optimizations :none
+                 :pretty-print false}}
+  }
 
   :profiles {
              ;:dev-config {}
              :dev {
+                    ;:source-paths ["dev-resources"]
+                    :source-paths ["dev"]
+                    :resource-paths ^:replace
+                    ["resources" "dev-resources" "resources-index/dev"]
+
                    :datomic {:config "resources/free-transactor.properties"
                              :db-uri "datomic:free://localhost:4334/frejm"}
 
@@ -120,7 +134,6 @@
                    :dependencies [
                                    [org.clojure/tools.namespace "0.2.7"]
                                    [org.clojure/tools.nrepl "0.2.10"]
-                                   ;[figwheel "0.2.5"]
                                    [datascript "0.11.5"]
                                    ]
 
@@ -129,30 +142,48 @@
                               [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
                               [lein-environ "1.0.0"]]
 
-                    :source-paths ["dev"]
-                    :resource-paths ^:replace
-                    ["resources" "dev-resources" "resources-index/dev"]
 
                     :cljsbuild
                     {:builds
                      {:client {:source-paths ["dev"]
                                :compiler
                                {:optimizations :none
-                                :source-map true}}}}
+                                :source-map true}}}
 
                     :figwheel {:http-server-root "public"
                                :port 3449
                                :nrepl-port 7888
                                :repl true
                                :css-dirs ["resources/public/css"]}
-                    ; }
-             }
 
+                    :whitespace {:source-paths ["src/cljs" "test/cljs" "src/brepl"]
+                                :compiler
+                                {:output-to "dev-resources/public/js/whitespace.js"
+                                 :optimizations :whitespace
+                                 :pretty-print true}}
+
+                    :simple {:source-paths ["src/cljs" "test/cljs"]
+                              :compiler
+                              {:output-to "dev-resources/public/js/simple.js"
+                               :optimizations :simple
+                               :pretty-print false}}
+
+                    :advanced {:source-paths ["src/cljs" "test/cljs"]
+                              :compiler
+                              {:output-to "dev-resources/public/js/advanced.js"
+                               :optimizations :advanced
+                               :pretty-print false}}}
+                    ; } ;}
+             }
              :prod {:cljsbuild
                     {:builds
                      {:client {:compiler
-                               {:optimizations :advanced
-                                :pretty-print false}}}}}}
+                               {;output-to "dev-resources/pub/js/sanitized.js"
+                                :optimizations :advanced
+                                :pretty-print false}}}}}
+             :uberjar {:aot :all}
+             }
+  :uberjar-name "frejm.jar"
 
   :aliases {"package"
             ["with-profile" "prod" "do"
