@@ -1,8 +1,8 @@
 (ns rente.client.views.main
   (:require [rente.client.views.layout :as layout :refer [navbar]]
-            [re-frame.core   :as re-frame :refer [subscribe dispatch]]
+            [re-frame.core             :as re-frame :refer [subscribe dispatch]]
             [rente.client.views.companyedit :as companyedit]
-            [reagent.core    :as reagnt  :refer [atom]]))
+            [reagent.core              :as reagent])) ; behövs?
 ;(enable-console-print!)
 
 
