@@ -19,7 +19,9 @@
     (d/create-database uri)
     (reset! connection (d/connect uri))
     (d/transact (conn) schema)
-    nil))
+    ;nil
+    true
+    ))
 
 (defn close []
   (d/release (conn))
