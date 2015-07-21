@@ -1,0 +1,7 @@
+#lein clean
+#lein uberjar
+#java -jar target/uberjar/rente-1.0.0-standalone.jar -h
+java -server -Xms320m -Xmx320m -jar target/uberjar/rente-1.0.0-standalone.jar
+# 256mb för lite
+
+
