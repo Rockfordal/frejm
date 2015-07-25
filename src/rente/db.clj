@@ -1,12 +1,10 @@
 (ns rente.db
   (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]
+            [rente.config :refer [get-config]]
             [clojure.java.io :refer (resource)]))
-;; Datomic
-(defonce connection (atom nil))
 
-;(def conn (d/connect uri))
-;(def db (d/db conn))
+(defonce connection (atom nil))
 
 (defn conn []
   (if (nil? @connection)
@@ -14,14 +12,12 @@
     @connection))
 
 (defn init []
-  (let [uri "datomic:free://localhost:4334/frejm"
+  (let [uri (:dburi (get-config))
         schema (read-string (slurp (resource "schema.edn")))]
     (d/create-database uri)
     (reset! connection (d/connect uri))
     (d/transact (conn) schema)
-    ;nil
-    true
-    ))
+    true))
 
 (defn close []
   (d/release (conn))
@@ -30,19 +26,10 @@
 (defn db []
   (d/db (conn)))
 
-(defonce max-id (atom 0))
-
-(defn next-id []
-  (swap! max-id inc))
-
-;(defn resolve-tempid [tempids tempid]
-;  (d/resolve-tempid (db) tempids tempid))
-
 (defn create! [m]
-  (let [id (next-id)
-        dbid (d/tempid :db.part/user)]
-    @(d/transact (conn) (list (assoc m :db/id dbid :id id)))
-    id))
+  (let [dbid (d/tempid :db.part/user)]
+    @(d/transact (conn) (list (assoc m :db/id dbid)))
+    dbid))
 
 (defn create-eid [m]
   (let [dbid (d/tempid :db.part/user)]                ; #db/id[:db.part/user -1000027]

@@ -1,0 +1,2 @@
+AWSAUTH="aws_access_key_id=$AWS_ACCESS_KEY_ID&aws_secret_key=$AWS_SECRET_KEY"
+DBURI="datomic:ddb://eu-west-1/anludatomic/frejm?$AWSAUTH" lein run
