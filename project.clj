@@ -46,11 +46,11 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.5.1"
 
-  :dependencies [[org.clojure/clojure "1.7.0-RC2"]
+  :dependencies [[environ "1.0.0"]
+                 [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "0.0-3308"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [com.stuartsierra/component "0.2.3"]
-                 [environ "1.0.0"]
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/tools.nrepl "0.2.10"]
