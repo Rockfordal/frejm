@@ -1,36 +1,21 @@
 (ns rente.companies
   (:refer-clojure :exclude [read])
   (:require [rente.db :as db :refer [conn]]
-            [datomic.api :as d]
-            [clj-json.core :as json]))
-   ;[clojure.tools.namespace.repl :refer [refresh refresh-all]]
+            [clojure.tools.namespace.repl :refer [refresh refresh-all]]
+            [datomic.api :as d]))
 
 (defn create!
   ([]  (db/create! {:type :company}))
   ([m] (db/create! (assoc m :type :company))))
 
 (defn read
-  ([]    (db/read :type :company))
-  ([id]  (db/read id))
-  ([k v] (db/read k v)))
+  ([]  (db/read :type :company)))
 
-(defn update! [id m]
-  (db/update! id m))
-
-(defn delete! [id]
-  (db/delete! id))
-
-(defn getjson []
-  (json/generate-string (map db/expand (read))))
-
-(defn getedn []
-  ;(map db/expand (read)))
+(defn getall []
   (map d/touch (read)))
 
 (comment
-  (defn pull-all []
-    (d/pull (db) '[*] 17592186045647)))
-
+  (d/pull (db) '[*] 17592186045647)) ; pull all
 
 (defn find-with-eid []
   (d/touch (d/entity (db/db) (ffirst (d/q '[:find ?e :in $ ?project/name
@@ -46,7 +31,6 @@
 
 (defn create-for-project-name [company-name project-name]
   (let [company-id (d/tempid :db.part/user)]
-  ;@(d/transact conn [{:db/id company-id
   @(d/transact (db/conn) [{:db/id company-id
                            :company/name company-name
                            :type :company}

@@ -11,14 +11,11 @@
             [taoensso.sente.packers.transit :as sente-transit]))
 
 (def ping-counts (atom 0))
-
 (defmulti event-msg-handler :id) ; Dispatch on event-id
-
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}] ;; Wrap for logging, catching, etc.:
   (event-msg-handler ev-msg))
 
 ;------------- test ------------------------------------
-
 (defmethod event-msg-handler :chsk/ws-ping [_]
     (swap! ping-counts inc)
     (when (= 0 (mod @ping-counts 10))
@@ -30,21 +27,23 @@
     (?reply-fn [:rente/testevent {:message (str "Server Callback fick: " ?data)}])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
 
-;-------------------------------------------------------
-
+;------------ gamla ------------------------------------
 ;(defmethod event-msg-handler :rente/get-projects
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
 ;    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
 
-;(defmethod event-msg-handler :rente/get-companies
+;(Defmethod event-msg-handler :rente/get-companies
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-companies (db/expand (companies/getedn))]))
+;    (?reply-fn [:rente/get-companies (db/expand (companies/getall))]))
 
 ;(defmethod event-msg-handler :rente/add-project
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
 ;  (if-let [id (projects/create! (:project ?data))]
 ;      (?reply-fn [:rente/add-project {:id id :project (:project ?data)}])
 ;      (?reply-fn [:rente/add-project {:message (str "misslyckades adda")}])))
+
+;------------ nya --------------------------------------
+;(defn create-for-project-name [company-name project-name]
 
 (comment
   (defmethod event-msg-handler :rente/add-company2project
@@ -58,10 +57,7 @@
         (?reply-fn [:rente/add-company2project {:message (str "misslyckades adda")}])))
 )
 
-;(defn create-for-project-name [company-name project-name]
-
 ;------------ generella --------------------------------
-
 (defmethod event-msg-handler :rente/get
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
   (let [data (map d/touch (db/read :type (:type ?data)))]

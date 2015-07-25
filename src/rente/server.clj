@@ -9,7 +9,7 @@
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
             [rente.projects :as projects]
-            [rente.companies :as companies]
+            [clj-json.core :as json]
             [rente.ws :as ws]))
 
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
@@ -17,9 +17,9 @@
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
+   ; Test
    (GET "/createprojects" req (projects/init))
-   (GET "/getprojects" _ (projects/getjson))
-   ;(GET "/getcompanies" _ (projects/getjson))
+   (GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
 
 (defn app [handler]
@@ -32,7 +32,7 @@
     (-> handler
         (wrap-defaults ring-defaults-config)
         (wrap-resource "/META-INF/resources"))))
-        ;wrap-edn-params  ; vi använder ju sente å transit via ws så detta behövs ej
+        ;wrap-edn-params  ; vi använder ju sente å transit via ws
 
 (defrecord HttpServer [port ws-connection server-stop]
   component/Lifecycle
