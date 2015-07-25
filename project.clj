@@ -50,10 +50,8 @@
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "0.0-3308"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [com.stuartsierra/component "0.2.3"]
-                 [ch.qos.logback/logback-classic "1.1.3"]
                  [org.clojure/tools.logging "0.3.1"]
-                 [org.clojure/tools.nrepl "0.2.10"]
+                 [ch.qos.logback/logback-classic "1.1.3"]
 
                  ; Server
                  [ring/ring-core "1.3.2"]
@@ -63,6 +61,7 @@
                  ;[liberator "0.12.0"]
 
                  ;[com.datomic/datomic-free "0.9.5153"
+                 [com.stuartsierra/component "0.2.3"]
                  [com.datomic/datomic-pro "0.9.5201"
                   :exclusions [joda-time
                                org.slf4j/jul-to-slf4j
@@ -89,7 +88,8 @@
                  ;[org.webjars.bower/jquery-ui "1.11.4"]
                  [matchbox "0.0.6"]]
 
-  :plugins [[lein-cljsbuild "1.0.6"] ;
+  :plugins [[lein-environ "1.0.0"]
+            [lein-cljsbuild "1.0.6"] ;
             ;[lein-bin "0.3.4"]      ; kör uberjars enklare!  target/runs -h  (istället för java -jar target/..)
             ]
 
@@ -102,8 +102,9 @@
   ;:main ^:skip-aot rente.run
   :main rente.run
 
-  :datomic {:schemas ["resources" ["schema.edn"]]
-            :install-location "/opt/datomic"}
+  :datomic {:schemas ["resources" ["schema.edn"]] ; man kan tex adda initial-data.edn i vektorn
+            :install-location  "/opt/datomic-pro"
+            :location "/opt/datomic-pro"}
 
   :cljsbuild
   {:builds
@@ -128,21 +129,16 @@
                     :resource-paths ^:replace
                     ["resources" "dev-resources" "resources-index/dev"]
 
-                   :datomic {:config "resources/free-transactor.properties"
-                             :db-uri "datomic:free://localhost:4334/frejm"}
+                   :datomic {:config "resources/free-transactor.properties"} ; för lein-datomic
 
                    ;:dev-config {
-                   :dependencies [
-                                   [org.clojure/tools.namespace "0.2.7"]
+                   :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                    [org.clojure/tools.nrepl "0.2.10"]
-                                   [datascript "0.11.5"]
-                                   ]
+                                   [datascript "0.11.5"]]
 
                     :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
-                              [lein-datomic "0.2.0"]
-                              [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]
-                              [lein-environ "1.0.0"]]
-
+                              ;[lein-datomic "0.2.0"]
+                              [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]]
 
                     :cljsbuild
                     {:builds
@@ -150,12 +146,6 @@
                                :compiler
                                {:optimizations :none
                                 :source-map true}}}
-
-                    :figwheel {:http-server-root "public"
-                               :port 3449
-                               :nrepl-port 7888
-                               :repl true
-                               :css-dirs ["resources/public/css"]}
 
                     :whitespace {:source-paths ["src/cljs" "test/cljs" "src/brepl"]
                                 :compiler
@@ -184,6 +174,10 @@
                                 :pretty-print false}}}}}
              :uberjar {:aot :all}
              }
+
+  :figwheel {:nrepl-port 7888
+             :port 3449}
+
   :uberjar-name "frejm.jar"
 
   :aliases {"package"
