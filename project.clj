@@ -62,7 +62,8 @@
                  [http-kit "2.1.19"]
                  ;[liberator "0.12.0"]
 
-                 [com.datomic/datomic-free "0.9.5153"
+                 ;[com.datomic/datomic-free "0.9.5153"
+                 [com.datomic/datomic-pro "0.9.5201"
                   :exclusions [joda-time
                                org.slf4j/jul-to-slf4j
                                org.slf4j/slf4j-nop]]
