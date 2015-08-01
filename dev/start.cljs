@@ -9,6 +9,4 @@
  :websocket-url "ws://localhost:3449/figwheel-ws"
  :jsload-callback #(app/render))
 
-(js/console.log "rente.start")
-
 (app/main)

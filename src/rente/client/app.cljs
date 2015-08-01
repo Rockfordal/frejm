@@ -24,6 +24,11 @@
 
 (defonce conn (d/create-conn schema))
 
+(def routes (atom [{:url "#sortiment" :panel :inventory :label "Sortiment" :run "[demo/rente-panel]" }
+                   {:url "#company"   :panel :company   :label "Företag"   :run "[company/company-panel]" }]))
+
+(def currentpage (atom :inventory))
+
 (declare render persist)
 
 (defn hook-browser-navigation! []
@@ -34,7 +39,6 @@
        (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
-(def page (atom :home))
 
 (defn reset-conn! [db]
   (reset! conn db)
@@ -85,7 +89,6 @@
 
 (defn filtered-db [db]
   (if-let [terms   (filter-terms db)]
-    ;(let[whitelist (set (todos-by-filter db terms))
     (let[whitelist (set (items-by-filter db terms))
          pred      (fn [db datom]
                      (or (not= "item" (namespace (.-a datom)))
@@ -98,28 +101,21 @@
     [:a {:href (:url route)} (:label route)]])
 
 (rum/defc navbar-items [panel routes]
-    [:div
-    ;; Om du vill lägga in en statisk route:
-    ; [:li {:class (if (= panel :project-panel) "active" "")} [:a {:href "#project"} "Projekt"]]
-     (for [route routes]
-       ;^{:key (:panel route)}
-       (navbar-item route panel))])
+  [:div
+   (for [route routes]
+     (rum/with-props navbar-item route panel :rum/key [(:panel route)]))])
 
 (rum/defc navbar []
-  (let [currentpage :rente-panel
-        routes [{:url "#sortiment" :panel :rente-panel    :label "Sortiment" :run "[demo/rente-panel]" }
-                {:url "#company"   :panel :company-panel  :label "Företag"   :run "[company/company-panel]" }]]
    [:nav.light-blue.lighten-1 {:role "navigation"}
      [:div.nav-wrapper.container
        [:a#logo-container.brand-logo {:href "#"} "Frejm"]
        [:ul.right.hide-on-med-and-down
-         (navbar-items currentpage routes)]
-
-       ;[:ul#nav-mobile.side-nav
-       ;  (navbar-items currentpage routes)]
+        (navbar-items @currentpage @routes)]
+       [:ul#nav-mobile.side-nav
+         (navbar-items @currentpage @routes)]
        [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
-        [:i.mdi-navigation-menu]
-        ]]]))
+        [:i.mdi-navigation-menu]]]])
+
  ;       [:li [:a [:div (@state :current-project)]]]]
  ;         [:button.btn.btn-success {:type "submit"} "Logga in"]]]]
  ;       [:a.dropdown-button.btn {"data-beloworigin" "true", :href "#", "data-activates" "dropdown1"} "Drop me"]
@@ -238,7 +234,7 @@
 (rum/defc visa-alla-produkter [db]
   [:div
     (for [[eid] (sort (d/q '[:find ?e :where [?e :product/name]] db))]
-    (product (d/entity db eid)))])
+      (rum/with-props product (d/entity db eid) :rum/key [eid]))])
 
 (rum/defc shelf_v [shelf]
   [:.product
@@ -255,7 +251,9 @@
 (rum/defc visa-alla-hyllor [db]
   [:div
     (for [[eid] (sort (d/q '[:find ?e :where [?e :shelf/name]] db))]
-    (shelf_v (d/entity db eid)))])
+      ;(shelf_v (d/entity db eid))
+      (rum/with-props shelf_v (d/entity db eid) :rum/key [eid])
+      )])
 
 (rum/defc visa-sortiment [db]
   [:div
@@ -265,11 +263,14 @@
                         [?item :item/shelf ?shelf]
                         [?item :item/product ?product]]
                    db "C1")]
-     (item_v (d/entity db item)
+       (rum/with-props item_v
+       (d/entity db item)
        (d/entity db product)
-       (d/entity db shelf)))])
+       (d/entity db shelf)
+       :rum/key [item]
+       ))])
 
-(rum/defc canvas [db]
+(rum/defc sortiment [db]
   [:.canvas
    (navbar)
     [:.main-view.row
@@ -303,6 +304,10 @@
    ;(if (= @page :company) (edit-view))
      (history-view db)
      ])
+
+(rum/defc canvas [db]
+  (sortiment db)
+)
 
 (defn render
   ([] (render @conn))
@@ -380,14 +385,16 @@
 (secretary/set-config! :prefix "#")
 
 (defroute home-path "/" []
-  (reset! page :home)
+  (reset! currentpage :inventory)
   (println "vi är på route HEM!")
-  (render))
+  ;(render)
+  )
 
 (defroute "/company/:id" {:as params}
-  (reset! page :company)
+  (reset! currentpage :company)
   (println "vi är på route company " (:id params))
-  (render))
+  (render)
+  )
 
 (hook-browser-navigation!)
 ;(render) ;; for interactive re-evaluation
