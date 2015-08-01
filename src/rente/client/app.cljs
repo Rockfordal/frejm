@@ -7,7 +7,7 @@
      cljs.reader
     [datascript :as d]
     [rum :include-macros true]
-    [figwheel.client :as fw]
+    ;[figwheel.client :as fw]
     [goog.events :as events]
     [goog.history.EventType :as EventType]
     [cognitect.transit :as transit]
@@ -202,19 +202,6 @@
 ;;     [:input.add-due     {:type "text" :placeholder "Förfallodag"}]
 ;;     [:input.add-submit  {:type "submit" :value "Skapa"}]])
 
-(rum/defc history-view [db]
-  [:.history-view
-    (for [state @history]
-      [:.history-state 
-       { :class (when (identical? state db) "history-selected")
-         :on-click (fn [_] (reset-conn! state)) }])
-    (if-let [prev (u/find-prev @history #(identical? db %))]
-      [:button.history-btn {:on-click (fn [_] (reset-conn! prev))} "‹ ångra"]
-      [:button.history-btn {:disabled true} "‹ ångra"])
-    (if-let [next (u/find-next @history #(identical? db %))]
-      [:button.history-btn {:on-click (fn [_] (reset-conn! next))} "gör om ›"]
-      [:button.history-btn {:disabled true} "gör om ›"])])
-
 ;; (rum/defc edit-view [db]
 ;;   (let [todos (d/q '[:find [?todo ...]
 ;;                      :where [?todo :todo/done true]] db)
@@ -229,6 +216,19 @@
 ;;     [:input.add-tags    {:type "text" :placeholder "Taggar"}]
 ;;     [:input.add-due     {:type "text" :placeholder "Förfallodag"}]
 ;;     [:input.add-submit  {:type "submit" :value "Skapa"}]]))
+
+(rum/defc history-view [db]
+  [:.history-view
+    (for [state @history]
+      [:.history-state 
+       { :class (when (identical? state db) "history-selected")
+         :on-click (fn [_] (reset-conn! state)) }])
+    (if-let [prev (u/find-prev @history #(identical? db %))]
+      [:button.history-btn {:on-click (fn [_] (reset-conn! prev))} "‹ ångra"]
+      [:button.history-btn {:disabled true} "‹ ångra"])
+    (if-let [next (u/find-next @history #(identical? db %))]
+      [:button.history-btn {:on-click (fn [_] (reset-conn! next))} "gör om ›"]
+      [:button.history-btn {:disabled true} "gör om ›"])])
 
 (rum/defc product [product]
   [:.product
@@ -316,7 +316,6 @@
     (render (:db-after tx-report))))
 
 ;; history
-
 (d/listen! conn :history
   (fn [tx-report]
     (let [{:keys [db-before db-after]} tx-report]
@@ -382,19 +381,19 @@
 
 (defroute home-path "/" []
   (reset! page :home)
-  ;(println "route HEM!")
+  (println "vi är på route HEM!")
   (render))
 
 (defroute "/company/:id" {:as params}
   (reset! page :company)
-  ;(println "route company " (:id params))
+  (println "vi är på route company " (:id params))
   (render))
 
 (hook-browser-navigation!)
 ;(render) ;; for interactive re-evaluation
 
+;; log all transactions (prettified)
 (defn logga []
- "logging of all transactions (prettified)"
   (d/listen! conn :log
     (fn [tx-report]
       (let [tx-id  (get-in tx-report [:tempids :db/current-tx])
@@ -404,13 +403,7 @@
         (println
           (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
 
-
 (defn ^:export main []
   (rensa_ls)
   (fixturer)
-  (logga)
-  ;(dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
-  ;(app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
-  ;(main/create-my-routes)
-  ;(mount-root)
-  )
+  (logga))

@@ -1,13 +1,15 @@
-(ns rente.client.queries)
+(ns rente.client.queries
+  (:require
+   [datascript :as d]))
 
 ;; Rules are used to implement OR semantic of a filter
 ;; ?term must match either :project/name OR :todo/tags
-;; (def todo-filter-rule
-;;  '[[(match ?todo ?term)
-;;     [?todo :todo/project ?p]
-;;     [?p :project/name ?term]]
-;;    [(match ?todo ?term)
-;;     [?todo :todo/tags ?term]]])
+(def todo-filter-rule
+ '[[(match ?todo ?term)
+    [?todo :todo/project ?p]
+    [?p :project/name ?term]]
+   [(match ?todo ?term)
+    [?todo :todo/tags ?term]]])
 
 (def item-filter-rule
  '[[(match ?item ?term)
