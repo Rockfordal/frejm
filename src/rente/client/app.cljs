@@ -49,7 +49,10 @@
 (defn reset-conn! [db]
   (reset! conn db)
   (render db)
-  (persist db))
+  ;(persist db)
+  )
+
+(secretary/set-config! :prefix "#")
 
 ;; Entity with id=0 is used for storing auxilary view information
 ;; like filter value and selected group
@@ -321,7 +324,6 @@
 (defn fixturer []
   (d/transact! conn u/fixtures))
 
-(secretary/set-config! :prefix "#")
 
 ;(defroute "/company/:id" {:as params}
 ;  (swap! app-state assoc :currentmodule :company)
