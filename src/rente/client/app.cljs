@@ -93,32 +93,33 @@
       (d/filter db pred))
     db))
 
+(rum/defc navbar-item [route panel]
+  [:li {:class (if (= panel (:panel route)) "active" "")}
+    [:a {:href (:url route)} (:label route)]])
 
-
-;; (defn navbar-item [route panel]
-;;   [:li {:class (if (= panel (:panel route)) "active" "")}
-;;     [:a {:href (:url route)} (:label route)]])
-
-;; (defn navbar-items [panel routes]
-;;     [:div
-;;     ; [:li {:class (if (= panel :project-panel) "active" "")} [:a {:href "#project"} "Projekt"]]
-;;      (for [route @routes]
-;;        ^{:key (:panel route)} [navbar-item route panel])])
+(rum/defc navbar-items [panel routes]
+    [:div
+    ;; Om du vill lägga in en statisk route:
+    ; [:li {:class (if (= panel :project-panel) "active" "")} [:a {:href "#project"} "Projekt"]]
+     (for [route routes]
+       ;^{:key (:panel route)}
+       (navbar-item route panel))])
 
 (rum/defc navbar []
-;;   (let [active-panel (subscribe [:active-panel])
-;;         routes (subscribe [:routes])]
+  (let [currentpage :rente-panel
+        routes [{:url "#sortiment" :panel :rente-panel    :label "Sortiment" :run "[demo/rente-panel]" }
+                {:url "#company"   :panel :company-panel  :label "Företag"   :run "[company/company-panel]" }]]
    [:nav.light-blue.lighten-1 {:role "navigation"}
      [:div.nav-wrapper.container
        [:a#logo-container.brand-logo {:href "#"} "Frejm"]
        [:ul.right.hide-on-med-and-down
-         ;[navbar-items @active-panel routes]]
+         (navbar-items currentpage routes)]
 
-       [:ul#nav-mobile.side-nav
-         ;[navbar-items @active-panel routes]]
+       ;[:ul#nav-mobile.side-nav
+       ;  (navbar-items currentpage routes)]
        [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
         [:i.mdi-navigation-menu]
-        ]]]]])
+        ]]]))
  ;       [:li [:a [:div (@state :current-project)]]]]
  ;         [:button.btn.btn-success {:type "submit"} "Logga in"]]]]
  ;       [:a.dropdown-button.btn {"data-beloworigin" "true", :href "#", "data-activates" "dropdown1"} "Drop me"]
@@ -314,16 +315,6 @@
   (fn [tx-report]
     (render (:db-after tx-report))))
 
-;; logging of all transactions (prettified)
-(d/listen! conn :log
-  (fn [tx-report]
-    (let [tx-id  (get-in tx-report [:tempids :db/current-tx])
-          datoms (:tx-data tx-report)
-          datom->str (fn [d] (str (if (.-added d) "+" "−")
-                               "[" (.-e d) " " (.-a d) " " (pr-str (.-v d)) "]"))]
-      (println
-        (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms)))))))
-
 ;; history
 
 (d/listen! conn :history
@@ -402,9 +393,22 @@
 (hook-browser-navigation!)
 ;(render) ;; for interactive re-evaluation
 
+(defn logga []
+ "logging of all transactions (prettified)"
+  (d/listen! conn :log
+    (fn [tx-report]
+      (let [tx-id  (get-in tx-report [:tempids :db/current-tx])
+            datoms (:tx-data tx-report)
+            datom->str (fn [d] (str (if (.-added d) "+" "−")
+                                 "[" (.-e d) " " (.-a d) " " (pr-str (.-v d)) "]"))]
+        (println
+          (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
+
+
 (defn ^:export main []
   (rensa_ls)
   (fixturer)
+  (logga)
   ;(dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
   ;(app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
   ;(main/create-my-routes)
