@@ -40,7 +40,7 @@
                          (get JVMOPTS os)))))) 
 
 (defproject rente "1.0.0"
-  :description "A barebones Reagent+Sente app deployable to Heroku. Uses Figwheel (for development build) and Component (lifecycle management)."
+  :description "Datomic, Component, Sente, Rum, Datascript"
   :url "http://enterlab.com"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -48,7 +48,7 @@
 
   :dependencies [[environ "1.0.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "0.0-3308"]
+                 [org.clojure/clojurescript "1.7.28"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/tools.logging "0.3.1"]
                  [ch.qos.logback/logback-classic "1.1.3"]
@@ -72,21 +72,23 @@
                  [com.cognitect/transit-cljs "0.8.220"]
 
                  ; Klient
-                 [reagent "0.5.0"]
-                 [re-frame "0.4.1"]
+                 ;[reagent "0.5.0"]
+                 ;[re-frame "0.4.1"]
                  [secretary "1.2.3"]
                  [cljs-http "0.1.14"]
                  [clj-json "0.5.3"]
-                 [jayq "2.5.4"]
                  [datascript "0.11.5"]
-                 [cljsjs/highlight "8.4-0"]
+                 [rum "0.2.6"]
+                 ;[jayq "2.5.4"]
+                 ;[cljsjs/highlight "8.4-0"]
                  [org.webjars.bower/jquery "2.1.3"]
                  [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
-                 [org.webjars.bower/highlightjs "8.5.0"]
+                 ;[org.webjars.bower/highlightjs "8.5.0"]
                  ;[cljsjs/jquery "2.1.4-0"]
                  ;[cljsjs/jquery-ui "1.11.3-1"]
                  ;[org.webjars.bower/jquery-ui "1.11.4"]
-                 [matchbox "0.0.6"]]
+                 ;[matchbox "0.0.6"]
+                 ]
 
   :plugins [[lein-environ "1.0.0"]
             [lein-cljsbuild "1.0.6"] ;
@@ -133,8 +135,7 @@
 
                    ;:dev-config {
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
-                                   [org.clojure/tools.nrepl "0.2.10"]
-                                   [datascript "0.11.5"]]
+                                  [org.clojure/tools.nrepl "0.2.10"]]
 
                     :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
                               ;[lein-datomic "0.2.0"]
