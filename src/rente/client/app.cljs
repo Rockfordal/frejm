@@ -1,35 +1,42 @@
 (ns rente.client.app
-    (:import goog.History)
-    (:require
+  (:import goog.History)
+  (:require
     [secretary.core :as secretary :refer-macros [defroute]]
     [clojure.set :as set]
     [clojure.string :as str]
      cljs.reader
     [datascript :as d]
     [rum :include-macros true]
-    ;[figwheel.client :as fw]
     [goog.events :as events]
     [goog.history.EventType :as EventType]
     [cognitect.transit :as transit]
     [rente.client.queries :as q]
     [rente.client.dom :as dom]
+    [rente.client.views.html2ts   :refer [html2ts]]
+    [rente.client.views.sortiment :refer [shelf_v item_v product_v visa-alla-produkter visa-alla-hyllor visa-sortiment sortiment_v]]
     [rente.client.util :as u])
   (:require-macros
     [rente.macros :refer [profile]]))
-
-(enable-console-print!)
 
 (def schema  {:item/shelf   {:db/valueType :db.type/ref}
               :item/product {:db/valueType :db.type/ref}})
 
 (defonce conn (d/create-conn schema))
 
-(def routes (atom [{:url "#sortiment" :panel :inventory :label "Sortiment" :run "[demo/rente-panel]" }
-                   {:url "#company"   :panel :company   :label "Företag"   :run "[company/company-panel]" }]))
-
-(def currentpage (atom :inventory))
+(defonce app-state
+  (atom {:current-module :html2ts
+         :modules [{:key :html2ts   :title "html2ts"   :url "#html2ts"}
+                   {:key :sortiment :title "Sortiment" :url "#sortiment"}
+                   ;{:key :company   :url "#company"   :title "Företag"}
+                   ]}))
 
 (declare render persist)
+
+(defroute module-path "/:module" {module :module}
+  (let [module-keys (set (map :key (:modules @app-state)))
+        module-key (or (module-keys (keyword module)) :html2ts)]
+    (swap! app-state
+           assoc :current-module module-key)))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -39,7 +46,6 @@
        (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
-
 (defn reset-conn! [db]
   (reset! conn db)
   (render db)
@@ -48,73 +54,77 @@
 ;; Entity with id=0 is used for storing auxilary view information
 ;; like filter value and selected group
 
-(defn set-system-attrs! [& args]
-  (d/transact! conn 
-    (for [[attr value] (partition 2 args)]
-      (if value
-        [:db/add 0 attr value]
-        [:db.fn/retractAttribute 0 attr]))))
+;; (defn set-system-attrs! [& args]
+;;   (d/transact! conn 
+;;     (for [[attr value] (partition 2 args)]
+;;       (if value
+;;         [:db/add 0 attr value]
+;;         [:db.fn/retractAttribute 0 attr]))))
 
-(defn system-attr
-  ([db attr]
-    (get (d/entity db 0) attr))
-  ([db attr & attrs]
-    (mapv #(system-attr db %) (concat [attr] attrs))))
+;; (defn system-attr
+;;   ([db attr]
+;;     (get (d/entity db 0) attr))
+;;   ([db attr & attrs]
+;;     (mapv #(system-attr db %) (concat [attr] attrs))))
 
 ;; History
-
-(defonce history (atom []))
-(def ^:const history-limit 10)
+;; (defonce history (atom []))
+;; (def ^:const history-limit 10)
 
 ;; Keyword filter
+;; (rum/defc filter-pane [db]
+;;   [:.filter-pane
+;;     [:input.filter {:type "text"
+;;                     :value (or (system-attr db :system/filter) "")
+;;                     :on-change (fn [_]
+;;                                  (set-system-attrs! :system/filter (dom/value (dom/q ".filter"))))
+;;                     :placeholder "Sök"}]])
 
-(rum/defc filter-pane [db]
-  [:.filter-pane
-    [:input.filter {:type "text"
-                    :value (or (system-attr db :system/filter) "")
-                    :on-change (fn [_]
-                                 (set-system-attrs! :system/filter (dom/value (dom/q ".filter"))))
-                    :placeholder "Sök"}]])
+;; (defn items-by-filter [db terms]
+;;   (d/q '[:find   [?e ...]
+;;          :in $ % [?term ...]
+;;          :where  [?e :item/quantity]
+;;                  (match ?e ?term)]
+;;     db q/item-filter-rule terms))
 
-(defn items-by-filter [db terms]
-  (d/q '[:find   [?e ...]
-         :in $ % [?term ...]
-         :where  [?e :item/quantity]
-                 (match ?e ?term)]
-    db q/item-filter-rule terms))
+;; (defn filter-terms [db]
+;;   (not-empty
+;;     (str/split (system-attr db :system/filter) #"\s+")))
 
-(defn filter-terms [db]
-  (not-empty
-    (str/split (system-attr db :system/filter) #"\s+")))
-
-(defn filtered-db [db]
-  (if-let [terms   (filter-terms db)]
-    (let[whitelist (set (items-by-filter db terms))
-         pred      (fn [db datom]
-                     (or (not= "item" (namespace (.-a datom)))
-                         (contains? whitelist (.-e datom))))]
-      (d/filter db pred))
-    db))
+;; (defn filtered-db [db]
+;;   (if-let [terms   (filter-terms db)]
+;;     (let [whitelist (set (items-by-filter db terms))
+;;          pred      (fn [db datom]
+;;                      (or (not= "item" (namespace (.-a datom)))
+;;                          (contains? whitelist (.-e datom))))]
+;;       (d/filter db pred))
+;;     db))
 
 (rum/defc navbar-item [route panel]
-  [:li {:class (if (= panel (:panel route)) "active" "")}
-    [:a {:href (:url route)} (:label route)]])
+  [:li {:class (if (= panel (:key route)) "active" "")}
+    [:a {:href (:url route)} (:title route)]])
 
 (rum/defc navbar-items [panel routes]
   [:div
    (for [route routes]
-     (rum/with-props navbar-item route panel :rum/key [(:panel route)]))])
+     ;(navbar-item route panel)
+     (rum/with-props navbar-item route panel :rum/key route) ; tills rum fixat bug
+     )])
 
-(rum/defc navbar []
-   [:nav.light-blue.lighten-1 {:role "navigation"}
-     [:div.nav-wrapper.container
-       [:a#logo-container.brand-logo {:href "#"} "Frejm"]
-       [:ul.right.hide-on-med-and-down
-        (navbar-items @currentpage @routes)]
-       [:ul#nav-mobile.side-nav
-         (navbar-items @currentpage @routes)]
-       [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
-        [:i.mdi-navigation-menu]]]])
+(rum/defc navbar < rum/reactive []
+  ;(let [{:keys [current-module modules]} (rum/react app-state)]
+    [:nav.light-blue.lighten-1 {:role "navigation"}
+      [:div.nav-wrapper.container
+        [:a#logo-container.brand-logo {:href "#"} "Frejm"]
+        [:ul.right.hide-on-med-and-down
+         ;(navbar-items current-module modules)]
+         (navbar-items (:current-module (rum/react app-state))
+                       (:modules (rum/react app-state)))]
+        ;[:ul#nav-mobile.side-nav
+        ;  (navbar-items current-module modules)]
+        [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
+         [:i.mdi-navigation-menu]]]])
+;)
 
  ;       [:li [:a [:div (@state :current-project)]]]]
  ;         [:button.btn.btn-success {:type "submit"} "Logga in"]]]]
@@ -213,101 +223,32 @@
 ;;     [:input.add-due     {:type "text" :placeholder "Förfallodag"}]
 ;;     [:input.add-submit  {:type "submit" :value "Skapa"}]]))
 
-(rum/defc history-view [db]
-  [:.history-view
-    (for [state @history]
-      [:.history-state 
-       { :class (when (identical? state db) "history-selected")
-         :on-click (fn [_] (reset-conn! state)) }])
-    (if-let [prev (u/find-prev @history #(identical? db %))]
-      [:button.history-btn {:on-click (fn [_] (reset-conn! prev))} "‹ ångra"]
-      [:button.history-btn {:disabled true} "‹ ångra"])
-    (if-let [next (u/find-next @history #(identical? db %))]
-      [:button.history-btn {:on-click (fn [_] (reset-conn! next))} "gör om ›"]
-      [:button.history-btn {:disabled true} "gör om ›"])])
+;; (rum/defc history-view [db]
+;;   [:.history-view
+;;     (for [state @history]
+;;       [:.history-state 
+;;        {:class (when (identical? state db) "history-selected")
+;;         :on-click (fn [_] (reset-conn! state)) }])
+;;     (if-let [prev (u/find-prev @history #(identical? db %))]
+;;       [:button.history-btn {:on-click (fn [_] (reset-conn! prev))} "‹ ångra"]
+;;       [:button.history-btn {:disabled true} "‹ ångra"])
+;;     (if-let [next (u/find-next @history #(identical? db %))]
+;;       [:button.history-btn {:on-click (fn [_] (reset-conn! next))} "gör om ›"]
+;;       [:button.history-btn {:disabled true} "gör om ›"])])
 
-(rum/defc product [product]
-  [:.product
-    [:span.id   (:db/id product)]
-    [:span.name (:product/name product)]])
+(def module-map
+  {:html2ts html2ts
+   :sortiment sortiment_v})
 
-(rum/defc visa-alla-produkter [db]
+(rum/defc content [current-module db]
+  (let [module-comp (current-module module-map)]
+    [:div.content
+      (module-comp db)]))
+
+(rum/defc canvas < rum/reactive [db]
   [:div
-    (for [[eid] (sort (d/q '[:find ?e :where [?e :product/name]] db))]
-      (rum/with-props product (d/entity db eid) :rum/key [eid]))])
-
-(rum/defc shelf_v [shelf]
-  [:.product
-    [:span.id   (:db/id shelf)]
-    [:span.name (:shelf/name shelf)]])
-
-(rum/defc item_v [item product shelf]
-  [:div
-    [:span (:db/id item)] [:span " "]
-    [:span (:item/quantity item)] [:span " "]
-    [:span (:product/name product)] [:span " "]
-    [:span (:shelf/name shelf)]])
-
-(rum/defc visa-alla-hyllor [db]
-  [:div
-    (for [[eid] (sort (d/q '[:find ?e :where [?e :shelf/name]] db))]
-      ;(shelf_v (d/entity db eid))
-      (rum/with-props shelf_v (d/entity db eid) :rum/key [eid])
-      )])
-
-(rum/defc visa-sortiment [db]
-  [:div
-   (for [[item product shelf] (d/q '[:find ?item ?product ?shelf
-                        :in $ ?shelfname :where
-                        [?shelf :shelf/name ?shelfname]
-                        [?item :item/shelf ?shelf]
-                        [?item :item/product ?product]]
-                   db "C1")]
-       (rum/with-props item_v
-       (d/entity db item)
-       (d/entity db product)
-       (d/entity db shelf)
-       :rum/key [item]
-       ))])
-
-(rum/defc sortiment [db]
-  [:.canvas
    (navbar)
-    [:.main-view.row
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
-          [:span.card-title "Produkter"]
-          (visa-alla-produkter db) [:br]
-          [:div.card-action [:a {:href "#"} "ok"] ]]]]
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
-          [:span.card-title "Sortiment"]
-
-            (let [db (filtered-db db)]
-              (visa-sortiment db)) [:br]
-          [:div.card-action [:a {:href "#"} "ok"] ]]]]
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
-          [:span.card-title "Hyllor"]
-          (visa-alla-hyllor db) [:br]
-          [:div.card-action [:a {:href "#"} "ok"] ]]]]
-      ]
-      (filter-pane db)
-      ;(let [db (filtered-db db)]
-       ; (list
-          ;(overview-pane db)
-          ;(todo-pane db) ;   ) ;  )
-   ;(if (= @page :home) ;(add-view) ;)
-   ;(if (= @page :company) (edit-view))
-     (history-view db)
-     ])
-
-(rum/defc canvas [db]
-  (sortiment db)
-)
+   (content (:current-module (rum/react app-state)) db)])
 
 (defn render
   ([] (render @conn))
@@ -321,23 +262,22 @@
     (render (:db-after tx-report))))
 
 ;; history
-(d/listen! conn :history
-  (fn [tx-report]
-    (let [{:keys [db-before db-after]} tx-report]
-      (when (and db-before db-after)
-        (swap! history (fn [h]
-          (-> h
-            (u/drop-tail #(identical? % db-before))
-            (conj db-after)
-            (u/trim-head history-limit))))))))
+;; (d/listen! conn :history
+;;   (fn [tx-report]
+;;     (let [{:keys [db-before db-after]} tx-report]
+;;       (when (and db-before db-after)
+;;         (swap! history (fn [h]
+;;           (-> h
+;;             (u/drop-tail #(identical? % db-before))
+;;             (conj db-after)
+;;             (u/trim-head history-limit))))))))
 
 ;; transit serialization
-
-(deftype DatomHandler []
-  Object
-  (tag [_ _] "datascript/Datom")
-  (rep [_ d] #js [(.-e d) (.-a d) (.-v d) (.-tx d)])
-  (stringRep [_ _] nil))
+;; (deftype DatomHandler []
+;;   Object
+;;   (tag [_ _] "datascript/Datom")
+;;   (rep [_ d] #js [(.-e d) (.-a d) (.-v d) (.-tx d)])
+;;   (stringRep [_ _] nil))
 
 ;(def transit-writer
 ;  (transit/writer :json
@@ -360,21 +300,14 @@
 ;      (d/init-db datoms schema))))
 
 ;; persisting DB between page reloads
-(defn persist [db]
-  ;(js/localStorage.setItem "datascript-todo/db" (db->string db))
-)
+;; (defn persist [db]
+;;   (js/localStorage.setItem "datascript-todo/db" (db->string db)))
 
-(defn rensa_ls []
-  #_(js/localStorage.clear))
-
-(defn fixturer []
-  (d/transact! conn u/fixtures))
-
-(d/listen! conn :persistence
-  (fn [tx-report] ;; FIXME do not notify with nil as db-report
-                  ;; FIXME do not notify if tx-data is empty
-    (when-let [db (:db-after tx-report)]
-      (js/setTimeout #(persist db) 0))))
+;(d/listen! conn :persistence
+;  (fn [tx-report] ;; FIXME do not notify with nil as db-report
+;                  ;; FIXME do not notify if tx-data is empty
+;    (when-let [db (:db-after tx-report)]
+;      (js/setTimeout #(persist db) 0))))
 
 ;; restoring once persisted DB on page load
 ;(if-let [stored (js/localStorage.getItem "datascript-todo/db")]
@@ -382,22 +315,20 @@
 ;    (reset-conn! (string->db stored))
 ;    (swap! history conj @conn))
 
+;; (defn rensa_ls []
+;;   #_(js/localStorage.clear))
+
+(defn fixturer []
+  (d/transact! conn u/fixtures))
+
 (secretary/set-config! :prefix "#")
 
-(defroute home-path "/" []
-  (reset! currentpage :inventory)
-  (println "vi är på route HEM!")
-  ;(render)
-  )
-
-(defroute "/company/:id" {:as params}
-  (reset! currentpage :company)
-  (println "vi är på route company " (:id params))
-  (render)
-  )
+;(defroute "/company/:id" {:as params}
+;  (swap! app-state assoc :currentmodule :company)
+;  (println "vi är på route company id: " (:id params))
+;  (render))
 
 (hook-browser-navigation!)
-;(render) ;; for interactive re-evaluation
 
 ;; log all transactions (prettified)
 (defn logga []
@@ -411,6 +342,6 @@
           (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
 
 (defn ^:export main []
-  (rensa_ls)
+  ;(rensa_ls)
   (fixturer)
   (logga))
