@@ -93,6 +93,37 @@
       (d/filter db pred))
     db))
 
+
+
+;; (defn navbar-item [route panel]
+;;   [:li {:class (if (= panel (:panel route)) "active" "")}
+;;     [:a {:href (:url route)} (:label route)]])
+
+;; (defn navbar-items [panel routes]
+;;     [:div
+;;     ; [:li {:class (if (= panel :project-panel) "active" "")} [:a {:href "#project"} "Projekt"]]
+;;      (for [route @routes]
+;;        ^{:key (:panel route)} [navbar-item route panel])])
+
+(rum/defc navbar []
+;;   (let [active-panel (subscribe [:active-panel])
+;;         routes (subscribe [:routes])]
+   [:nav.light-blue.lighten-1 {:role "navigation"}
+     [:div.nav-wrapper.container
+       [:a#logo-container.brand-logo {:href "#"} "Frejm"]
+       [:ul.right.hide-on-med-and-down
+         ;[navbar-items @active-panel routes]]
+
+       [:ul#nav-mobile.side-nav
+         ;[navbar-items @active-panel routes]]
+       [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
+        [:i.mdi-navigation-menu]
+        ]]]]])
+ ;       [:li [:a [:div (@state :current-project)]]]]
+ ;         [:button.btn.btn-success {:type "submit"} "Logga in"]]]]
+ ;       [:a.dropdown-button.btn {"data-beloworigin" "true", :href "#", "data-activates" "dropdown1"} "Drop me"]
+
+
 ;; Grupper
 
 ;; This transaction function swaps the value of :todo/done attribute.
@@ -239,9 +270,8 @@
 
 (rum/defc canvas [db]
   [:.canvas
-   [:h3 [:a {:href "#/"} "Inventarie"]]
-    [:.main-view
-     [:div.row
+   (navbar)
+    [:.main-view.row
       [:div.col.s3
         [:div.card.blue-grey.darken-1
          [:div.card-content.white-text
@@ -271,7 +301,7 @@
    ;(if (= @page :home) ;(add-view) ;)
    ;(if (= @page :company) (edit-view))
      (history-view db)
-     ]])
+     ])
 
 (defn render
   ([] (render @conn))
