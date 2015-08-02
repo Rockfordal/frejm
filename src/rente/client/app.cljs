@@ -25,18 +25,21 @@
   (reset! conn db)
   (render db))
 
-(defn fixturer []
+(defn load-fixtures []
   (d/transact! conn u/fixtures))
 
+;; where is page to run
 (def module-map
   {:html2ts   html2ts
    :sortiment sortiment_v})
 
-(rum/defc content [module db]
-  (let [module-comp (module module-map)]
+;; select current page
+(rum/defc content [current-module db]
+  (let [module-comp (current-module module-map)]
     [:div.content
       (module-comp db)]))
 
+;; navbar and currentpage
 (rum/defc canvas < rum/reactive [db]
   [:div
    (navbar
@@ -44,6 +47,7 @@
      (:modules       (rum/react app-state)))
    (content (:module (rum/react app-state)) db)])
 
+;; mount page to html body
 (defn render
   ([] (render @conn))
   ([db]
@@ -67,7 +71,7 @@
           (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
 
 (defn ^:export main []
-  ;(rensa_ls)
+  ;(clear_ls)
   (routes/app-routes)
-  (fixturer)
+  (load-fixtures)
   (logga))
