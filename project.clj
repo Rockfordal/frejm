@@ -72,13 +72,13 @@
                  [com.cognitect/transit-cljs "0.8.220"]
 
                  ; Klient
+                 [rum "0.2.7"]
                  ;[reagent "0.5.0"]
                  ;[re-frame "0.4.1"]
-                 [secretary "1.2.3"]
-                 ;[cljs-http "0.1.14"]
-                 [clj-json "0.5.3"]
                  [datascript "0.11.5"]
-                 [rum "0.2.7"]
+                 [secretary "1.2.3"]
+                 [clj-json "0.5.3"]
+                 ;[cljs-http "0.1.14"]
                  ;[jayq "2.5.4"]
                  ;[cljsjs/highlight "8.4-0"]
                  [org.webjars.bower/jquery "2.1.3"]
@@ -111,8 +111,9 @@
   :cljsbuild
   {:builds
      {:client {:source-paths ["src/rente/client"]
-               :compiler
-               {:output-to "resources/public/js/app.js"
+               :compiler {
+                :warnings {:single-segment-namespace false} ; för rum
+                :output-to "resources/public/js/app.js"
                 :output-dir "dev-resources/public/js/out"}}}
 
       :deploy {:source-paths ["src/cljs"]
