@@ -5,6 +5,9 @@
 (defn q [selector]
   (js/document.querySelector selector))
 
+(defn by-id [id]
+  (.getElementById js/document (name id)))
+
 (defn set-value! [el value]
   (set! (.-value el) value))
 
