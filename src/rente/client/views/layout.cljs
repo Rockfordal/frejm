@@ -1,30 +1,26 @@
 (ns rente.client.views.layout
-  ;;   (:require [re-frame.core :as re-frame :refer [subscribe dispatch]])
- )
+  (:require [rum :include-macros true]))
 
-;; (defn navbar-item [route panel]
-;;   [:li {:class (if (= panel (:panel route)) "active" "")}
-;;     [:a {:href (:url route)} (:label route)]])
 
-;; (defn navbar-items [panel routes]
-;;     [:div
-;;     ; [:li {:class (if (= panel :project-panel) "active" "")} [:a {:href "#project"} "Projekt"]]
-;;      (for [route @routes]
-;;        ^{:key (:panel route)} [navbar-item route panel])])
+(rum/defc navbar-item < rum/static [route panel]
+  [:li {:class (if (= panel (:key route)) "active" "")}
+    [:a {:href (:url route)} (:title route)]])
 
-;; (defn navbar []
-;;   (let [active-panel (subscribe [:active-panel])
-;;         routes (subscribe [:routes])]
-;;   [:nav.light-blue.lighten-1 {:role "navigation"}
-;;     [:div.nav-wrapper.container
-;;       [:a#logo-container.brand-logo {:href "#"} "SolidCall"]
-;;       [:ul.right.hide-on-med-and-down
-;;         [navbar-items @active-panel routes]]
+(rum/defc navbar-items < rum/static [panel routes]
+  [:div (for [route routes]
+     (rum/with-props navbar-item route panel :rum/key route))])
 
-;;       [:ul#nav-mobile.side-nav
-;;         [navbar-items @active-panel routes]]
-;;       [:a.button-collapse {:href "#" "data-activates" "nav-mobile"}
-;;        [:i.mdi-navigation-menu]]]]))
+(rum/defc navbar < rum/static [route modules]
+  [:nav.light-blue.lighten-1 {:role "navigation"}
+    [:div.nav-wrapper.container
+      [:a#logo-container.brand-logo {:href "#"} "Frejm"]
+      [:ul.right.hide-on-med-and-down
+        (navbar-items route modules)]
+      [:ul#nav-mobile.side-nav
+        (navbar-items route modules)]
+      [:a.button-collapse {:href "#" :data-activates "nav-mobile"}
+        [:i.mdi-navigation-menu]]]])
+
 ;; ;       [:li [:a [:div (@state :current-project)]]]]
 ;; ;         [:button.btn.btn-success {:type "submit"} "Logga in"]]]]
 ;; ;       [:a.dropdown-button.btn {"data-beloworigin" "true", :href "#", "data-activates" "dropdown1"} "Drop me"]
