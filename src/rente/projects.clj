@@ -19,5 +19,4 @@
 
     (create! {:project/name "nytt projekt"
               :project/description ""})
-    "skapat projects"
-    ))
+    "skapat projects"))
