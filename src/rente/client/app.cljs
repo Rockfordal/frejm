@@ -9,7 +9,7 @@
     [rente.client.dom :as dom]
     [rente.client.queries :as q]
     [rente.client.routes :as routes]
-    [rente.client.state :as state :refer [app-state schema]]
+    [rente.client.state :as state :refer [state schema]]
     [rente.client.views.layout    :refer [navbar]]
     [rente.client.views.html2ts   :refer [html2ts]]
     [rente.client.views.sortiment :refer [shelf_v item_v product_v visa-alla-produkter visa-alla-hyllor visa-sortiment sortiment_v]]
@@ -43,9 +43,9 @@
 (rum/defc canvas < rum/reactive [db]
   [:div
    (navbar
-     (:module        (rum/react app-state))
-     (:modules       (rum/react app-state)))
-   (content (:module (rum/react app-state)) db)])
+     (:module        (rum/react state))
+     (:modules       (rum/react state)))
+   (content (:module (rum/react state)) db)])
 
 ;; mount page to html body
 (defn render

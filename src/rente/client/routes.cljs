@@ -4,7 +4,7 @@
     [goog.events :as events]
     [goog.history.EventType :as EventType]
     [secretary.core :as secretary :refer-macros [defroute]]
-    [rente.client.state :as state :refer [app-state]]))
+    [rente.client.state :as state :refer [state]]))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -19,8 +19,7 @@
   (hook-browser-navigation!))
 
 (defroute module-path "/:module" {module :module}
-  (let [module-keys (set (map :key (:modules @app-state)))
+  (let [module-keys (set (map :key (:modules @state)))
         module-key (or (module-keys (keyword module)) :html2ts)]
-    (swap! app-state
+    (swap! state
            assoc :module module-key)))
-
