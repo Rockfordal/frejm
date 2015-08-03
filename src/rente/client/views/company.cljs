@@ -1,10 +1,9 @@
 (ns rente.client.views.company
-;;   (:require [reagent.core  :as reagent :refer [atom]]
-;;             [rente.client.views.layout :as layout :refer [navbar]]
-;;             [rente.client.ws :as ws]
-;;             [secretary.core :refer [IRenderRoute render-route encode-query-params]]
-  ;;             [re-frame.core :refer [subscribe dispatch]])
-)
+  (:require [rum :as rum]
+            [rente.client.state :refer [state get-state]]
+;             [rente.client.ws :as ws]
+;             [secretary.core :refer [IRenderRoute render-route encode-query-params]]
+))
 
 ;; (def getcompanies
 ;;   (memoize #((ws/get-all :company :companies)
@@ -69,16 +68,17 @@
 ;;        ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
 ;;        [:span " "]]])))
 
-;; (defn company-panel []
-;;   (let [companies (subscribe [:companies])
-;;         active-project (subscribe [:active-project])]
-;;   [:div
-;;    [navbar]
+(rum/defc company_v < rum/reactive [db]
+  [:div
+  [:h3 "Företag"]
+   ;[:div "Valt Projekt: " (str (get-state :activeproject))]
+   ]
+)
+
 ;;    [:div.container
 ;;     (getcompanies)
 ;;     [:header#header
 ;;      [:h2 "Företag"]
-;;        "Valt Projekt: " (:project/name @active-project)
 ;;        [company-input {:id "new-todo"
 ;;                        :placeholder "Nytt företag?"
 ;;                        :on-save #(ws/add-name % :company/name :company :companies)}]]
