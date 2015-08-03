@@ -1,10 +1,48 @@
 (ns rente.client.views.main
-  ;; (:require
-  ;;   ;[rente.client.views.layout :as layout :refer [navbar]]
-  ;;   ;[re-frame.core             :as re-frame :refer [subscribe dispatch]]
-  ;;   ;[rente.client.views.companyedit :as companyedit]
-  ;;   ;[reagent.core              :as reagent]) ; behövs?
+  (:require
+    [rente.client.views.layout    :refer [navbar]]
+    [rente.client.views.login     :refer [login_v]]
+    [rente.client.views.company   :refer [company_v]]
+    [rente.client.views.sortiment :refer [sortiment_v]]
+    [rente.client.state           :refer [state get-state]]
+    [rum :include-macros true])
 )
+
+;; where are page views
+(def module-map
+  {:company   company_v
+   :sortiment sortiment_v
+   :login     login_v})
+
+(defmulti  panels identity)
+;(defmulti  panels (fn ([db & xs])
+;                       (mapv identity (into [db] xs))))
+
+(defmethod panels :sortiment [db] (sortiment_v db))
+;(defmethod panels :company   [db] (company_v db))
+;(defmethod panels :login     [db] (login_v db))
+
+;; select current page
+(rum/defc content [current-module db] 
+  (let [module-comp (current-module module-map)]
+    [:div.content
+      (module-comp db)]))
+
+(defn main-panel [panel db]
+  (panels panel db)
+)
+
+;; navbar and currentpage
+(rum/defc canvas < rum/reactive [db]
+  [:div
+   (navbar
+     (:module        (get-state))
+     (:modules       (get-state)))
+   ;(content (:module (get-state)) db)
+   ;(main-panel (:module (get-state)) db)
+   (panels (:module (get-state)) db)
+   ])
+
 
 ;(defn notfound-panel [data]
 ;  (let [active-panel (subscribe [:active-panel])]

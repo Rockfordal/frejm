@@ -1,6 +1,8 @@
 (ns rente.client.util
-  (:require
-    [datascript :as d]))
+  (:require [datascript :as d]
+            [rente.client.fixtures :refer [data]]
+            [clojure.string :as str]))
+   ;[cognitect.transit :as transit]
 
 (defn remove-vals [f m]
   (reduce-kv (fn [m k v] (if (f v) m (assoc m k v))) (empty m) m))
@@ -29,32 +31,34 @@
 (defn e-by-av [db a v]
   (-> (d/datoms db :avet a v) first :e))
 
-(def fixtures [
-  [:db/add 0 :system/group :all]
-  {:db/id -1 :product/name "Mjölk"}
-  {:db/id -2 :product/name "Ost"}
-  {:db/id -3 :product/name "Korv"}
+;; log all transactions (prettified)
+(defn log-transactions [conn]
+  (d/listen! conn :log
+    (fn [tx-report]
+      (let [tx-id  (get-in tx-report [:tempids :db/current-tx])
+            datoms (:tx-data tx-report)
+            datom->str (fn [d] (str (if (.-added d) "+" "−")
+                                 "[" (.-e d) " " (.-a d) " " (pr-str (.-v d)) "]"))]
+        (println
+          (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
 
-  {:db/id -1 :shelf/name "C1"}
-  {:db/id -2 :shelf/name "C2"}
 
-  {:db/id -1
-   :item/quantity 10
-   :item/shelf -1
-   :item/product -1}
+(defn load-fixtures [conn]
+  (d/transact! conn data))
 
-  {:db/id -2
-   :item/quantity 20
-   :item/shelf -1
-   :item/product -2}
+;(defn toggle-fig-tx [db eid]
+;  (let [done? (:fig/done (d/entity db eid))]
+;    [[:db/add eid :fig/done (not done?)]]))
 
-  {:db/id -4
-   :item/quantity 15
-   :item/shelf -2
-   :item/product -3}
+;(defn toggle-fig [eid]
+;  (d/transact! conn [[:db.fn/call toggle-fig-tx eid]]))
 
-  {:db/id -4
-   :item/quantity 5
-   :item/shelf -1
-   :item/product -3}
-  ])
+(defn toggle-fig [conn id n]
+  (d/transact! conn
+     ;[:db/add 1 :system/group :all]
+     [{:db/id id :figwheel/name "yo"}]
+
+     ;{:figwheel/id n}
+     )
+  (println "id" id "n" n)
+)

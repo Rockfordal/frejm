@@ -4,7 +4,7 @@
     [goog.events :as events]
     [goog.history.EventType :as EventType]
     [secretary.core :as secretary :refer-macros [defroute]]
-    [rente.client.state :as state :refer [state]]))
+    [rente.client.state :refer [state]]))
 
 (defn hook-browser-navigation! []
   (doto (History.)
