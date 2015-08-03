@@ -125,7 +125,6 @@
   }
 
   :profiles {
-             ;:dev-config {}
              :dev {
                     ;:source-paths ["dev-resources"]
                     :source-paths ["dev"]

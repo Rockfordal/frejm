@@ -2,6 +2,7 @@
   (:require
     [datascript :as d]
     [clojure.string :as str]
+    ;[rente.client.queries :as q]
     [rum :include-macros true]))
 
 
