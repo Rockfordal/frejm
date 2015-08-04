@@ -39,34 +39,32 @@
 ;; ;(def company-edit (with-meta company-input
 ;; ;  {:component-did-mount #(.focus (reagent/dom-node %))}))
 
-;; (defn company-item []
+
+(r/defc company-item [company]
 ;;   (let [editing (atom false)]
-;;     (fn [company]
-;;       [:tr
-;;       [:td (:db/id company)]
-;;       [:td (:company/name company)]
-;;       [:td (:company/orgnr company)]
+    [:tr
+      ;[:td "företag"]
+      [:td (:db/id company)]
+      [:td (:company/name company)]
+      [:td (:company/phone company)]
 ;;        [:td
 ;;         [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]
 ;;         [:a {:href (render-route (Company. (:db/id company)))} [:i.material-icons "view_headline"]]
 ;;         ;[:P (:db/id company)]
-;;         ]])))
+         ])
   
-;; (defn company-list []
-;;   (let [namn (atom "")]
-;;     (fn [companies]
-;;       [:table
-;;        [:tbody
-;;        [:tr
-;;         [:th "Id"]
-;;         [:th "Namn"]
-;;         [:th "Orgnr"]
-;; ;        [:th "Info"]
-;;         [:th]]
-;;        (for [company @companies]
-;;            ^{:key (:db/id company)} [company-item company])
-;;        ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
-;;        [:span " "]]])))
+(r/defc company-list [companies]
+  [:table
+   [:thead
+    [:tr
+    [:th "Id"]
+    [:th "Namn"]
+    [:th "Telefon"]
+    [:th ""]]
+    [:tbody
+      (for [company companies]
+        ;(company-item company)) ; kommer nog funka sen
+         (r/with-props company-item company :rum/key company))]]])
 
 
 ;(rum/defc company-input [{:keys [title on-save on-stop]}]
@@ -90,15 +88,17 @@
 
 (r/defc company_v < rum/reactive [db]
   [:div
-  [:h3 "Företag"]
+    [:h3 "Företag"]
+      [:div.row
+       (company-list (get-state :companies))
+       [:button.btn.btn-primary {:on-click #(js/alert "yo")} "Lägg till projekt"]]]) 
+
    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
        ;; [company-input {:id "new-todo"
        ;;                 :placeholder "Nytt företag?"
        ;;                                  ;:on-save #(ws/add-name % :company/name :company :companies)
        ;;                 }]
                        ;:on-save #(ws/add-company2project % "ica")}]]
-   ]
-)
 
 ;;    [:div.container
 ;;     (getcompanies)
@@ -116,5 +116,4 @@
 ;;     ;[:a.btn {:on-click #(println (count @companies))} "antal"]   
 ;;     ;[:a.btn {:on-click #(js/alert "tjo")} "Alert"]
 ;;     ;[:a.btn {:on-click #(js/console.log "tjo")} "Log"]
-;;     ]
-;;    ]))
+;;     ]]))
