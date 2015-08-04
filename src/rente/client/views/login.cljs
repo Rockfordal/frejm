@@ -4,6 +4,6 @@
 
 (rum/defc login_v [db]
   [:div
-   [:h3 "login"]
+   [:h3 "Logga in"]
    ;[:b (rum/react figgen)]
    ])
