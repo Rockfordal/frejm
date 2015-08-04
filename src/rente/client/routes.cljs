@@ -20,6 +20,6 @@
 
 (defroute module-path "/:module" {module :module}
   (let [module-keys (set (map :key (:modules @state)))
-        module-key (or (module-keys (keyword module)) :html2ts)]
+        module-key (or (module-keys (keyword module)) :notfound)]
     (swap! state
            assoc :module module-key)))
