@@ -7,6 +7,7 @@
     [rente.client.state           :refer [state get-state]]
     [rum :include-macros true]))
 
+;; Sidan finns inte
 (rum/defc notfound_v []
   [:div.row
    [:div.col.s4
@@ -17,6 +18,7 @@
      [:div.card-action
       [:a {:href "#"} "Gå Hem"]]]]]])
 
+;; Vy väljare baserat på aktuell modul
 (defn panels [i db]
   (case i
     :sortiment (sortiment_v db)
@@ -24,7 +26,7 @@
     :login     (login_v db)
     :notfound  (notfound_v)))
 
-;; navbar and currentpage
+;; Huvud vy med navbar
 (rum/defc canvas < rum/reactive [db]
   [:div
    (navbar
