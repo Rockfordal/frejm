@@ -79,7 +79,7 @@
                  [secretary "1.2.3"]
                  [clj-json "0.5.3"]
                  ;[cljs-http "0.1.14"]
-                 ;[jayq "2.5.4"]
+                 [jayq "2.5.4"]
                  ;[cljsjs/highlight "8.4-0"]
                  [org.webjars.bower/jquery "2.1.3"]
                  [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
