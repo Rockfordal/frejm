@@ -7,6 +7,6 @@
 
 (fw/watch-and-reload
  :websocket-url "ws://localhost:3449/figwheel-ws"
- :jsload-callback #(app/fig))
+ :jsload-callback #(app/render))
 
 (app/main)
