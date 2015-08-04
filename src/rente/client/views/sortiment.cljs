@@ -6,7 +6,7 @@
     [rum :include-macros true]))
 
 
-(rum/defc shelf_v [shelf]
+(rum/defc shelf_v < rum/static [shelf]
   [:.product
     [:span.id   (:db/id shelf)]
     [:span.name (:shelf/name shelf)]])
