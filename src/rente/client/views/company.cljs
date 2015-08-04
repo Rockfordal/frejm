@@ -91,7 +91,7 @@
     [:h3 "Företag"]
       [:div.row
        (company-list (get-state :companies))
-       [:button.btn.btn-primary {:on-click #(js/alert "yo")} "Lägg till projekt"]]]) 
+       [:button.btn.btn-primary {:on-click #(js/alert "yo")} "Lägg till"]]]) 
 
    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
        ;; [company-input {:id "new-todo"
