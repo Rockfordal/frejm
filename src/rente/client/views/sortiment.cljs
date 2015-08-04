@@ -1,8 +1,8 @@
 (ns rente.client.views.sortiment
   (:require
     [datascript :as d]
-    ;[rente.client.queries :as q]
-    [rum :as r :include-macros true]))
+    [rente.client.queries :as q]
+    [rum :as r]))
 
 
 (r/defc shelf_v < r/static [shelf]
@@ -27,14 +27,14 @@
     (for [[eid] (sort (d/q '[:find ?e
                              :where [?e :product/name]]
                              db))]
-      (r/with-props product_v (d/entity db eid) :r/key [eid]))]) ; tills rum fixat bug
+      (r/with-props product_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
 
 (r/defc visa-alla-hyllor [db]
   [:div
    (for [[eid] (sort (d/q '[:find ?e
                             :where [?e :shelf/name]]
                             db))]
-      (r/with-props shelf_v (d/entity db eid) :r/key [eid]))]) ; tills rum fixat bug
+      (r/with-props shelf_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
 
 (r/defc visa-sortiment [db]
   [:div
@@ -46,7 +46,7 @@
                       [?item  :item/product ?product]]
                       db "C1")]
        (r/with-props item_v (d/entity db item) (d/entity db product) (d/entity db shelf) ; tills rum fixat bug
-       :r/key [item]))])
+       :rum/key [item]))])
 
 (r/defc sortiment_v [db]
   [:div.sortiment
