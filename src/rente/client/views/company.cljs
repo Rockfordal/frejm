@@ -68,10 +68,35 @@
 ;;        ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
 ;;        [:span " "]]])))
 
+
+;(rum/defc company-input [{:keys [title on-save on-stop]}]
+;;   (let [val (atom title)
+;;         stop #(do (reset! val "")
+;;                   (if on-stop (on-stop)))
+;;         save #(let [v (-> @val str clojure.string/trim)]
+;;                (if-not (empty? v) (on-save v))
+;;                (stop))]
+;;     (fn [props]
+;;       [:input (merge props
+;;                      {:type "text"
+;;                       :value @val
+;;                       :on-blur save
+;;                       :on-change #(reset! val (-> % .-target .-value))
+;;                       :on-key-down #(case (.-which %)
+;;                                      13 (save)
+;;                                      27 (stop)
+;;                                      nil)})])))
+
+
 (rum/defc company_v < rum/reactive [db]
   [:div
   [:h3 "Företag"]
    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
+       ;; [company-input {:id "new-todo"
+       ;;                 :placeholder "Nytt företag?"
+       ;;                                  ;:on-save #(ws/add-name % :company/name :company :companies)
+       ;;                 }]
+                       ;:on-save #(ws/add-company2project % "ica")}]]
    ]
 )
 
