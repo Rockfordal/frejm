@@ -5,10 +5,10 @@
     [rente.client.views.company   :refer [company_v]]
     [rente.client.views.sortiment :refer [sortiment_v]]
     [rente.client.state           :refer [state get-state]]
-    [rum :include-macros true]))
+    [rum :as r :include-macros true]))
 
 ;; Sidan finns inte
-(rum/defc notfound_v []
+(r/defc notfound_v []
   [:div.row
    [:div.col.s4
   [:div.card.blue-grey.darken-1
@@ -27,7 +27,7 @@
     :notfound  (notfound_v)))
 
 ;; Huvud vy med navbar
-(rum/defc canvas < rum/reactive [db]
+(r/defc canvas < rum/reactive [db]
   [:div
    (navbar
      (:module  (get-state))

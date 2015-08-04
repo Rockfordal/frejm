@@ -1,5 +1,5 @@
 (ns rente.client.views.company
-  (:require [rum :as rum]
+  (:require [rum :as r]
             [rente.client.state :refer [state get-state]]
 ;             [rente.client.ws :as ws]
 ;             [secretary.core :refer [IRenderRoute render-route encode-query-params]]
@@ -88,7 +88,7 @@
 ;;                                      nil)})])))
 
 
-(rum/defc company_v < rum/reactive [db]
+(r/defc company_v < rum/reactive [db]
   [:div
   [:h3 "Företag"]
    ;[:div "Valt Projekt: " (str (get-state :activeproject))]

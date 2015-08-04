@@ -1,16 +1,8 @@
 (ns rente.client.views.companyedit
-;;   (:require [reagent.core  :as reagent]
-;;             [rente.client.views.layout :as layout :refer [navbar]]
-;;             ;[rente.client.views.global :as global]
-;;             [rente.client.ws :as ws]
-;;             [secretary.core :as secretary]
-  ;;             [re-frame.core :refer [subscribe dispatch]])
-)
+  (:require [datascript :as d]
+            [rum :as r]))
+;;          [rente.client.ws :as ws]
 
-
-;; (def getcompanies
-;;   (memoize #((ws/get-all :company :companies)
-;;     nil)))
 
 ;; (defn inputt [{:keys [title on-save on-stop]}]
 ;;   (let [val (atom title)
@@ -53,16 +45,13 @@
 ;;   ;[:b "Orgnr "] (:company/orgnr company)
 ;;   ])
 
-;; (defn companyedit-panel []
+;; (r/defc companyedit_v []
 ;;   (let [a 1
 ;;         companies (subscribe [:companies])
 ;;         ;active-project (subscribe [:active-project])
 ;;         active-panel (subscribe [:active-panel])
 ;;         panelid (subscribe [:active-panel-id])]
-
 ;;   [:div
-;;    [navbar]
-;;    [:div.container
 ;;     (getcompanies)
 ;;     [:header#header
 ;;      [:h2 "Redigera Företag"]
@@ -72,4 +61,4 @@
 ;;     [:div.row
 ;;      [:br]
 ;;       [company-edit (first @companies)]
-;;      ]]]))
+;;      ]))

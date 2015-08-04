@@ -1,9 +1,6 @@
 (ns rente.client.views.login
-  (:require [rum :as rum]
-            [rente.client.state :refer [figgen]]))
+  (:require [rum :as r])) 
 
-(rum/defc login_v [db]
+(r/defc login_v [db]
   [:div
-   [:h3 "Logga in"]
-   ;[:b (rum/react figgen)]
-   ])
+   [:h3 "Logga in"]])
