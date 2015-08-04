@@ -5,43 +5,21 @@
     [rente.client.views.company   :refer [company_v]]
     [rente.client.views.sortiment :refer [sortiment_v]]
     [rente.client.state           :refer [state get-state]]
-    [rum :include-macros true])
-)
+    [rum :include-macros true]))
 
-;; where are page views
-(def module-map
-  {:company   company_v
-   :sortiment sortiment_v
-   :login     login_v})
 
 (defmulti  panels identity)
-;(defmulti  panels (fn ([db & xs])
-;                       (mapv identity (into [db] xs))))
-
-(defmethod panels :sortiment [db] (sortiment_v db))
-;(defmethod panels :company   [db] (company_v db))
-;(defmethod panels :login     [db] (login_v db))
-
-;; select current page
-(rum/defc content [current-module db] 
-  (let [module-comp (current-module module-map)]
-    [:div.content
-      (module-comp db)]))
-
-(defn main-panel [panel db]
-  (panels panel db)
-)
+(defmethod panels :sortiment [i db] (sortiment_v db))
+(defmethod panels :company   [i db] (company_v db))
+(defmethod panels :login     [i db] (login_v db))
 
 ;; navbar and currentpage
 (rum/defc canvas < rum/reactive [db]
   [:div
    (navbar
-     (:module        (get-state))
-     (:modules       (get-state)))
-   ;(content (:module (get-state)) db)
-   ;(main-panel (:module (get-state)) db)
-   (panels (:module (get-state)) db)
-   ])
+     (:module       (get-state))
+     (:modules      (get-state)))
+   (panels (:module (get-state)) db)])
 
 
 ;(defn notfound-panel [data]
