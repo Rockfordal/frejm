@@ -58,6 +58,7 @@
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.3.4"]
                  [http-kit "2.1.19"]
+                 [datomic-schema "1.3.0"]
                  ;[liberator "0.12.0"]
 
                  ;[com.datomic/datomic-free "0.9.5153"
