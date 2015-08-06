@@ -1,5 +1,6 @@
 (ns rente.client.views.company
   (:require [rum :as r]
+            [rente.client.dom :as dom :refer [by-id]]
             [rente.client.state :refer [state get-state]]
 ;             [rente.client.ws :as ws]
 ;             [secretary.core :refer [IRenderRoute render-route encode-query-params]]
@@ -66,40 +67,48 @@
         ;(company-item company)) ; kommer nog funka sen
          (r/with-props company-item company :rum/key company))]]])
 
-
-;(rum/defc company-input [{:keys [title on-save on-stop]}]
-;;   (let [val (atom title)
-;;         stop #(do (reset! val "")
-;;                   (if on-stop (on-stop)))
-;;         save #(let [v (-> @val str clojure.string/trim)]
-;;                (if-not (empty? v) (on-save v))
-;;                (stop))]
-;;     (fn [props]
-;;       [:input (merge props
-;;                      {:type "text"
-;;                       :value @val
-;;                       :on-blur save
-;;                       :on-change #(reset! val (-> % .-target .-value))
-;;                       :on-key-down #(case (.-which %)
-;;                                      13 (save)
-;;                                      27 (stop)
-;;                                      nil)})])))
-
+(rum/defc company-input [{:keys [id title on-save on-stop]}]
+  (let [val (atom title)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)
+                  ))
+        save #(let [v (-> @val str clojure.string/trim)]
+               (if-not (empty? v) (on-save v))
+               (stop))]
+;    (fn [props]
+    [:input
+     ;(merge props
+                {:type "text"
+                :id id
+                :value @val
+                :on-blur save
+                :on-change #(reset! val (-> % .-target .-value))
+                :on-key-down #(case (.-which %)
+                                13 (save)
+                                27 (stop)
+                                nil)}
+   ;  )
+    ]))
+;)
 
 (r/defc company_v < rum/reactive [db]
   [:div
     [:h3 "Företag"]
       [:div.row
        (company-list (get-state :companies))
-       [:button.btn.btn-primary {:on-click #(js/alert "yo")} "Lägg till"]]]) 
-
+       [:button.btn {:on-click #(js/alert "yo")} "Lägg till"]
    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
-       ;; [company-input {:id "new-todo"
+       (company-input {:id "new-todo"
        ;;                 :placeholder "Nytt företag?"
-       ;;                                  ;:on-save #(ws/add-name % :company/name :company :companies)
-       ;;                 }]
+       ;;                 :on-save #(ws/add-name % :company/name :company :companies)
                        ;:on-save #(ws/add-company2project % "ica")}]]
-
+                        :title "Nytt företag"
+                        :on-save #(js/console.log "sparar")
+                        :on-stop #(js/console.log "slut")
+        })
+       [:button.btn {:on-click #(.focus (by-id "new-todo"))} "Fokus"]
+       [:button.btn {:on-click #(.blur (by-id "new-todo"))} "Blur"]
+       ]]) 
 ;;    [:div.container
 ;;     (getcompanies)
 ;;     [:header#header
