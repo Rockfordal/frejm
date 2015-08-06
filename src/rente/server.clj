@@ -9,6 +9,7 @@
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
             [rente.projects :as projects]
+            [rente.products :as products]
             [clj-json.core :as json]
             [rente.ws :as ws]))
 
