@@ -4,6 +4,7 @@
             [clojure.core.async :as async]
             [datomic.api :as d]
             [rente.db :as db]
+            [rente.products :as products]
             [rente.projects :as projects]
             [rente.companies :as companies]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
@@ -27,11 +28,12 @@
     (?reply-fn [:rente/testevent {:message (str "Server Callback fick: " ?data)}])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
 
-;------------ gamla ------------------------------------
-;(defmethod event-msg-handler :rente/get-projects
-;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
+;------------ nya --------------------------------------
+(defmethod event-msg-handler :rente/get-products
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (?reply-fn [:rente/get-products (products/getall)]))
 
+;------------ gamla ------------------------------------
 ;(Defmethod event-msg-handler :rente/get-companies
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
 ;    (?reply-fn [:rente/get-companies (db/expand (companies/getall))]))
