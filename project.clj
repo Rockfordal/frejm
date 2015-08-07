@@ -127,14 +127,12 @@
 
   :profiles {
              :dev {
-                    ;:source-paths ["dev-resources"]
                     :source-paths ["dev"]
                     :resource-paths ^:replace
                     ["resources" "dev-resources" "resources-index/dev"]
 
-                   :datomic {:config "resources/free-transactor.properties"} ; för lein-datomic
+                   :datomic {:config "resources/lowmem-transactor.properties"} ; för lein-datomic
 
-                   ;:dev-config {
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/tools.nrepl "0.2.10"]]
 
