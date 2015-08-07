@@ -1,6 +1,6 @@
 (ns rente.client.util
   (:require [datascript :as d]
-            [rente.client.fixtures :refer [data]]
+            [rente.client.fixtures :refer [data tomdata]]
             [clojure.string :as str]))
    ;[cognitect.transit :as transit]
 
@@ -42,9 +42,14 @@
         (println
           (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
 
-
 (defn load-fixtures [conn]
+  (println "ladda fixturer")
   (d/transact! conn data))
+
+(defn importdata [data]
+  (println "importdata: " data)
+  ;(d/transact! conn data))
+  )
 
 ;(defn toggle-fig-tx [db eid]
 ;  (let [done? (:fig/done (d/entity db eid))]

@@ -5,7 +5,7 @@
   options can be kept under `:disabled`."
   {:any
    [
-    ;"-server"                     ; -server = optimized for speed ;  client = optimized for startup time
+    ;"-server"                     ; -server = optimized for speed ;  client = optimized for launch time
     "-Xms512m" "-Xmx1g"           ; Minimum and maximum sizes of the heap
     "-XX:+UseParNewGC"            ; Use the new parallel GC in conjunction with
     "-XX:+UseConcMarkSweepGC"     ;  the concurrent garbage collector
@@ -144,8 +144,8 @@
                     {:builds
                      {:client {:source-paths ["dev"]
                                :compiler
-                               {:optimizations :none
-                                :source-map true}}}
+                                 {:optimizations :none
+                                  :source-map true}}}
 
                     :whitespace {:source-paths ["src/cljs" "test/cljs" "src/brepl"]
                                 :compiler
