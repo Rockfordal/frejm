@@ -1,5 +1,8 @@
 (ns rente.client.fixtures)
 
+(def tomdata [
+  [:db/add 0 :system/group :all]])
+
 (def data [
   [:db/add 0 :system/group :all]
   {:db/id -1 :product/name "Mjölk"}
@@ -29,4 +32,3 @@
    :item/shelf -1
    :item/product -3}
   ])
-
