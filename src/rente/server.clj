@@ -19,6 +19,7 @@
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
    ; Test
+   (GET "/createproducts" req (products/init))
    (GET "/createprojects" req (projects/init))
    (GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))

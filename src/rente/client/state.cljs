@@ -1,5 +1,6 @@
 (ns rente.client.state
-  (:require [rum :as r]))
+  (:require [rum :as r]
+            [datascript :as d]))
 
 (defonce ^:private state
   (atom {:schema  {:item/shelf   {:db/valueType :db.type/ref}
@@ -10,6 +11,9 @@
          :modules [{:key :sortiment :title "Sortiment" :url "#sortiment"}
                    {:key :company   :title "Företag"   :url "#company"}
                    {:key :login     :title "Logga in"  :url "#login"}]}))
+
+(def conn
+  (atom (d/create-conn (:schema @state))))
 
 (defn reset-state! [] (reset! state nil))
 
