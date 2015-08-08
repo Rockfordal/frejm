@@ -3,7 +3,6 @@
      cljs.reader
     [datascript :as d]
     [rum :as r]
-    [rente.client.ws :as ws]
     [rente.client.dom :as dom :refer [by-id]]
     [rente.client.routes :as routes]
     [rente.client.views.main :refer [canvas]]
