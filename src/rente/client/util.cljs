@@ -40,10 +40,13 @@
     (fn [tx-report]
       (let [tx-id  (get-in tx-report [:tempids :db/current-tx])
             datoms (:tx-data tx-report)
-            datom->str (fn [d] (str (if (.-added d) "+" "−")
-                                 "[" (.-e d) " " (.-a d) " " (pr-str (.-v d)) "]"))]
-        (println
-          (str/join "\n" (concat [(str "tx " tx-id ":")] (map datom->str datoms))))))))
+            datom->str (fn [d] (if (= :figwheel (.-a d)) 0
+                                 (str (if (.-added d) "+" "−")
+            "[" (.-e d) " " (.-a d) " " (pr-str (.-v d)) "]")))
+            s [(str "tx " tx-id ":")]
+            dt (map datom->str datoms)]
+          (when-not (= 0 (first dt))
+            (println (str/join "\n" (concat s dt))))))))
 
 (defn load-fixtures [conn]
   (println "ladda fixturer")

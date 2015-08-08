@@ -37,5 +37,4 @@
 (defn ^:export main []
   (routes/app-routes)
   (load-fixtures @conn)
-  ;(log-transactions @conn)
-  )
+  (log-transactions @conn))
