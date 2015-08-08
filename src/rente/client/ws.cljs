@@ -4,31 +4,24 @@
             [cognitect.transit :as t]
             [rente.client.util :as u :refer [importdata]]))
 
-;; (def j (t/reader :json))
+; Dispatch on event key which is 1st elem in vector
+(defmulti push-msg-handler (fn [[id _]] id))
 
-;; (defn jsonreader [data]
-;;   (js->clj
-;;   (t/read j data)
-;;   :keywordize-keys true))
+(defmethod push-msg-handler :rente/testevent [[_ event]]
+  (println "PUSHed :rente/testevent from server: %s " (pr-str event)))
 
-(defmulti push-msg-handler (fn [[id _]] id)) ; Dispatch on event key which is 1st elem in vector
-
-(defmethod push-msg-handler :rente/testevent
-  [[_ event]]
-  (js/console.log "PUSHed :rente/testevent from server: %s " (pr-str event)))
-
-(defmulti event-msg-handler :id) ; Dispatch on event-id
-;; Wrap for logging, catching, etc.:
+;; Dispatch on event-id
+(defmulti event-msg-handler :id)
 
 (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event]}]
-    (js/console.log "Okänt event: %s" (pr-str event)))
+    (println "Okänt event: %s" (pr-str event)))
 
 (defmethod event-msg-handler :chsk/state
   [{:as ev-msg :keys [?data]}]
   (if (= ?data {:first-open? true})
-    (js/console.log "Channel socket successfully established!")
-    (js/console.log "Channel socket state change: %s" (pr-str ?data))))
+    (println "Channel socket successfully established!")
+    (println "Channel socket state change: %s" (pr-str ?data))))
 
 (defmethod event-msg-handler :chsk/recv
   [{:as ev-msg :keys [?data]}]
@@ -44,25 +37,25 @@
   (def chsk-send! send-fn)
   (def chsk-state state))
 
-(sente/start-chsk-router! ch-chsk event-msg-handler*)
+;(sente/start-chsk-router! ch-chsk event-msg-handler*)
 
 ;; ;------------ test -------------------------------------
-(defn test-socket-event []
-  (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
+;; (defn test-socket-event []
+;;   (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
 
-(defn test-socket-callback []
-  (chsk-send!
-    [:rente/testevent {:message "klienten säger Callback!"}]
-    2000
-    ;#(dispatch [:get-message (second %)])
-    #(importdata (second %))))
+;; (defn test-socket-callback []
+;;   (chsk-send!
+;;     [:rente/testevent {:message "klienten säger Callback!"}]
+;;     2000
+;;     ;#(dispatch [:get-message (second %)])
+;;     #(importdata (second %))))
 
 ;; ;--------------------------------------------------
 (defn get-products []
   (chsk-send!
     [:rente/get-products]
     2000
-    #(println "vi fik produkter: " (second %))))
+    #(println "vi fick produkter: " (second %))))
 
 ;; ;(defn add-project [project]
 ;; ;  (chsk-send!
