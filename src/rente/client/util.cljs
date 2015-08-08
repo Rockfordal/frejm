@@ -54,19 +54,7 @@
   ;(d/transact! conn data))
   )
 
-;(defn toggle-fig-tx [db eid]
-;  (let [done? (:fig/done (d/entity db eid))]
-;    [[:db/add eid :fig/done (not done?)]]))
-
-;(defn toggle-fig [eid]
-;  (d/transact! conn [[:db.fn/call toggle-fig-tx eid]]))
-
-(defn toggle-fig [conn id n]
+(defn toggle-fig [conn]
   (d/transact! conn
-     ;[:db/add 1 :system/group :all]
-     [{:db/id id :figwheel/name "yo"}]
+    [{:db/id 0 :figwheel (random)}]))
 
-     ;{:figwheel/id n}
-     )
-  (println "id" id "n" n)
-)
