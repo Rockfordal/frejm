@@ -1,10 +1,9 @@
 (ns rente.client.views.sortiment
   (:require
     [datascript :as d]
-    [rente.client.ws :as ws]
     [rente.client.queries :as q]
+    ;[rente.client.ws :as ws]
     [rum :as r]))
-
 
 (r/defc shelf_v < r/static [shelf]
   [:.product
