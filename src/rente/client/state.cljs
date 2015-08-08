@@ -18,7 +18,7 @@
 (defn reset-state! [] (reset! state nil))
 
 (defn get-state
-  ([] (r/react state))
+  ([]         (r/react state))
   ([key] (key (r/react state))))
 
 (defn update-state! [k v & kvs]
