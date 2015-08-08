@@ -13,20 +13,20 @@
 
 (declare render persist)
 
-;(defn initdb []
-;  (reset! conn (d/create-conn (:schema @state))))
-;  (initdb)
+(defn initdb []
+  (reset! conn (d/create-conn (:schema @state))))
 
 ;(defn reset-conn! [db]
 ;  (reset! conn db)
 ;  (render db))
 
-;; mount page to html body
 (defn render
   ([] (render @conn))
   ([db]
-   (profile "render"
-     (r/mount (canvas db) (by-id "app")))))
+     (r/mount (canvas db) (by-id "app"))))
+
+(defn fig []
+  (u/toggle-fig @conn))
 
 ;; re-render on every DB change
 (d/listen! @conn :render
