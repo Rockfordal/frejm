@@ -25,15 +25,13 @@
 (r/defc visa-alla-produkter [db]
   [:div
     (for [[eid] (sort (d/q '[:find ?e
-                             :where [?e :product/name]]
-                             db))]
+                             :where [?e :product/name]] db))]
       (r/with-props product_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
 
 (r/defc visa-alla-hyllor [db]
   [:div
    (for [[eid] (sort (d/q '[:find ?e
-                            :where [?e :shelf/name]]
-                            db))]
+                            :where [?e :shelf/name]] db))]
       (r/with-props shelf_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
 
 (r/defc visa-sortiment [db]
