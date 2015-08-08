@@ -54,7 +54,10 @@
          [:div.card-content.white-text
           [:span.card-title "Produkter"]
           (visa-alla-produkter db) [:br]
-          [:div.card-action [:a {:href "#" :on-click #(ws/get-products)} "ok"] ]]]]
+          [:div.card-action [:a {:href "#" :on-click #(println "get"
+                                                       ;ws/get-products
+                                                        )} "ok"] ]
+          ]]]
       [:div.col.s3
         [:div.card.blue-grey.darken-1
          [:div.card-content.white-text
