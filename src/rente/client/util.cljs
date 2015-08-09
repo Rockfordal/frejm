@@ -1,6 +1,13 @@
 (ns rente.client.util
+  (:require-macros
+    [cljs.core.async.macros :refer [go]])
   (:require [datascript :as d]
-            [rente.client.fixtures :refer [data tomdata]]
+            [cljs.core.async :refer [<!]]
+            [cljs-http.client :as http]
+            [cognitect.transit :as t]
+            [rente.client.fixtures :refer [data blank]]
+            [rente.client.state :refer [conn]]
+            [rente.client.dom :refer [toast]]
             [clojure.string :as str]))
    ;[cognitect.transit :as transit]
 
@@ -48,16 +55,36 @@
           (when-not (= 0 (first dt))
             (println (str/join "\n" (concat s dt))))))))
 
-(defn load-fixtures [conn]
-  (println "ladda fixturer")
-  (d/transact! conn data))
+(defn load-fixtures []
+  (d/transact! @conn data))
 
-(defn importdata [data]
-  (println "importdata: " data)
-  ;(d/transact! conn data))
-  )
+ (defn load-state []
+  (go (let [response (<! (http/get "/getstate" {}))
+            status   (:status response)
+            body     (:body response)]
+        (if (= 200 status) 
+          (do
+            (d/transact! @conn body)
+            (toast "Data laddad!"))
+          (do
+            (load-fixtures)
+            (toast (str "kunde inte ladda state från server:" status)))
+      (log-transactions @conn)))))
 
-(defn toggle-fig [conn]
-  (d/transact! conn
+(defn create-for-product-name [name]
+  (let [id (d/tempid :db.part/user)]
+  @(d/transact @conn [{:db/id id
+                       :product/name name}])))
+
+(defn toggle-fig []
+  (d/transact! @conn
     [{:db/id 0 :figwheel (random)}]))
 
+;; (defn got-products [data]
+;;   (let [id   (d/tempid :db.part/user)
+;;         f    (first data)
+;;         name (:product/name f)]
+;;     ;(println "data: " name)
+;;     (d/transact @conn data)
+;;     ;(create-for-product-name name)
+;;     ))
