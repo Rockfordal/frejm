@@ -7,19 +7,19 @@
 
 (r/defc shelf_v < r/static [shelf]
   [:.product
-    [:span.id   (:db/id shelf)]
+    ;[:span.id   (:db/id shelf)]
     [:span.name (:shelf/name shelf)]])
 
 (r/defc item_v [item product shelf]
   [:div
-    [:span (:db/id item)]           [:span " "]
+    ;[:span (:db/id item)]           [:span " "]
     [:span (:item/quantity item)]   [:span " "]
     [:span (:product/name product)] [:span " "]
     [:span (:shelf/name shelf)]])
 
 (r/defc product_v [product]
   [:.product
-    [:span.id   (:db/id product)]
+    ;[:span.id   (:db/id product)]
     [:span.name (:product/name product)]])
 
 (r/defc visa-alla-produkter [db]
@@ -54,9 +54,10 @@
          [:div.card-content.white-text
           [:span.card-title "Produkter"]
           (visa-alla-produkter db) [:br]
-          [:div.card-action [:a {:href "#" :on-click #(println "get"
+          [:div.card-action [:a {:href "#" :on-click #(
+                                                       println "get"
                                                        ;ws/get-products
-                                                        )} "ok"] ]
+                                                        )} "Hämta"] ]
           ]]]
       [:div.col.s3
         [:div.card.blue-grey.darken-1
