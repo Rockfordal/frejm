@@ -1,7 +1,7 @@
 (ns rente.client.fixtures)
 
-(def tomdata [
-  [:db/add 0 :system/group :all]])
+(def blank
+  [[:db/add 0 :system/group :all]])
 
 (def data [
   [:db/add 0 :system/group :all]
