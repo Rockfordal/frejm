@@ -1,40 +1,31 @@
 (ns rente.client.app
+  (:require-macros
+    [rente.macros :refer [profile]])
   (:require
-     cljs.reader
     [datascript :as d]
     [rum :as r]
-    [rente.client.dom :as dom :refer [by-id]]
-    [rente.client.routes :as routes]
+    ;[rente.client.ws :as ws]
+    [rente.client.util :as u :refer [log-transactions load-state]]
+    [rente.client.state :refer [conn state]]
+    [rente.client.routes :refer [app-routes]]
     [rente.client.views.main :refer [canvas]]
-    [rente.client.state :refer [conn state get-state]]
-    [rente.client.util :as u :refer [log-transactions load-fixtures]])
-  (:require-macros
-    [rente.macros :refer [profile]]))
+    [rente.client.dom :refer [by-id]]))
 
 (declare render persist)
 
 (defn initdb []
   (reset! conn (d/create-conn (:schema @state))))
 
-;(defn reset-conn! [db]
-;  (reset! conn db)
-;  (render db))
-
 (defn render
-  ([] (render @conn))
-  ([db]
-     (r/mount (canvas db) (by-id "app"))))
+  ([]   (render @conn))
+  ([db] (r/mount (canvas db) (by-id "app"))))
 
-(defn fig []
-  (u/toggle-fig @conn))
-
-;; re-render on every DB change
+;; re-render on DB change
 (d/listen! @conn :render
   (fn [tx-report]
     (render (:db-after tx-report))))
 
 ;; Starting point
 (defn ^:export main []
-  (routes/app-routes)
-  (load-fixtures @conn)
-  (log-transactions @conn))
+  (app-routes)
+  (load-state))
