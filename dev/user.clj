@@ -11,11 +11,14 @@
    [com.stuartsierra.component :as component]
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
    [rente.config :as config]
+   [rente.products] ; för att snabbt komma åt från repl
+   [rente.run]
    [rente.system :as system]))
   ;[midje.repl :as midje]
   ;[clojure.stacktrace :as st]))
 
 (def system nil)
+(def testar 123)
 
 (defn init []
   (alter-var-root #'system (fn [] (system/system (config/get-config)))))
@@ -41,9 +44,3 @@
 
 (defn visa [found]
   (datomic.api/touch (datomic.api/entity (db) (ffirst found))))
-
-(comment
- (def food-q '[:find ?e :where [?e :material/title "On Food and Cooking"]])
- (def found (datomic.api/q food-q db))
- (instance? datomic.query.EntityMap found) ; false
-)
