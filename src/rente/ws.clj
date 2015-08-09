@@ -4,6 +4,7 @@
             [clojure.core.async :as async]
             [datomic.api :as d]
             [rente.db :as db]
+            [rente.queries :as q]
             [rente.products :as products]
             [rente.projects :as projects]
             [rente.companies :as companies]
@@ -29,14 +30,14 @@
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
 
 ;------------ nya --------------------------------------
-(defmethod event-msg-handler :rente/get-products
+(defmethod event-msg-handler :rente/get-data
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (?reply-fn [:rente/get-products (products/getall)]))
+    (?reply-fn [:rente/get-data (db/get-state)]))
 
 ;------------ gamla ------------------------------------
 ;(Defmethod event-msg-handler :rente/get-companies
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-companies (db/expand (companies/getall))]))
+;    (?reply-fn [:rente/get-companies (db/expand (companies/get-all))]))
 
 ;(defmethod event-msg-handler :rente/add-project
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -68,7 +69,7 @@
 (defmethod event-msg-handler :rente/delete
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
     ;(if (db/delete! (:id ?data))
-    (if (db/delete-eid (:db/id ?data))
+    (if (db/delete-entity (:db/id ?data))
       (?reply-fn [:rente/delete {:db/id (:db/id ?data)}])
       (?reply-fn [:rente/delete {:message (str "misslyckades radera")}])))
 
