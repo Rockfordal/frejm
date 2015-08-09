@@ -8,6 +8,10 @@
 (defn by-id [id]
   (.getElementById js/document (name id)))
 
+(defn toast
+  ([msg]      (.toast js/Materialize msg 3000))
+  ([msg time] (.toast js/Materialize msg time)))
+
 (defn set-value! [el value]
   (set! (.-value el) value))
 
