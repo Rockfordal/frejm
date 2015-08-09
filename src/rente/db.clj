@@ -1,6 +1,9 @@
 (ns rente.db
   (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]
+            [clojure.algo.generic.functor :refer [fmap]]
+            [rente.dbschema :refer [get-schema]]
+            [rente.dbseed :refer [seed-data]]
             [rente.config :refer [get-config]]
             [clojure.java.io :refer (resource)]))
 
@@ -12,16 +15,11 @@
     @connection))
 
 (defn init []
-  (let [uri (:dburi (get-config))
-        schema (read-string (slurp (resource "schema.edn")))]
+  (let [uri (:dburi (get-config))]
     (d/create-database uri)
     (reset! connection (d/connect uri))
-    (d/transact (conn) schema)
+    (d/transact (conn) (get-schema))
     true))
-
-(defn close []
-  (d/release (conn))
-  (reset! connection nil))
 
 (defn db []
   (d/db (conn)))
@@ -31,46 +29,23 @@
     @(d/transact (conn) (list (assoc m :db/id dbid)))
     dbid))
 
-(defn create-eid [m]
-  (let [dbid (d/tempid :db.part/user)]                ; #db/id[:db.part/user -1000027]
-    @(d/transact (conn) (list (assoc m :db/id dbid))) ; {:db}
-    dbid))
-
 (defn create-entity [m]
   (let [temp-id (d/tempid :db.part/user)
         tx @(d/transact (conn) (list (assoc m :db/id temp-id)))]
     (d/resolve-tempid (db) (:tempids tx) temp-id)))
 
+(defn seed []
+  (for [entry (seed-data)]
+    (create! entry)))
+
 (defn read
-  ([id]
-     (let [found (d/q '[:find ?e :in $ ?id :where [?event :id ?id]] (db) id)]
-       (if (seq found)
-         (d/entity (db) (ffirst found)))))
   ([k v]
      (let [found (d/q '[:find ?e :in $ ?k ?v :where [?e ?k ?v]] (db) k v)]
        (map (comp (partial d/entity (db)) first) found))))
 
-(defn update! [id m]
-  (if-let [found (read id)]
-    (do @(d/transact (conn)
-       (map (fn [k v] [:db/add (:db/id found) k v])
-                (keys m) (vals m)))
-        true)
-    false))
-
 (defn delete-entity [eid]
   (do @(d/transact (conn) [[:db.fn/retractEntity eid]])
-    true))
-
-(defn delete! [id]
-  (if-let [found (read id)]
-    (do @(d/transact (conn) [[:db.fn/retractEntity (:db/id found)]])
-        true)
-    false))
-
-(defn delete-eid [eid]
-  (do @(d/transact (conn) [[:db.fn/retractEntity eid]])
-  true))
+      true))
 
 (defn expand
   ([e]
@@ -88,3 +63,35 @@
           (expand (assoc e (first ks) (set (map expand val))) (rest ks))
           :else (expand e (rest ks))))
        e)))
+
+(defn visible-entities []
+  (d/q '[:find ?e :in $ %
+         :where (visible ?e)]
+        (db)
+        '[[(visible ?p) (?p :product/name)]
+          [(visible ?s) (?s :shelf/name)]
+          [(visible ?j) (?j :project/name)]
+          [(visible ?c) (?c :company/name)]]))
+
+(defn load-entity
+  "Loads an entity and its attributes. Keep in the db/id
+  and replace references with ids (for use by DataScript)"
+  [db entity]
+  (as->
+   (d/entity db entity) e
+   (d/touch e)
+   (into {:db/id (:db/id e)} e) ; needs to be a hash-map, not an entity map
+   (fmap (fn [v]
+           (cond (set? v) (mapv #(if (instance? datomic.query.EntityMap %) (:db/id %) %) v)
+                 (instance? datomic.query.EntityMap v) (:db/id v)
+                 :else v)) e)))
+
+(defn get-state []
+  (map
+    (comp (partial load-entity (db))
+           first)
+    (visible-entities)))
+
+(defn close []
+  (d/release (conn))
+  (reset! connection nil))
