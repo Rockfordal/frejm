@@ -52,16 +52,17 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/tools.logging "0.3.1"]
                  [ch.qos.logback/logback-classic "1.1.3"]
+                 [org.clojure/algo.generic "0.1.2"]
 
                  ; Server
                  [ring/ring-core "1.3.2"]
                  [ring/ring-defaults "0.1.5"]
+                 [fogus/ring-edn "0.3.0"]
                  [compojure "1.3.4"]
                  [http-kit "2.1.19"]
                  [datomic-schema "1.3.0"]
                  ;[liberator "0.12.0"]
 
-                 ;[com.datomic/datomic-free "0.9.5153"
                  [com.stuartsierra/component "0.2.3"]
                  [com.datomic/datomic-pro "0.9.5201"
                   :exclusions [joda-time
@@ -74,14 +75,12 @@
 
                  ; Klient
                  [rum "0.2.7"]
-                 ;[reagent "0.5.0"]
-                 ;[re-frame "0.4.1"]
                  [datascript "0.11.5"]
                  [secretary "1.2.3"]
                  [clj-json "0.5.3"]
-                 ;[cljs-http "0.1.14"]
-                 [jayq "2.5.4"]
+                 [cljs-http "0.1.36"]
                  ;[cljsjs/highlight "8.4-0"]
+                 ;[jayq "2.5.4"]
                  [org.webjars.bower/jquery "2.1.3"]
                  [org.webjars.bower/materialize "0.96.1" :exclusions [org.webjars.bower/jquery]]
                  ;[org.webjars.bower/highlightjs "8.5.0"]
@@ -105,9 +104,9 @@
   ;:main ^:skip-aot rente.run
   :main rente.run
 
-  :datomic {:schemas ["resources" ["schema.edn"]] ; man kan tex adda initial-data.edn i vektorn
-            :install-location  "/opt/datomic-pro"
-            :location "/opt/datomic-pro"}
+  :datomic {:config "../../../../../../opt/datomic-pro/lowmem-transactor.properties"
+            :install-location "/opt/datomic-pro"
+            :env {"JAVA_OPTS" "-Xms128m -Xmx128m"}}
 
   :cljsbuild
   {:builds
@@ -131,13 +130,11 @@
                     :resource-paths ^:replace
                     ["resources" "dev-resources" "resources-index/dev"]
 
-                   :datomic {:config "resources/lowmem-transactor.properties"} ; för lein-datomic
-
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/tools.nrepl "0.2.10"]]
 
                     :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
-                              ;[lein-datomic "0.2.0"]
+                              [anlu-datomic "0.2.0"]
                               [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]]
 
                     :cljsbuild
