@@ -2,7 +2,7 @@
   (:require [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]
             [cognitect.transit :as t]
-            [rente.client.util :as u :refer [importdata]]))
+            [rente.client.util :as u]))
 
 ; Dispatch on event key which is 1st elem in vector
 (defmulti push-msg-handler (fn [[id _]] id))
@@ -51,11 +51,10 @@
 ;;     #(importdata (second %))))
 
 ;; ;--------------------------------------------------
-(defn get-products []
-  (chsk-send!
-    [:rente/get-products]
-    2000
-    #(println "vi fick produkter: " (second %))))
+;; (defn get-products []
+;;   (chsk-send!
+;;     [:rente/get-products]
+;;     2000 #(u/got-products (second %))))
 
 ;; ;(defn add-project [project]
 ;; ;  (chsk-send!
