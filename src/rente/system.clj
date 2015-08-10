@@ -1,16 +1,25 @@
 (ns rente.system
-  (:require [com.stuartsierra.component :as component]
-            [rente.ws :as ws]
-            [rente.server :as server]
-            [rente.core :as core]))
+  (:require [com.stuartsierra.component :as component :refer [system-map using]]
+            [rente.ws :refer [new-ws]]
+            [rente.server :refer [new-http-server]]
+            [rente.db :refer [new-datomic]]
+            [rente.core :refer [new-app]]))
 
-(defn system [config]
-  (component/system-map
-   :datomic
-   (component/using (core/new-datomic) [])
-   :ws-connection
-   (ws/new-ws-connection)
-   :http-server
-   (component/using (server/new-http-server (:port config)) [:ws-connection])
-   :app
-   (component/using (core/new-app) [:ws-connection])))
+(defn vanlig [config]
+  (let [{:keys [port dburi]} config]
+    (system-map
+     :datomic       (new-datomic dburi)
+     :ws-conn       (new-ws)
+     :http-server   (using (new-http-server port) [:ws-conn])
+     ;:app           (using (new-app)              [:ws-conn])
+     :app           (new-app)
+     )))
+
+(defn light [config]
+  (let [{:keys [port dburi]} config]
+    (system-map
+     :datomic       (new-datomic dburi)
+     ;:ws-conn       (new-ws)
+     ;:http-server   (using (new-http-server port) [:ws-conn])
+     :app           (new-app)
+     )))
