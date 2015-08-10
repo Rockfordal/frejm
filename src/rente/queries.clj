@@ -8,7 +8,7 @@
          (db/db) name ref))
 
 (defn get-all [typ]
-  (map d/touch (read :type typ)))
+  (map d/touch (db/read :type typ)))
 
 (defn get-by-name [ref name]
   (d/touch (d/entity (db/db) (ffirst (by-name ref name)))))
