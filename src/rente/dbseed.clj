@@ -1,5 +1,7 @@
 (ns rente.dbseed)
 
+;; Sortiment
+;; --------------------------------
 (def products
   [{:type :product
           :product/name    "Filmjölk"
@@ -16,6 +18,14 @@
           :shelf/name      "B01"
           :shelf/location  "Rum 27"}])
 
+(def items
+  [{:type :item
+          :item/quantity 25}
+   {:type :item
+          :item/quantity 15}])
+
+;; Callcenter
+;; --------------------------------
 (def companies
   [{:type :company
           :company/name    "Baker Tilly"
@@ -38,5 +48,5 @@
 
 (defn seed-data []
   (concat
-    products shelfs
+    products shelfs items
     projects companies))
