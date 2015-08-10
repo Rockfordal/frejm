@@ -1,11 +1,14 @@
 (ns rente.db
   (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]
+            [clojure.tools.logging :as log]
+            [com.stuartsierra.component :as component]
             [clojure.algo.generic.functor :refer [fmap]]
+            ;[clojure.java.io :refer (resource)]
             [rente.dbschema :refer [get-schema]]
             [rente.dbseed :refer [seed-data]]
-            [rente.config :refer [get-config]]
-            [clojure.java.io :refer (resource)]))
+            [rente.config :refer [get-config]]))
+
 
 (defonce connection (atom nil))
 
@@ -95,3 +98,17 @@
 (defn close []
   (d/release (conn))
   (reset! connection nil))
+
+(defrecord Db []
+  component/Lifecycle
+  (start [component]
+    (init)
+    (log/info "Datomic ansluten")
+    component)
+  (stop [component]
+    (close)
+    (log/info "Datomic nerkopplad")
+    component))
+
+(defn new-datomic []
+  (map->Db {}))

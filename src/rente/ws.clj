@@ -130,5 +130,5 @@
 (defn ring-handlers [ws-connection]
   (:ring-handlers ws-connection))
 
-(defn new-ws-connection []
+(defn new-ws []
   (map->WSConnection {}))
