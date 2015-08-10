@@ -104,10 +104,6 @@
   ;:main ^:skip-aot rente.run
   :main rente.run
 
-  :datomic {:config "../../../../../../opt/datomic-pro/lowmem-transactor.properties"
-            :install-location "/opt/datomic-pro"
-            :env {"JAVA_OPTS" "-Xms128m -Xmx128m"}}
-
   :cljsbuild
   {:builds
      {:client {:source-paths ["src/rente/client"]
@@ -133,9 +129,7 @@
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/tools.nrepl "0.2.10"]]
 
-                    :plugins [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
-                              [anlu-datomic "0.2.0"]
-                              [lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]]
+                   :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]]
 
                     :cljsbuild
                     {:builds

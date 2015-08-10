@@ -9,7 +9,8 @@
   [root {:keys [install-location config db-uri test-data env]}]
   (if config 
     (let [p (sh/proc "bin/transactor"
-                     (str root File/separator config)
+                     ;(str root File/separator config)
+                     (str config)
                      :env env
                      :dir install-location)]
       (while true (try
