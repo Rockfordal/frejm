@@ -62,7 +62,7 @@
 
                  ;[com.datomic/datomic-free "0.9.5153"
                  [com.stuartsierra/component "0.2.3"]
-                 [com.datomic/datomic-pro "0.9.5201"
+                 [com.datomic/datomic-pro "0.9.5206"
                   :exclusions [joda-time
                                org.slf4j/jul-to-slf4j
                                org.slf4j/slf4j-nop]]
