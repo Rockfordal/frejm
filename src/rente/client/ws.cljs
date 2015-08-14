@@ -80,11 +80,17 @@
 ;;     2000
 ;;     #(dispatch [:get-success (second %) types])))
 
-;; (defn delete [id type]
-;;   (chsk-send!
-;;     [:rente/delete {:db/id id :type type}]
-;;     2000
-;;     #(dispatch [:delete-success (:db/id (second %)) type])))
+(defn add [data]
+  (chsk-send! [:rente/add data]
+    2000
+    (second %)))
+
+(defn delete [id type]
+  (chsk-send!
+    [:rente/delete {:db/id id :type type}]
+    2000
+    #(println "raderat " id type)
+    ))
 
 ;; (defn add-name [item key type types]
 ;;   (chsk-send!
