@@ -31,7 +31,9 @@
    (s/schema company (s/fields
      [name        :string :indexed]
      [orgnr       :string :indexed]
-     [phone       :string :indexed]))
+     [phone       :string :indexed]
+     [email       :string :indexed]
+     ))
   ])
 
 (defn get-schema []

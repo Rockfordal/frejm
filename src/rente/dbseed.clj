@@ -30,12 +30,16 @@
   [{:type :company
           :company/name    "Baker Tilly"
           :company/orgnr   "483938-1134"
-          :company/phone   "08-42424"}
+          :company/phone   "08-42424"
+          :company/email   "tilly@billy.lab"
+    }
 
    {:type :company
           :company/name    "Yellow-backed duiker"
           :company/orgnr   "483838-2424"
-          :company/phone   "08-48398"}])
+          :company/phone   "08-48398"
+          :company/email   "yo@do.lab"
+    }])
 
 (def projects
   [{:type :project
