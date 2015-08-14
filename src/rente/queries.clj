@@ -12,3 +12,9 @@
 
 (defn get-by-name [ref name]
   (d/touch (d/entity (db/db) (ffirst (by-name ref name)))))
+
+(defn show-entity [entity]
+  (d/touch
+    (d/entity
+      (db/db)
+      (ffirst entity))))
