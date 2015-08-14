@@ -68,10 +68,9 @@
 
 (defmethod event-msg-handler :rente/delete
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    ;(if (db/delete! (:id ?data))
     (if (db/delete-entity (:db/id ?data))
       (?reply-fn [:rente/delete {:db/id (:db/id ?data)}])
-      (?reply-fn [:rente/delete {:message (str "misslyckades radera")}])))
+      (?reply-fn [:rente/delete {:message "misslyckades radera"}])))
 
 (defmethod event-msg-handler :rente/add-name
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -81,7 +80,7 @@
         id (db/create-entity {:type typ kw dat})]  ; {:type :company :company/name "ica" }
    (if id
      (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
-     (?reply-fn [:rente/add-name {:message "misslyckades adda"}]))))
+     (?reply-fn [:rente/add-name {:message "misslyckades add-name"}]))))
 
 ;-------------------------------------------------------
 
@@ -120,15 +119,15 @@
     (assoc component
       :ch-recv nil :connected-uids nil :send-fn nil :ring-handlers nil)))
 
-(defn send! [ws-connection user-id event]
-  ((:send-fn ws-connection) user-id event))
+(defn send! [ws-conn user-id event]
+  ((:send-fn ws-conn) user-id event))
 
-(defn broadcast! [ws-connection event]
-  (let [uids (ws-connection :connected-uids )]
-    (doseq [uid (:any @uids)] (send! ws-connection uid event))))
+(defn broadcast! [ws-conn event]
+  (let [uids (ws-conn :connected-uids )]
+    (doseq [uid (:any @uids)] (send! ws-conn uid event))))
 
-(defn ring-handlers [ws-connection]
-  (:ring-handlers ws-connection))
+(defn ring-handlers [ws-conn]
+  (:ring-handlers ws-conn))
 
 (defn new-ws []
   (map->WSConnection {}))

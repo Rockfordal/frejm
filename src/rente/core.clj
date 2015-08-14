@@ -2,7 +2,7 @@
   (:require [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]))
 
-(defrecord App [ws-connection]
+(defrecord App [ws-conn]
   component/Lifecycle
   (start [component]
     (log/debug "Application logic started")
