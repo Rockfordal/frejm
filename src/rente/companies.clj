@@ -30,7 +30,3 @@
                            :type :company}
                           {:db/id (q/by-name :project/name project-name)
                            :project/companies company-id}])))
-
-(comment
-  (instance? datomic.query.EntityMap found) ; false
-  (d/pull (db) '[*] 17592186045647)) ; pull all
