@@ -24,7 +24,7 @@
 (defn add-success [data conn]
   (let [id (:db/id data)
         entity (:entity data)
-        query  (into {:db/add id} entity)]
+        query  (into {:db/id id} entity)]
     (if id
     (do
       (d/transact! @conn [query])
