@@ -48,17 +48,17 @@
 
   :dependencies [[environ "1.0.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.28"]
+                 [org.clojure/clojurescript "1.7.28" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/tools.logging "0.3.1"]
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [org.clojure/algo.generic "0.1.2"]
 
                  ; Server
-                 [ring/ring-core "1.3.2"]
+                 [ring/ring-core "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [fogus/ring-edn "0.3.0"]
-                 [compojure "1.3.4"]
+                 [compojure "1.4.0"]
                  [http-kit "2.1.19"]
                  [datomic-schema "1.3.0"]
                  ;[liberator "0.12.0"]
@@ -69,8 +69,8 @@
                                org.slf4j/jul-to-slf4j
                                org.slf4j/slf4j-nop]]
 
-                 [com.taoensso/sente "1.5.0" :exclusions [org.clojure/tools.reader]]
-                 [com.cognitect/transit-clj  "0.8.275" :exclusions [commons-codec]]
+                 [com.taoensso/sente "1.6.0" :exclusions [org.clojure/tools.reader]]
+                 [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.220"]
 
                  ; Klient
