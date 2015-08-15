@@ -10,13 +10,13 @@
 ;; Sidan finns inte
 (r/defc notfound_v []
   [:div.row
-   [:div.col.s4
-  [:div.card.blue-grey.darken-1
-   [:div.card-content.white-text
-     [:span.card-title "Sorry!"]
-     [:p "Sidan kunde inte hittas"]
-     [:div.card-action
-      [:a {:href "#"} "Gå Hem"]]]]]])
+    [:div.col.s4
+      [:div.card.blue-grey.darken-1
+        [:div.card-content.white-text
+          [:span.card-title "Sorry!"]
+          [:p "Sidan kunde inte hittas"]
+          [:div.card-action
+            [:a {:href "#"} "Gå Hem"]]]]]])
 
 ;; Vy väljare baserat på aktuell modul
 (defn panels [i db]
