@@ -1,31 +1,26 @@
 (ns rente.client.ws
   (:require [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :as sente-transit]
+            [taoensso.timbre :as timbre :refer-macros (tracef debugf infof warnf errorf)]
             [cognitect.transit :as t]
             [rente.client.util :as u]))
-
-; Dispatch on event key which is 1st elem in vector
-(defmulti push-msg-handler (fn [[id _]] id))
-
-(defmethod push-msg-handler :rente/testevent [[_ event]]
-  (println "PUSHed :rente/testevent from server: %s " (pr-str event)))
 
 ;; Dispatch on event-id
 (defmulti event-msg-handler :id)
 
 (defmethod event-msg-handler :default ; Fallback
     [{:as ev-msg :keys [event]}]
-    (println "Okänt event: %s" (pr-str event)))
+    (debugf "Okänd event: %s" event))
 
 (defmethod event-msg-handler :chsk/state
   [{:as ev-msg :keys [?data]}]
   (if (= ?data {:first-open? true})
-    (println "Channel socket successfully established!")
-    (println "Channel socket state change: %s" (pr-str ?data))))
+    (debugf "Channel socket successfully established!")
+    (debugf "Channel socket state change: %s" ?data)))
 
 (defmethod event-msg-handler :chsk/recv
   [{:as ev-msg :keys [?data]}]
-  (push-msg-handler ?data))
+  (debugf "PUSH event from server: %s " ?data))
 
 (defn event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
   (event-msg-handler ev-msg))
@@ -44,53 +39,29 @@
 ;;   (chsk-send! [:rente/testevent {:message "Hello socket Event!"}]))
 
 ;; (defn test-socket-callback []
-;;   (chsk-send!
-;;     [:rente/testevent {:message "klienten säger Callback!"}]
-;;     2000
-;;     ;#(dispatch [:get-message (second %)])
-;;     #(importdata (second %))))
+;;   (chsk-send! [:rente/testevent {:message "klienten säger Callback!"}]
+;;     2000 #(dispatch [:get-message (second %)])
 
 ;; ;--------------------------------------------------
-;; (defn get-products []
-;;   (chsk-send!
-;;     [:rente/get-products]
-;;     2000 #(u/got-products (second %))))
-
-;; ;(defn add-project [project]
-;; ;  (chsk-send!
-;; ;    [:rente/add-project {:project {:project/name project}}]
-;; ;    2000
-;; ;    #(dispatch [:add-project-success (second %)])))
-
 ;; (defn add-company2project [companyname projectname]
 ;;   (chsk-send!
 ;;     [:rente/add-company2project {:company/name companyname :project/name projectname}]
-;;     2000
-;;     #(println "mja:" %)
-;;     ;#(dispatch [:add-company2project-success "jultomte"])
-;;     ))
+;;     2000 ;#(dispatch [:add-company2project-success "jultomte"])))
 
-;; ;(defmethod event-msg-handler :rente/add-company-for-project
-
-;; ;; Polymorfiska
-
+;; ;------------ polymorfiska -----------------------------
 ;; (defn get-all [type types]
 ;;   (chsk-send!
 ;;     [:rente/get {:type type}]
 ;;     2000
 ;;     #(dispatch [:get-success (second %) types])))
 
-(defn add [data]
-  (chsk-send! [:rente/add data]
-    2000
-    (second %)))
+(defn add [data callback conn]
+  (chsk-send! [:rente/add data] 2000
+    #(callback (second %) conn)))
 
-(defn delete [id type]
-  (chsk-send!
-    [:rente/delete {:db/id id :type type}]
-    2000
-    #(println "raderat " id type)
-    ))
+(defn del [id type callback conn]
+  (chsk-send! [:rente/delete {:db/id id :type type}] 2000
+    #(callback (second %) conn)))
 
 ;; (defn add-name [item key type types]
 ;;   (chsk-send!

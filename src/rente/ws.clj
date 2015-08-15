@@ -74,9 +74,11 @@
 
 (defmethod event-msg-handler :rente/add
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    (if (db/create-entity (:entity ?data))
-      (?reply-fn [:rente/add {:db/id (:db/id ?data) :company/name "testnamn"}])
-      (?reply-fn [:rente/add {:message (str "misslyckades adda" ?data)}])))
+  (let [entity (:entity ?data)
+        id     (db/create-entity entity)]
+    (if id
+      (?reply-fn [:rente/add {:db/id id :entity entity}])
+      (?reply-fn [:rente/add {:message (str "misslyckades adda" ?data entity)}]))))
 
 (defmethod event-msg-handler :rente/add-name
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]

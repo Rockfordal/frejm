@@ -82,8 +82,8 @@
   [:a.btn.waves-effect.waves-light
    {:type "submit"
     :name "action"
-    :on-click #(trans/add)}
-   "adda " [:i.material-icons "send"]]])
+    :on-click #(trans/add conn)}
+   "Lägg till " [:i.material-icons "send"]]])
 
 (r/defc company_v < rum/reactive [db]
   [:div

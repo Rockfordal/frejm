@@ -1,12 +1,7 @@
 (ns rente.client.transactions
-  (:require-macros
-    [cljs.core.async.macros :refer [go]])
   (:require
     [rente.client.ws :as ws]
-    [rente.client.dom :as dom :refer [q by-id]]
-    ;[cljs-http.client :as http]
-    ;[cljs.core.async :refer [<!]]
-    [rente.client.dom :refer [toast]]
+    [rente.client.dom :as dom :refer [q by-id toast]]
     [datascript :as d]))
 
 (defn extract-company []
@@ -17,7 +12,7 @@
      :email (dom/value (by-id "company-email"))}))
 
 (defn reset-company []
-  )
+)
 
 (defn db-company []
   {:type :company
@@ -26,44 +21,27 @@
    :company/phone (:phone (extract-company))
    :company/email (:email (extract-company))})
 
-(defn add-success [result]
-  (toast "företag lagt till!")
-  (println result)
-  (reset-company)
-  )
+(defn add-success [data conn]
+  (let [id (:db/id data)
+        entity (:entity data)
+        query  (into {:db/add id} entity)]
+    (if id
+    (do
+      (d/transact! @conn [query])
+      (toast "post har lagts till!")
+      (reset-company))
+    (toast (str "kunde inte lägga till" data)))))
 
-(defn add []
-  (let [result (ws/add {:entity (db-company)})
-        msg (:message result)]
-    (if (= nil msg)
-      (add-success result)
-      (println "fel vid add:")))
-  )
+(defn add [conn]
+  (let [data {:entity (db-company)}]
+    (ws/add data add-success conn)))
+
+(defn del-success [data conn]
+  (let [id (:db/id data)]
+    (if id (do
+      (d/transact! @conn [[:db.fn/retractEntity id]])
+      (toast "post raderad!"))
+    (toast (str "kunde inte radera" id)))))
 
 (defn delete [eid conn]
-   (ws/delete eid :company)
-
-  ;(println "e:" e)
-  ;(ws/delete eid :company)
-  ;; (let [result (ws/delete eid :company)]
-  ;;  (if (result)
-  ;;   (do
-  ;;     (d/transact! @conn [[:db.fn/retractEntity eid]])
-  ;;     (toast "post raderad!"))
-  ;;   ;(toast "kunde inte radera " eid)
-  ;;   (println "kunde inte radera" eid)
-  ;;   )
-  )
-
- ;; (defn delete [eid conn]
- ;;  (go (let [response (<! (http/delete "/companies" {}))
- ;;            body     (:body response)
- ;;            status   (:status response)]
- ;;        (if (= 200 status) 
- ;;          (do
- ;;            (d/transact! @conn [[:db.fn/retractEntity eid]])
- ;;            (println "body: " body)
- ;;            (toast "post raderad!"))
- ;;          (do
- ;;            (toast (str "kunde inte radera:" status)))
- ;;          ))))
+   (ws/del eid :company del-success conn))
