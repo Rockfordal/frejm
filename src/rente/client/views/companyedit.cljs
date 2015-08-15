@@ -38,7 +38,6 @@
   [:div
     [:h2 "Redigera företag"]
     ;(get-state :moduleid)
-
    (company-form db
      (d/touch (d/entity db (get-state :moduleid))))
     [:br]])
