@@ -36,6 +36,12 @@
    ;(GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
 
+(defn wrap-dir-index [handler]
+  (fn [req]
+    (handler
+     (update-in req [:uri]
+       #(if (= "/" %) "/index.html" %)))))
+
 (defn app [handler]
   (let [ring-defaults-config
         (-> site-defaults
@@ -45,6 +51,7 @@
             (assoc-in [:static :resources] "public"))]
     (-> handler
         (wrap-defaults ring-defaults-config)
+        (wrap-dir-index)
         (wrap-resource "/META-INF/resources")
         (wrap-edn-params))))
 
