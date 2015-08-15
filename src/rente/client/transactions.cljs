@@ -4,6 +4,7 @@
     [rente.client.dom :as dom :refer [q by-id toast]]
     [datascript :as d]))
 
+
 (defn extract-company []
   (when-let [name (dom/value (by-id "company-name"))]
     {:name   name
@@ -11,25 +12,19 @@
      :phone (dom/value (by-id "company-phone"))
      :email (dom/value (by-id "company-email"))}))
 
-(defn reset-company []
-)
-
 (defn db-company []
+  (let [company (extract-company)]
   {:type :company
-   :company/name  (:name  (extract-company))
-   :company/orgnr (:orgnr (extract-company))
-   :company/phone (:phone (extract-company))
-   :company/email (:email (extract-company))})
+   :company/name  (:name  company)
+   :company/orgnr (:orgnr company)
+   :company/phone (:phone company)
+   :company/email (:email company)}))
 
 (defn add-success [data conn]
   (let [id (:db/id data)
         entity (:entity data)
         query  (into {:db/id id} entity)]
-    (if id
-    (do
-      (d/transact! @conn [query])
-      (toast "post har lagts till!")
-      (reset-company))
+    (if id (d/transact! @conn [query])
     (toast (str "kunde inte lägga till" data)))))
 
 (defn add [conn]
