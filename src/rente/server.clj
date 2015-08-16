@@ -13,7 +13,7 @@
             [rente.shelfs :as shelfs]
             [rente.projects :as projects]
             [rente.companies :as companies]
-            [clj-json.core :as json]
+            ;[clj-json.core :as json]
             [rente.ws :as ws]))
 
 ;(defmacro tojson [& args] `(json/generate-string ~@args))
@@ -31,7 +31,7 @@
    ; produkter
    ;(GET "/seed" _ (db/seed))
    (GET "/getstate" _ (edn-res (db/get-state)))
-   (GET "/getproducts" _ (json/generate-string products/get-all))
+   ;(GET "/getproducts" _ (json/generate-string products/get-all))
    ;(DELETE "/companies" req (companydel req))
    ;(GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
