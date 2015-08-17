@@ -80,13 +80,14 @@
   :profiles {
              :dev {
                     :source-paths ["dev"]
-                    :resource-paths ^:replace
+                    :resource-paths ^:replace ; Replace instead of merge
                     ["resources" "dev-resources" "resources-index/dev"]
 
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/tools.nrepl "0.2.10"]]
 
-                   :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader org.clojure/clojurescript clj-stacktrace]]]
+                   :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader
+                                                                 org.clojure/clojurescript clj-stacktrace]]]
 
                     :cljsbuild
                     {:builds
