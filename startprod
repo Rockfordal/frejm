@@ -1,1 +1,1 @@
-lein run prod
+JVM_OPTS="-server -Xmx1g" lein with-profile prod run prod
