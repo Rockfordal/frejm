@@ -121,5 +121,4 @@
   :aliases {"package"
             ["with-profile" "prod" "do"
              "clean" ["cljsbuild" "once"]]}
-
   )
