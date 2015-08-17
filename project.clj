@@ -39,7 +39,7 @@
                  ;[clj-json "0.5.3"]
                  [cljs-http "0.1.36"]
                  ;[cljsjs/highlight "8.4-0"]
-                 ;[jayq "2.5.4"]
+                 [jayq "2.5.4"]
                  ;[org.webjars.bower/jquery "2.1.4"]
                  ;[org.webjars.bower/materialize "0.97.0" :exclusions [org.webjars.bower/jquery]]
                  ;[org.webjars.bower/highlightjs "8.5.0"]
@@ -53,8 +53,6 @@
             [lein-cljsbuild "1.0.6"] ;
             ;[lein-bin "0.3.4"]      ; kör uberjars enklare!  target/runs -h  (istället för java -jar target/..)
             ]
-
-  ;:bin { :name "runs" })
 
   :source-paths ["src"]
   :resource-paths ["resources" "resources-index/prod"]
