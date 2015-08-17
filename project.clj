@@ -95,18 +95,12 @@
                                :compiler
                                  {:optimizations :none
                                   :source-map true}}}
-
-                    :advanced {:source-paths ["src/cljs" "test/cljs"]
-                              :compiler
-                              {:output-to "dev-resources/public/js/advanced.js"
-                               :optimizations :advanced
-                               :pretty-print false}}}
-                    ; } ;}
+                     }
              }
              :prod {:cljsbuild
                     {:builds
                      {:client {:compiler
-                               {;output-to "dev-resources/pub/js/sanitized.js"
+                               {;output-to "dev-resources/pub/js/prod_client.js"
                                 :optimizations :advanced
                                 :pretty-print false}}}}}
              :uberjar {:aot :all}
