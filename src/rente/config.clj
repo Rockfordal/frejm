@@ -3,6 +3,7 @@
 
 (defn get-config []
   {:port   (Integer/parseInt (or (env :port) "3001"))
+   :figport 3000
    :dburi  (or (env :dburi) "datomic:dev://localhost:4334/frejm")})
 
 (defn hitta [x]
