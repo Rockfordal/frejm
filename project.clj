@@ -107,7 +107,7 @@
              }
 
   :figwheel {:nrepl-port 7888
-             :port 3449}
+             :server-port 3000}
 
   :uberjar-name "frejm.jar"
 
