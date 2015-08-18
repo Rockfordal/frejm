@@ -5,9 +5,13 @@ lein clean
 lein figwheel
 ```
 
-Figwheel will automatically push cljs changes to the browser.
+Kör startfig om du använder Linux / Mac
+Vänta ett tag, och surfa till http://localhost:3000/
+Figwheel kommer automatiskt skicka clojurescript-ändringar till din webläsare.
 
-Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
+Starta fin favorit-editor (Emacs, IntelliJ, Lighttable, Atom, Vim) och anslut till nREPL på port 7888
+skriv (run) och surfa till http://localhost:3001/
+clojure-servern startar nu med Databas, Sente Websocket kanaler, Compojure router
 
 ## Installing Datomic Pro
 
@@ -29,6 +33,12 @@ Jag föreslår att göra en start.bat eller start.sh, eller att starta med plugi
 
 
 ## Starting Datomic with plugin
+
+OBS! Det verkar som om pluginet i sig tar upp en helt egen JAVA process inklusive RAM
+Så det kanske är klokare att köra startdb scriptet istället
+Dessutom ser du inte felmeddelanden, så om din dators hostname inte mappar mot en giltig ip
+, då kommer det se ut som den startat, fast inget kommer funka
+
 
 Gör anlu-datomic pluginnet tillgängligt så här
 
@@ -66,13 +76,15 @@ Gör så här i din ~/.lein/profiles.clj för att använda pluginnet:
 ```
 lein clean
 lein cljsbuild once min
+./startprod
 ```
 
 ## Tips
 
 På osx, mac
-``` rlwrap lein figwheel ```
+Trampoline kan eventuellt göra att den startar snabbare
+Men jag vet inte om det är så stor skillnad
 
-Trampoline kan göra att den startar snabbare
+``` rlwrap lein figwheel ```
 
 ``` rlwrap lein trampoline figwheel ```
