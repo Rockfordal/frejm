@@ -1,1 +1,2 @@
-lein run
+rm -rf figwheel_server.log
+rlwrap lein trampoline figwheel
