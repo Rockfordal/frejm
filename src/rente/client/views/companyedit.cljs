@@ -1,74 +1,43 @@
 (ns rente.client.views.companyedit
-  (:require [reagent.core  :as reagent]
-            [rente.client.views.layout :as layout :refer [navbar]]
-            ;[rente.client.views.global :as global]
-            [rente.client.ws :as ws]
-            [secretary.core :as secretary]
-            [re-frame.core :refer [subscribe dispatch]]))
+  (:require [datascript :as d]
+            [rente.client.views.global :as gv :refer [ikon]]
+            [rente.client.views.company :as companyview]
+            [rente.client.state :refer [state get-state conn]]
+            [rum :as r]))
 
 
-(def getcompanies
-  (memoize #((ws/get-all :company :companies)
-    nil)))
+(r/defc company-field [id icon label data]
+  [:div.input-field.col.s6
+    [:i.material-icons.prefix icon]
+   (gv/component-input {:id id
+                   :defval data
+                   :on-save #(do (js/console.log "sparar " %))} )
+    [:label {:for id :class "active"} label]])
 
-(defn inputt [{:keys [title on-save on-stop]}]
-  (let [val (atom title)
-        stop #(do (reset! val "")
-                  (if on-stop (on-stop)))
-        save #(let [v (-> @val str clojure.string/trim)]
-               (if-not (empty? v) (on-save v))
-               (stop))]
-    (fn [props]
-      [:input (merge props
-                     {:type "text"
-                      :value @val
-                      :on-blur save
-                      :on-change #(reset! val (-> % .-target .-value))
-                      :on-key-down #(case (.-which %)
-                                     13 (save)
-                                     27 (stop)
-                                     nil)})])))
+(r/defc company-form [db company]
+ [:form
+  [:div.row
+   (company-field "company-name"  "person_pin" "Namn" (:company/name company))
+   (company-field "company-orgnr" "account_circle" "Orgnr" (:company/orgnr company))]
+  [:div.row
+   (company-field "company-phone" "phone" "Telefon" (:company/phone company))
+   (company-field "company-email" "email" "E-post" (:company/email company))]
+  [:div.row
+   [:div.col.s2
+    [:a.btn.waves-effect.waves-light
+     {:type "submit" :name "action"
+      ;:on-click #(trans/add conn)
+      } "Spara " (ikon "send")]]
 
-(defn company-edit [company]
+   [:div.col.offset-s8.s2
+    [:a.btn.waves-effect.waves-light
+     {:href "#company"}
+     "Tillbaka " (ikon "info")]]]])
+
+(r/defc companyedit_v < rum/reactive [db]
   [:div
-  ;[:h3 "Edit"]
-   ;[:div.row
-    ;[:form.col.s12
-     ;[:input-field.col.s6 {:placeholder "Namn" :type "text" :value (:company/name company)}]
-       [inputt                 {:id "company-id"
-                                :placeholder "Id..."
-                                ;:title (:db/id company)
-                                ;:on-save #(ws/add-name % :company/name :company :companies)
-                                }]
-;       [global/input-component {:id "company-name"
-;                                :placeholder "Name..."
-;                                :title (:company/name company)
-                                ;:on-save #(ws/add-name % :company/name :company :companies)
-;                                }]
-
-    ; ]
-    ;]
-  [:b "Namn "] (:company/name company)
-  ;[:b "Orgnr "] (:company/orgnr company)
-  ])
-
-(defn companyedit-panel []
-  (let [a 1
-        companies (subscribe [:companies])
-        ;active-project (subscribe [:active-project])
-        active-panel (subscribe [:active-panel])
-        panelid (subscribe [:active-panel-id])]
-
-  [:div
-   [navbar]
-   [:div.container
-    (getcompanies)
-    [:header#header
-     [:h2 "Redigera Företag"]
-     @panelid
-      ;"Valt Projekt: " (:project/name @active-project)
-     ]
-    [:div.row
-     [:br]
-      [company-edit (first @companies)]
-     ]]]))
+    [:h2 "Redigera företag"]
+    ;(get-state :moduleid)
+   (company-form db
+     (d/touch (d/entity db (get-state :moduleid))))
+    [:br]])

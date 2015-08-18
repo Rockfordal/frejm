@@ -1,11 +1,10 @@
 (ns rente.client.routes
-    (:require-macros [secretary.core :refer [defroute]])
-    (:import goog.History)
-    (:require [secretary.core :as secretary]
-              [goog.events :as events]
-              [goog.history.EventType :as EventType]
-              [clojure.string :refer [replace]]
-              [re-frame.core :as re-frame :refer [dispatch subscribe]]))
+  (:import goog.History)
+  (:require
+    [goog.events :as events]
+    [goog.history.EventType :as EventType]
+    [secretary.core :as secretary :refer-macros [defroute]]
+    [rente.client.state :refer [state]]))
 
 (defn hook-browser-navigation! []
   (doto (History.)
@@ -17,19 +16,13 @@
 
 (defn app-routes []
   (secretary/set-config! :prefix "#")
-
-  (defroute "/" []
-    (dispatch [:set-active-panel :home-panel]))
-
-  (defroute "/companies/:id" {:as params}
-    ;(println "Företag: " (:id params))
-    (dispatch [:set-active-panel :companyedit-panel (:id params)]))
-
-  (let [routes (subscribe [:routes])]
-    (doseq [route @routes]
-      (let [panel   (:panel route)
-            hashurl (:url route)
-            url     (replace hashurl "#" "/")]
-      (defroute [url] [] (dispatch [:set-active-panel panel])))))
-
   (hook-browser-navigation!))
+
+(defroute "/company/:id" {:as params}
+  (swap! state assoc :module :companyedit)
+  (swap! state assoc :moduleid (js/parseInt (:id params))))
+
+(defroute module-path "/:module" {module :module}
+  (let [module-keys (set (map :key (:modules @state)))
+        module-key (or (module-keys (keyword module)) :notfound)]
+    (swap! state assoc :module module-key)))

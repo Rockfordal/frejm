@@ -1,30 +1,31 @@
 (ns rente.client.app
-    (:require-macros [cljs.core.async.macros :refer [go-loop]])
-    (:require [reagent.core :as reagent]
-              [re-frame.core :as re-frame :refer [dispatch-sync]]
-              [rente.client.handlers]
-              [rente.client.subs]
-              [rente.client.appstate :refer [default-value]]
-              [rente.client.views.main :as main :refer [main-panel]]
-              [rente.client.routes :as routes :refer [app-routes]]
-              [rente.client.ws :as ws]))
+  (:require-macros
+    [rente.macros :refer [profile]])
+  (:require
+    [datascript :as d]
+    [rum :as r]
+    [rente.client.ws :as ws]
+    [rente.client.util :as u :refer [log-transactions load-state]]
+    [rente.client.state :refer [conn state]]
+    [rente.client.routes :refer [app-routes]]
+    [rente.client.views.main :refer [canvas]]
+    [rente.client.dom :refer [by-id]]))
 
+(declare render persist)
 
-(defmulti handle-event (fn [data [ev-id ev-data]] ev-id))
+(defn initdb []
+  (reset! conn (d/create-conn (:schema @state))))
 
-(defmethod handle-event :default
-  [data [_ msg]]
-  (swap! data update-in [:messages] #(conj % msg)))
+(defn render
+  ([]   (render @conn))
+  ([db] (r/mount (canvas db) (by-id "app"))))
 
-(defn app [data]
-  [main-panel])
+;; re-render on DB change
+(d/listen! @conn :render
+  (fn [tx-report]
+    (render (:db-after tx-report))))
 
-(defn mount-root []
-  (let [root (.getElementById js/document "main")]
-    (reagent/render [app nil] root)))
-
+;; Starting point
 (defn ^:export main []
-  (dispatch-sync [:initialize-db default-value]) ; populera appstate med seed-data
-  (app-routes)                                   ; lyssna på webläsare, dispatcha :set-active-panel
-  (main/create-my-routes)
-  (mount-root))
+  (app-routes)
+  (load-state))

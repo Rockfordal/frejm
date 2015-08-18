@@ -1,6 +1,7 @@
 /*.iml
 /*-init.clj
 /target/
+/plugin/*/target/
 /resources/public/js/compiled
 /resources/public/js/app.js
 /dev-resources/public

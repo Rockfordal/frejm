@@ -4,6 +4,8 @@
             [clojure.core.async :as async]
             [datomic.api :as d]
             [rente.db :as db]
+            [rente.queries :as q]
+            [rente.products :as products]
             [rente.projects :as projects]
             [rente.companies :as companies]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
@@ -27,14 +29,15 @@
     (?reply-fn [:rente/testevent {:message (str "Server Callback fick: " ?data)}])
     (send-fn :sente/all-users-without-uid [:rente/testevent {:message (str "Server Event fick: " ?data)}])))
 
-;------------ gamla ------------------------------------
-;(defmethod event-msg-handler :rente/get-projects
-;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-projects (db/expand (projects/getedn))]))
+;------------ nya --------------------------------------
+(defmethod event-msg-handler :rente/get-data
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+    (?reply-fn [:rente/get-data (db/get-state)]))
 
+;------------ gamla ------------------------------------
 ;(Defmethod event-msg-handler :rente/get-companies
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-companies (db/expand (companies/getall))]))
+;    (?reply-fn [:rente/get-companies (db/expand (companies/get-all))]))
 
 ;(defmethod event-msg-handler :rente/add-project
 ;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -65,10 +68,17 @@
 
 (defmethod event-msg-handler :rente/delete
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    ;(if (db/delete! (:id ?data))
-    (if (db/delete-eid (:db/id ?data))
+    (if (db/delete-entity (:db/id ?data))
       (?reply-fn [:rente/delete {:db/id (:db/id ?data)}])
-      (?reply-fn [:rente/delete {:message (str "misslyckades radera")}])))
+      (?reply-fn [:rente/delete {:message "misslyckades radera"}])))
+
+(defmethod event-msg-handler :rente/add
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (let [entity (:entity ?data)
+        id     (db/create-entity entity)]
+    (if id
+      (?reply-fn [:rente/add {:db/id id :entity entity}])
+      (?reply-fn [:rente/add {:message (str "misslyckades adda" ?data entity)}]))))
 
 (defmethod event-msg-handler :rente/add-name
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
@@ -78,7 +88,7 @@
         id (db/create-entity {:type typ kw dat})]  ; {:type :company :company/name "ica" }
    (if id
      (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
-     (?reply-fn [:rente/add-name {:message "misslyckades adda"}]))))
+     (?reply-fn [:rente/add-name {:message "misslyckades add-name"}]))))
 
 ;-------------------------------------------------------
 
@@ -117,15 +127,15 @@
     (assoc component
       :ch-recv nil :connected-uids nil :send-fn nil :ring-handlers nil)))
 
-(defn send! [ws-connection user-id event]
-  ((:send-fn ws-connection) user-id event))
+(defn send! [ws-conn user-id event]
+  ((:send-fn ws-conn) user-id event))
 
-(defn broadcast! [ws-connection event]
-  (let [uids (ws-connection :connected-uids )]
-    (doseq [uid (:any @uids)] (send! ws-connection uid event))))
+(defn broadcast! [ws-conn event]
+  (let [uids (ws-conn :connected-uids )]
+    (doseq [uid (:any @uids)] (send! ws-conn uid event))))
 
-(defn ring-handlers [ws-connection]
-  (:ring-handlers ws-connection))
+(defn ring-handlers [ws-conn]
+  (:ring-handlers ws-conn))
 
-(defn new-ws-connection []
+(defn new-ws []
   (map->WSConnection {}))

@@ -1,23 +1,16 @@
 (ns rente.projects
-  (:refer-clojure :exclude [read])
-  (:require [rente.db :as db]))
+  (:require [rente.db :as db :refer [conn]]
+            [rente.queries :as q]))
 
 (defn create!
-  ([]  (db/create! {:type :project}))
+  ([]  (db/create!         {:type :project}))
   ([m] (db/create! (assoc m :type :project))))
 
-(defn read
-  ([] (db/read :type :project)))
+(defn by-name [name]
+  (q/by-name :project/name name))
 
-(defn getall []
-  (map db/expand (read)))
+(defn get-by-name [name]
+  (q/get-by-name :project/name name))
 
-(defn init []
-  (do
-    (create! {:project/name "Baker Tilly"
-              :project/description  "Första"})
-
-    (create! {:project/name "nytt projekt"
-              :project/description ""})
-    "skapat projects"
-    ))
+(defn get-all []
+  (q/get-all :project))

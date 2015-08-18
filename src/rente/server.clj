@@ -1,26 +1,46 @@
 (ns rente.server
   (:require [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]
-            [compojure.core :refer [routes GET POST]]
+            [ring.middleware.edn :refer [wrap-edn-params]]
+            [compojure.core :refer [routes GET POST PUT DELETE]]
             [compojure.route :as route]
             [ring.util.response :as resp]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.resource :refer (wrap-resource)]
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
+            [rente.products :as products]
+            [rente.shelfs :as shelfs]
             [rente.projects :as projects]
-            [clj-json.core :as json]
+            [rente.companies :as companies]
+            ;[clj-json.core :as json]
             [rente.ws :as ws]))
+
+;(defmacro tojson [& args] `(json/generate-string ~@args))
+
+(defn edn-res [data & [status]]
+  {:status (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body (pr-str data)})
 
 (defn handler [ajax-post-fn ajax-get-or-ws-handshake-fn]
   (routes
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
-   ; Test
-   (GET "/createprojects" req (projects/init))
-   (GET "/getprojects" _ (json/generate-string projects/getall))
+   ; produkter
+   ;(GET "/seed" _ (db/seed))
+   (GET "/getstate" _ (edn-res (db/get-state)))
+   ;(GET "/getproducts" _ (json/generate-string products/get-all))
+   ;(DELETE "/companies" req (companydel req))
+   ;(GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
+
+(defn wrap-dir-index [handler]
+  (fn [req]
+    (handler
+     (update-in req [:uri]
+       #(if (= "/" %) "/index.html" %)))))
 
 (defn app [handler]
   (let [ring-defaults-config
@@ -31,10 +51,11 @@
             (assoc-in [:static :resources] "public"))]
     (-> handler
         (wrap-defaults ring-defaults-config)
-        (wrap-resource "/META-INF/resources"))))
-        ;wrap-edn-params  ; vi använder ju sente å transit via ws
+        (wrap-dir-index)
+        (wrap-resource "/META-INF/resources")
+        (wrap-edn-params))))
 
-(defrecord HttpServer [port ws-connection server-stop]
+(defrecord HttpServer [port ws-conn server-stop]
   component/Lifecycle
   (start [component]
     (if server-stop
@@ -42,16 +63,16 @@
       (let [component (component/stop component)
 
             {:keys [ajax-post-fn ajax-get-or-ws-handshake-fn]}
-            (ws/ring-handlers ws-connection)
+            (ws/ring-handlers ws-conn)
 
             handler (handler ajax-post-fn ajax-get-or-ws-handshake-fn)
 
             server-stop (run-server (app handler) {:port port})]
-        (log/debug "HTTP server started")
+        (log/debug "HTTP server startad")
         (assoc component :server-stop server-stop))))
   (stop [component]
     (when server-stop (server-stop))
-    (log/debug "HTTP server stopped")
+    (log/debug "HTTP server stoppad")
     (assoc component :server-stop nil)))
 
 (defn new-http-server [port]

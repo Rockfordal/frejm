@@ -2,7 +2,9 @@
   (:require [environ.core :refer [env]]))
 
 (defn get-config []
-  {:port (Integer/parseInt (or (env :port) "8080"))
-   :dburi (str (or (env :dburi)
-                 "datomic:free://localhost:4334/frejm"))
-  })
+  {:port   (Integer/parseInt (or (env :port) "3001"))
+   :figport 3000
+   :dburi  (or (env :dburi) "datomic:dev://localhost:4334/frejm")})
+
+(defn hitta [x]
+  (env x))

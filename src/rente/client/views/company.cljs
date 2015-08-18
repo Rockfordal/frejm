@@ -1,94 +1,69 @@
 (ns rente.client.views.company
-  (:require [reagent.core  :as reagent :refer [atom]]
-            [rente.client.views.layout :as layout :refer [navbar]]
-            [rente.client.ws :as ws]
-            [secretary.core :refer [IRenderRoute render-route encode-query-params]]
-            [re-frame.core :refer [subscribe dispatch]]))
+  (:require [rum :as r]
+            [datascript :as d]
+            [rente.client.dom :as dom :refer [by-id]]
+            [rente.client.views.global :as gv :refer [ikon]]
+            [rente.client.transactions :as trans]
+            [rente.client.state :refer [state get-state conn]]
+            [secretary.core :refer [IRenderRoute render-route encode-query-params]]))
 
-(def getcompanies
-  (memoize #((ws/get-all :company :companies)
-    ;(println "getcompanies")
-    nil)))
 
 (defrecord Company [id]
   IRenderRoute
   (render-route [_]
-    (str "/#companies/" id))
+    (str "#company/" id))
   (render-route [this params]
     (str (render-route this) "?"
          (encode-query-params params))))
 
-(defn company-input [{:keys [title on-save on-stop]}]
-  (let [val (atom title)
-        stop #(do (reset! val "")
-                  (if on-stop (on-stop)))
-        save #(let [v (-> @val str clojure.string/trim)]
-               (if-not (empty? v) (on-save v))
-               (stop))]
-    (fn [props]
-      [:input (merge props
-                     {:type "text"
-                      :value @val
-                      :on-blur save
-                      :on-change #(reset! val (-> % .-target .-value))
-                      :on-key-down #(case (.-which %)
-                                     13 (save)
-                                     27 (stop)
-                                     nil)})])))
+(r/defc company_item [company db]
+  [:tr.company
+   [:td.name  (:company/name  company)]
+   [:td.orgnr (:company/orgnr company)]
+   [:td.name  (:company/phone company)]
+   [:td.email (:company/email company)]
+   [:td
+    [:a {:href "#company"
+         :on-click #(trans/delete (:db/id company) conn)}
+         (ikon "delete")]
+    [:a {:href (render-route (Company. (:db/id company)))}
+     (ikon "view_headline")]]])
+; [:a {:href (render-route (Company. (:db/id company)))} [:i.material-icons "view_headline"]]
 
-;(def company-edit (with-meta company-input
-;  {:component-did-mount #(.focus (reagent/dom-node %))}))
+(r/defc company-list [db]
+ [:table
+  [:thead
+    [:tr
+      [:th "Namn"]
+      [:th "Orgnr"]
+      [:th "Telefon"]
+      [:th "E-post"]
+      [:th "Åtgärd"]]
+  [:tbody
+    (for [[eid] (sort (d/q '[:find ?e :where [?e :company/name]] db))]
+      (r/with-props company_item (d/entity db eid) db :rum/key [eid]))]]])
+      ; todo: rum react 13 key bug
 
-(defn company-item []
-  (let [editing (atom false)]
-    (fn [company]
-      [:tr
-      [:td (:db/id company)]
-      [:td (:company/name company)]
-      [:td (:company/orgnr company)]
-       [:td
-        [:a {:href "/#company" :on-click #(ws/delete (:db/id company) :companies)} [:i.material-icons "delete"]]
-        [:a {:href (render-route (Company. (:db/id company)))} [:i.material-icons "view_headline"]]
-        ;[:P (:db/id company)]
-        ]])))
-  
-(defn company-list []
-  (let [namn (atom "")]
-    (fn [companies]
-      [:table
-       [:tbody
-       [:tr
-        [:th "Id"]
-        [:th "Namn"]
-        [:th "Orgnr"]
-;        [:th "Info"]
-        [:th]]
-       (for [company @companies]
-           ^{:key (:db/id company)} [company-item company])
-       ;[:button.btn.btn-primary { :on-click #(dispatch [:add-project @namn])} "Lägg till projekt"]
-       [:span " "]]])))
+(r/defc company-field [id icon label data]
+  [:div.input-field.col.s6
+    [:i.material-icons.prefix icon]
+   (gv/component-input {:id id :on-save #(do (println "sparar " %))})
+    [:label {:for id} label]])
 
-(defn company-panel []
-  (let [companies (subscribe [:companies])
-        active-project (subscribe [:active-project])]
+(r/defc company-form [db newcompany]
+ [:form.col_s12
+  [:div.row (company-field "company-name"  "person_pin" "Namn" nil)
+            (company-field "company-orgnr" "account_circle" "Orgnr" nil)]
+  [:div.row (company-field "company-phone" "phone" "Telefon" nil)
+            (company-field "company-email" "email" "E-post" nil)]
+  [:a.btn.waves-effect.waves-light
+   {:type "submit"
+    :on-click #(trans/add conn)}
+   "Lägg till " (ikon "send")]])
+
+(r/defc company_v < rum/reactive [db]
   [:div
-   [navbar]
-   [:div.container
-    (getcompanies)
-    [:header#header
-     [:h2 "Företag"]
-       "Valt Projekt: " (:project/name @active-project)
-       [company-input {:id "new-todo"
-                       :placeholder "Nytt företag?"
-                       :on-save #(ws/add-name % :company/name :company :companies)}]]
-                       ;:on-save #(ws/add-company2project % "ica")}]]
-
-    [:div.row
-      [company-list companies]
-      ;(clj->js (first @companies))
-     ]
-    ;[:a.btn {:on-click #(println (count @companies))} "antal"]   
-    ;[:a.btn {:on-click #(js/alert "tjo")} "Alert"]
-    ;[:a.btn {:on-click #(js/console.log "tjo")} "Log"]
-    ]
-   ]))
+    (company-list db) [:br]
+    (company-form db (get-state :newcompany)) [:br]
+    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
+     ])
