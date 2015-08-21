@@ -43,8 +43,8 @@
       [:th "Åtgärd"]]
   [:tbody
     (for [[eid] (sort (d/q '[:find ?e :where [?e :company/name]] db))]
-      (r/with-props company_item (d/entity db eid) db :rum/key [eid]))]]])
-      ; todo: rum react 13 key bug
+      (-> (company_item (d/entity db eid) db)
+          (r/with-key [eid])))]]])
 
 (r/defc company-field [id icon label data]
   [:div.input-field.col.s6

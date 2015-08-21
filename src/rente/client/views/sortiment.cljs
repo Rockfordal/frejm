@@ -26,13 +26,15 @@
   [:div
     (for [[eid] (sort (d/q '[:find ?e
                              :where [?e :product/name]] db))]
-      (r/with-props product_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
+      (-> (product_v (d/entity db eid))
+          (r/with-key [eid])))])
 
 (r/defc visa-alla-hyllor [db]
   [:div
    (for [[eid] (sort (d/q '[:find ?e
                             :where [?e :shelf/name]] db))]
-      (r/with-props shelf_v (d/entity db eid) :rum/key [eid]))]) ; tills rum fixat bug
+     (-> (shelf_v (d/entity db eid))
+         (r/with-key [eid])))])
 
 (r/defc visa-sortiment [db]
   [:div
@@ -43,8 +45,8 @@
                       [?item  :item/shelf   ?shelf]
                       [?item  :item/product ?product]]
                       db "C1")]
-       (r/with-props item_v (d/entity db item) (d/entity db product) (d/entity db shelf) ; tills rum fixat bug
-       :rum/key [item]))])
+     (-> (item_v (d/entity db item) (d/entity db product) (d/entity db shelf))
+         (r/with-key [item])))])
 
 (r/defc sortiment_v [db]
   [:div.sortiment
