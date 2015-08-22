@@ -65,5 +65,6 @@
       (toast "post raderad!"))
     (toast (str "kunde inte radera" id)))))
 
-(defn delete [eid conn]
-   (ws/del eid :company del-success conn))
+(defn delete [object conn]
+  (let [eid (:db/id object)]
+   (ws/del eid :company del-success conn)))

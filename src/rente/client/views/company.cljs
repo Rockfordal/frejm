@@ -2,19 +2,15 @@
   (:require [rum :as r]
             [datascript :as d]
             [rente.client.dom :as dom :refer [by-id]]
-            [rente.client.views.global :as gv :refer [ikon]]
+            [rente.client.views.global :as gv :refer [ikon button go-route]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
             [secretary.core :refer [IRenderRoute render-route encode-query-params]]))
 
-
 (defrecord Company [id]
   IRenderRoute
-  (render-route [_]
-    (str "#company/" id))
-  (render-route [this params]
-    (str (render-route this) "?"
-         (encode-query-params params))))
+  (render-route [_]           (str "#company/" id))
+  (render-route [this params] (go-route this params)))
 
 (r/defc company_item [company db]
   [:tr.company
@@ -24,12 +20,11 @@
    [:td.email (:company/email company)]
    [:td.vd    (:company/vd    company)]
    [:td
-    [:a {:href "#company"
-         :on-click #(trans/delete (:db/id company) conn)}
-         (ikon "delete")]
-    [:a {:href (render-route (Company. (:db/id company)))}
-     (ikon "view_headline")]]])
-; [:a {:href (render-route (Company. (:db/id company)))} [:i.material-icons "view_headline"]]
+     [:a {:href "#company"
+          :on-click #(trans/delete company conn)}
+          (ikon "delete")]
+     [:a {:href (render-route (Company. (:db/id company)))}
+      (ikon "view_headline")]]])
 
 (r/defc company-list [db]
  [:table
@@ -52,13 +47,11 @@
    (gv/component-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])
 
+(defn aktivtprojekt []
+  (str (get-state :activeproject)))
+
 (r/defc company_v < rum/reactive [db]
   [:div
-    (company-list db) [:br]
-
-  [:a.btn.waves-effect.waves-light
-   {:href (render-route "/newcompany")}
-   "Ny " (ikon "send")]
-
-    ;[:div "Valt Projekt: " (str (get-state :activeproject))]
-     ])
+   [:div "Valt Projekt: " aktivtprojekt]
+    (company-list db)
+    (button {:href (render-route "/newcompany")} "Ny" "send")])
