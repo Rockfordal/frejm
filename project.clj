@@ -7,11 +7,12 @@
 
   :dependencies [[environ "1.0.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.28" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/tools.logging "0.3.1"]
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [org.clojure/algo.generic "0.1.2"]
+
 
                  ; Server
                  [ring/ring-core "1.4.0"]
@@ -32,12 +33,12 @@
                  [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.220"]
 
-                 ; Klient
-                 [rum "0.2.7"]
-                 [datascript "0.11.5"]
+                 ; Klien
+                 [rum "0.3.0"]
+                 [datascript "0.11.6"]
                  [secretary "1.2.3"]
                  ;[clj-json "0.5.3"]
-                 [cljs-http "0.1.36"]
+                 [cljs-http "0.1.37"]
                  ;[cljsjs/highlight "8.4-0"]
                  [jayq "2.5.4"]
                  ;[org.webjars.bower/jquery "2.1.4"]
@@ -83,7 +84,7 @@
                     :resource-paths ^:replace ; Replace instead of merge
                     ["resources" "dev-resources" "resources-index/dev"]
 
-                   :dependencies [[org.clojure/tools.namespace "0.2.7"]
+                   :dependencies [[org.clojure/tools.namespace "0.2.10"]
                                   [org.clojure/tools.nrepl "0.2.10"]]
 
                    :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader
