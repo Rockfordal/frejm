@@ -22,6 +22,7 @@
    [:td.orgnr (:company/orgnr company)]
    [:td.name  (:company/phone company)]
    [:td.email (:company/email company)]
+   [:td.vd    (:company/vd    company)]
    [:td
     [:a {:href "#company"
          :on-click #(trans/delete (:db/id company) conn)}
@@ -38,6 +39,7 @@
       [:th "Orgnr"]
       [:th "Telefon"]
       [:th "E-post"]
+      [:th "VD"]
       [:th "Åtgärd"]]
   [:tbody
     (for [[eid] (sort (d/q '[:find ?e :where [?e :company/name]] db))]
@@ -56,6 +58,7 @@
             (company-field "company-orgnr" "account_circle" "Orgnr" nil)]
   [:div.row (company-field "company-phone" "phone" "Telefon" nil)
             (company-field "company-email" "email" "E-post" nil)]
+  [:div.row (company-field "company-vd" "phone" "VD" nil)]
   [:a.btn.waves-effect.waves-light
    {:type "submit"
     :on-click #(trans/add conn)}

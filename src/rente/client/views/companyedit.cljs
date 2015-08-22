@@ -2,6 +2,7 @@
   (:require [datascript :as d]
             [rente.client.views.global :as gv :refer [ikon]]
             [rente.client.views.company :as companyview]
+            [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
             [rum :as r]))
 
@@ -23,10 +24,12 @@
    (company-field "company-phone" "phone" "Telefon" (:company/phone company))
    (company-field "company-email" "email" "E-post" (:company/email company))]
   [:div.row
+   (company-field "company-vd" "phone" "VD" (:company/vd company))]
+  [:div.row
    [:div.col.s2
     [:a.btn.waves-effect.waves-light
      {:type "submit" :name "action"
-      ;:on-click #(trans/add conn)
+      :on-click #(trans/edit conn)
       } "Spara " (ikon "send")]]
 
    [:div.col.offset-s8.s2

@@ -48,12 +48,16 @@
 ;;     [:rente/add-company2project {:company/name companyname :project/name projectname}]
 ;;     2000 ;#(dispatch [:add-company2project-success "jultomte"])))
 
-;; ;------------ polymorfiska -----------------------------
+;; ;------------ polymorfiska ------morf-----------------------
 ;; (defn get-all [type types]
 ;;   (chsk-send!
 ;;     [:rente/get {:type type}]
 ;;     2000
 ;;     #(dispatch [:get-success (second %) types])))
+
+(defn edit [data callback conn]
+  (chsk-send! [:rente/edit data] 2000
+              #(callback (second %) conn)))
 
 (defn add [data callback conn]
   (chsk-send! [:rente/add data] 2000

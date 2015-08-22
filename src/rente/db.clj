@@ -4,7 +4,7 @@
             [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]
             [clojure.algo.generic.functor :refer [fmap]]
-            ;[clojure.java.io :refer (resource)]
+    ;[clojure.java.io :refer (resource)]
             [rente.dbschema :refer [get-schema]]
             [rente.dbseed :refer [seed-data]]
             [rente.config :refer [get-config]]))
@@ -37,14 +37,20 @@
         tx @(d/transact (conn) (list (assoc m :db/id temp-id)))]
     (d/resolve-tempid (db) (:tempids tx) temp-id)))
 
+ (defn update-entity [eid k v]
+ (let [
+      (d/transact (conn) (list m))
+      ;tx @(d/transact (conn) (list (assoc m :db/id temp-id)))
+      ]))
+
 (defn seed []
   (for [entry (seed-data)]
     (create! entry)))
 
 (defn read
   ([k v]
-     (let [found (d/q '[:find ?e :in $ ?k ?v :where [?e ?k ?v]] (db) k v)]
-       (map (comp (partial d/entity (db)) first) found))))
+   (let [found (d/q '[:find ?e :in $ ?k ?v :where [?e ?k ?v]] (db) k v)]
+     (map (comp (partial d/entity (db)) first) found))))
 
 (defn delete-entity [eid]
   (do @(d/transact (conn) [[:db.fn/retractEntity eid]])
@@ -52,47 +58,47 @@
 
 (defn expand
   ([e]
-     (if (instance? datomic.query.EntityMap e)
-       (let [m (into {} (d/touch e))]
-         (expand m (keys m)))
-       e))
+   (if (instance? datomic.query.EntityMap e)
+     (let [m (into {} (d/touch e))]
+       (expand m (keys m)))
+     e))
   ([e ks]
-     (if-not (empty? ks)
-       (let [val (get e (first ks))]
-         (cond
-          (instance? datomic.query.EntityMap val)
-          (expand (assoc e (first ks) (expand val)) (rest ks))
-          (and (set? val) (instance? datomic.query.EntityMap (first val)))
-          (expand (assoc e (first ks) (set (map expand val))) (rest ks))
-          :else (expand e (rest ks))))
-       e)))
+   (if-not (empty? ks)
+     (let [val (get e (first ks))]
+       (cond
+         (instance? datomic.query.EntityMap val)
+         (expand (assoc e (first ks) (expand val)) (rest ks))
+         (and (set? val) (instance? datomic.query.EntityMap (first val)))
+         (expand (assoc e (first ks) (set (map expand val))) (rest ks))
+         :else (expand e (rest ks))))
+     e)))
 
 (defn visible-entities []
   (d/q '[:find ?e :in $ %
          :where (visible ?e)]
-        (db)
-        '[[(visible ?p) (?p :product/name)]
-          [(visible ?s) (?s :shelf/name)]
-          [(visible ?j) (?j :project/name)]
-          [(visible ?c) (?c :company/name)]]))
+       (db)
+       '[[(visible ?p) (?p :product/name)]
+         [(visible ?s) (?s :shelf/name)]
+         [(visible ?j) (?j :project/name)]
+         [(visible ?c) (?c :company/name)]]))
 
 (defn load-entity
   "Loads an entity and its attributes. Keep in the db/id
   and replace references with ids (for use by DataScript)"
   [db entity]
   (as->
-   (d/entity db entity) e
-   (d/touch e)
-   (into {:db/id (:db/id e)} e) ; needs to be a hash-map, not an entity map
-   (fmap (fn [v]
-           (cond (set? v) (mapv #(if (instance? datomic.query.EntityMap %) (:db/id %) %) v)
-                 (instance? datomic.query.EntityMap v) (:db/id v)
-                 :else v)) e)))
+    (d/entity db entity) e
+    (d/touch e)
+    (into {:db/id (:db/id e)} e)                            ; needs to be a hash-map, not an entity map
+    (fmap (fn [v]
+            (cond (set? v) (mapv #(if (instance? datomic.query.EntityMap %) (:db/id %) %) v)
+                  (instance? datomic.query.EntityMap v) (:db/id v)
+                  :else v)) e)))
 
 (defn get-state []
   (map
     (comp (partial load-entity (db))
-           first)
+          first)
     (visible-entities)))
 
 (defn close []

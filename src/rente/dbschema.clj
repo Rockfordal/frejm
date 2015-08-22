@@ -33,6 +33,7 @@
      [orgnr       :string :indexed]
      [phone       :string :indexed]
      [email       :string :indexed]
+     [vd          :string :indexed]
      ))
   ])
 

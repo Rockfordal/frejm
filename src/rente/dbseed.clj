@@ -32,6 +32,7 @@
           :company/orgnr   "483938-1134"
           :company/phone   "08-42424"
           :company/email   "tilly@billy.lab"
+          :company/vd      "Johanesburg freidricht"
     }
 
    {:type :company
@@ -39,6 +40,7 @@
           :company/orgnr   "483838-2424"
           :company/phone   "08-48398"
           :company/email   "yo@do.lab"
+          :company/vd      "Greiger Wolfenstein"
     }])
 
 (def projects

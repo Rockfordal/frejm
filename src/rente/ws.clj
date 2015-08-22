@@ -80,6 +80,14 @@
       (?reply-fn [:rente/add {:db/id id :entity entity}])
       (?reply-fn [:rente/add {:message (str "misslyckades adda" ?data entity)}]))))
 
+(defmethod event-msg-handler :rente/edit
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
+  (let [entity (:entity ?data)
+        id     (db/update-entity entity)]
+    (if id
+      (?reply-fn [:rente/edit {:db/id id :entity entity}])
+      (?reply-fn [:rente/edit {:message (str "misslyckades editera" ?data entity)}]))))
+
 (defmethod event-msg-handler :rente/add-name
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
   (let [kw (keyword (:key ?data))

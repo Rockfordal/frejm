@@ -10,7 +10,9 @@
     {:name   name
      :orgnr (dom/value (by-id "company-orgnr"))
      :phone (dom/value (by-id "company-phone"))
-     :email (dom/value (by-id "company-email"))}))
+     :email (dom/value (by-id "company-email"))
+     :vd    (dom/value (by-id "company-vd"))
+     }))
 
 (defn db-company []
   (let [company (extract-company)]
@@ -18,7 +20,9 @@
    :company/name  (:name  company)
    :company/orgnr (:orgnr company)
    :company/phone (:phone company)
-   :company/email (:email company)}))
+   :company/email (:email company)
+   :company/vd    (:vd    company)
+   }))
 
 (defn add-success [data conn]
   (let [id (:db/id data)
@@ -30,6 +34,18 @@
 (defn add [conn]
   (let [data {:entity (db-company)}]
     (ws/add data add-success conn)))
+
+(defn edit [conn]
+  (let [data {:entity (db-company)}]
+    (ws/edit data add-success conn)))
+
+(defn edit-success [data conn]
+  (let [id (:db/id data)
+        entity (:entity data)
+        query  (into {:db/id id} entity)]
+    (if id (d/transact! @conn [query])
+           (toast (str "kunde inte editera till" data)))))
+
 
 (defn del-success [data conn]
   (let [id (:db/id data)]
