@@ -24,16 +24,27 @@
    :company/vd    (:vd    company)
    }))
 
-(defn add-success [data conn]
+(defn add-cb [data conn]
   (let [id (:db/id data)
         entity (:entity data)
         query  (into {:db/id id} entity)]
     (if id (d/transact! @conn [query])
     (toast (str "kunde inte lägga till" data)))))
 
-(defn add [conn]
+(defn add-company [conn]
   (let [data {:entity (db-company)}]
-    (ws/add data add-success conn)))
+  (ws/add data add-cb conn)))
+
+(defn update-cb [data conn]
+  (let [entity (:entity data)
+        msg (:message data)]
+    (if msg
+      (toast (str "kunde inte lägga till" data))
+      (d/transact! @conn [entity]))))
+
+(defn update-company [id conn]
+  (let [entity {:entity (assoc (db-company) :db/id id)}]
+  (ws/upd entity update-cb conn)))
 
 (defn edit [conn]
   (let [data {:entity (db-company)}]

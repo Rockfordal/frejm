@@ -63,6 +63,10 @@
   (chsk-send! [:rente/add data] 2000
     #(callback (second %) conn)))
 
+(defn upd [data callback conn]
+  (chsk-send! [:rente/update data] 2000
+    #(callback (second %) conn)))
+
 (defn del [id type callback conn]
   (chsk-send! [:rente/delete {:db/id id :type type}] 2000
     #(callback (second %) conn)))

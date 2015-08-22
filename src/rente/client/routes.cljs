@@ -22,6 +22,9 @@
   (swap! state assoc :module :companyedit)
   (swap! state assoc :moduleid (js/parseInt (:id params))))
 
+(defroute "/newcompany" {:as params}
+  (swap! state assoc :module :companynew))
+
 (defroute module-path "/:module" {module :module}
   (let [module-keys (set (map :key (:modules @state)))
         module-key (or (module-keys (keyword module)) :notfound)]

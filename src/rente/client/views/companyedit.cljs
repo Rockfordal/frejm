@@ -4,6 +4,7 @@
             [rente.client.views.company :as companyview]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
+            [rente.client.transactions :as trans]
             [rum :as r]))
 
 
@@ -15,6 +16,18 @@
                    :on-save #(do (js/console.log "sparar " %))} )
     [:label {:for id :class "active"} label]])
 
+(r/defc button [opts name icontext]
+  [:a.btn.waves-effect.waves-light opts name (ikon icontext)])
+
+(r/defc back-button []
+  (button {:href "#company"}
+    "Tillbaka " "info"))
+
+(r/defc save-button [save]
+  (button {:type "submit" :name "action"
+           :on-click save}
+    "Spara " "info"))
+
 (r/defc company-form [db company]
  [:form
   [:div.row
@@ -25,22 +38,25 @@
    (company-field "company-email" "email" "E-post" (:company/email company))]
   [:div.row
    (company-field "company-vd" "phone" "VD" (:company/vd company))]
-  [:div.row
-   [:div.col.s2
-    [:a.btn.waves-effect.waves-light
-     {:type "submit" :name "action"
-      :on-click #(trans/edit conn)
-      } "Spara " (ikon "send")]]
-
-   [:div.col.offset-s8.s2
-    [:a.btn.waves-effect.waves-light
-     {:href "#company"}
-     "Tillbaka " (ikon "info")]]]])
+])
 
 (r/defc companyedit_v < rum/reactive [db]
   [:div
     [:h2 "Redigera företag"]
-    ;(get-state :moduleid)
    (company-form db
      (d/touch (d/entity db (get-state :moduleid))))
+  [:div.row
+   [:div.col.s2
+    (let [moduleid (get-state :moduleid)]
+      (save-button #(trans/update-company moduleid conn)))]
+    [:div.col.offset-s8.s2 (back-button)]]
     [:br]])
+
+(r/defc companynew_v < rum/reactive [db]
+  [:div
+    [:h2 "Nytt företag"]
+   (company-form db (get-state :newcompany))
+  [:div.row
+    [:div.col.s2 (save-button #(trans/add-company conn) )]
+    [:div.col.offset-s8.s2 (back-button)]]
+   [:br]])

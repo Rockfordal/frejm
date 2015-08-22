@@ -37,11 +37,10 @@
         tx @(d/transact (conn) (list (assoc m :db/id temp-id)))]
     (d/resolve-tempid (db) (:tempids tx) temp-id)))
 
- (defn update-entity [eid k v]
- (let [
-      (d/transact (conn) (list m))
-      ;tx @(d/transact (conn) (list (assoc m :db/id temp-id)))
-      ]))
+(defn update-entity [entity]
+  (d/transact (conn) (list entity))
+  ;(:db/id entity)
+  true)
 
 (defn seed []
   (for [entry (seed-data)]

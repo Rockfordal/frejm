@@ -52,21 +52,13 @@
    (gv/component-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])
 
-(r/defc company-form [db newcompany]
- [:form.col_s12
-  [:div.row (company-field "company-name"  "person_pin" "Namn" nil)
-            (company-field "company-orgnr" "account_circle" "Orgnr" nil)]
-  [:div.row (company-field "company-phone" "phone" "Telefon" nil)
-            (company-field "company-email" "email" "E-post" nil)]
-  [:div.row (company-field "company-vd" "phone" "VD" nil)]
-  [:a.btn.waves-effect.waves-light
-   {:type "submit"
-    :on-click #(trans/add conn)}
-   "Lägg till " (ikon "send")]])
-
 (r/defc company_v < rum/reactive [db]
   [:div
     (company-list db) [:br]
-    (company-form db (get-state :newcompany)) [:br]
+
+  [:a.btn.waves-effect.waves-light
+   {:href (render-route "/newcompany")}
+   "Ny " (ikon "send")]
+
     ;[:div "Valt Projekt: " (str (get-state :activeproject))]
      ])
