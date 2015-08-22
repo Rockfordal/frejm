@@ -32,25 +32,23 @@
           :company/orgnr   "483938-1134"
           :company/phone   "08-42424"
           :company/email   "tilly@billy.lab"
-          :company/vd      "Johanesburg freidricht"
-    }
+          :company/vd      "Johanesburg freidricht"}
 
    {:type :company
           :company/name    "Yellow-backed duiker"
           :company/orgnr   "483838-2424"
           :company/phone   "08-48398"
           :company/email   "yo@do.lab"
-          :company/vd      "Greiger Wolfenstein"
-    }])
+          :company/vd      "Greiger Wolfenstein"}])
 
 (def projects
   [{:type :project
-          :project/name    "Baker Tilly"
+          :project/name         "Baker Tilly"
           :project/description  "Första"}
 
    {:type :project
-          :project/name    "nytt projekt"
-          :project/description ""}])
+          :project/name         "nytt projekt"
+          :project/description  ""}])
 
 (defn seed-data []
   (concat
