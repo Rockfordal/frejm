@@ -24,6 +24,17 @@
    :company/vd    (:vd    company)
    }))
 
+(defn extract-project []
+  (when-let [name (dom/value (by-id "project-name"))]
+    {:name   name
+     :desc (dom/value (by-id "project-desc"))}))
+
+(defn db-project []
+  (let [project (extract-project)]
+  {:type :project
+   :project/name  (:name project)
+   :project/desc  (:desc project)}))
+
 (defn add-cb [data conn]
   (let [id (:db/id data)
         entity (:entity data)
@@ -35,28 +46,25 @@
   (let [data {:entity (db-company)}]
   (ws/add data add-cb conn)))
 
+(defn add-project [conn]
+  (let [data {:entity (db-project)}]
+  (ws/add data add-cb conn)))
+
 (defn update-cb [data conn]
   (let [entity (:entity data)
         msg (:message data)]
     (if msg
-      (toast (str "kunde inte lägga till" data))
+      (toast (str "kunde inte lägga till" data msg))
       (d/transact! @conn [entity]))))
 
 (defn update-company [id conn]
   (let [entity {:entity (assoc (db-company) :db/id id)}]
   (ws/upd entity update-cb conn)))
 
-(defn edit [conn]
-  (let [data {:entity (db-company)}]
-    (ws/edit data add-success conn)))
-
-(defn edit-success [data conn]
-  (let [id (:db/id data)
-        entity (:entity data)
-        query  (into {:db/id id} entity)]
-    (if id (d/transact! @conn [query])
-           (toast (str "kunde inte editera till" data)))))
-
+(defn update-project [id conn]
+  (let [entity {:entity (assoc (db-project) :db/id id)}]
+    (println "uppdaterar projekt")
+  (ws/upd entity update-cb conn)))
 
 (defn del-success [data conn]
   (let [id (:db/id data)]
