@@ -1,9 +1,8 @@
 (ns rente.client.views.companyedit
   (:require [datascript :as d]
-            [rente.client.views.global :as gv :refer [ikon button save-button]]
+            [rente.client.views.global :as gv :refer [ikon button]]
             [rente.client.views.company :as companyview]
-            [rente.client.transactions :as trans]
-            [rente.client.state :refer [state get-state conn]]
+            [rente.client.state :refer [state get-state get-moduleid conn get-currententity]]
             [rente.client.transactions :as trans]
             [rum :as r]))
 
@@ -11,13 +10,14 @@
 (r/defc company-field [id icon label data]
   [:div.input-field.col.s6
     [:i.material-icons.prefix icon]
-   (gv/component-input {:id id
-                   :defval data
-                   :on-save #(do (js/console.log "sparar " %))} )
+   (gv/component-input {:id id :defval data})
     [:label {:for id :class "active"} label]])
 
 (r/defc back-button []
   (button {:href "#company"} "Tillbaka " "info"))
+
+(r/defc save-button [save]
+  (button {:on-click save} "Spara " "info"))
 
 (r/defc company-form [db company]
  [:form
@@ -34,13 +34,12 @@
 (r/defc companyedit_v < rum/reactive [db]
   [:div
     [:h2 "Redigera företag"]
-    (company-form db
-      (d/touch (d/entity db (get-state :moduleid))))
+    (company-form db (get-currententity db))
     [:div.row
       [:div.col.s2
-       (let [moduleid (get-state :moduleid)]
+      (let [moduleid (get-moduleid)]
         (save-button #(trans/update-company moduleid conn)))]
-      [:div.col.offset-s8.s2 (back-button)]]])
+    [:div.col.offset-s8.s2 (back-button)]]])
 
 (r/defc companynew_v < rum/reactive [db]
   [:div
