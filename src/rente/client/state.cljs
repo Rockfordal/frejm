@@ -5,13 +5,14 @@
 (defonce ^:private state
   (atom {:schema  {:item/shelf   {:db/valueType :db.type/ref}
                    :item/product {:db/valueType :db.type/ref}}
-         :companies [{:db/id 1 :company/name "ica"  :company/phone "0910-12345"}
-                     {:db/id 2 :company/name "coop" :company/phone "0910-54321"}]
          :module :sortiment
+         :moduleid nil
+         :activeproject {}
          :modules [{:key :sortiment   :title "Sortiment" :url "#sortiment"}
+                   {:key :project     :title "Projekt"   :url "#project"}
                    {:key :company     :title "Företag"   :url "#company"}
                    {:key :login       :title "Logga in"  :url "#login"}]
-         :newcompany "blank"
+         :new-company {:company/name "1" :company/orgnr "2" :company/phone "3" :company/email "4"}
          }))
 
 (def conn
@@ -22,6 +23,14 @@
 (defn get-state
   ([]         (r/react state))
   ([key] (key (r/react state))))
+
+(defn get-currententity [db]
+  (d/touch
+    (d/entity db
+              (get-state :moduleid))))
+
+(defn get-moduleid []
+  (get-state :moduleid))
 
 (defn update-state! [k v & kvs]
  (swap! state assoc k v kvs))
