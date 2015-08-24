@@ -18,6 +18,7 @@
   (secretary/set-config! :prefix "#")
   (hook-browser-navigation!))
 
+;; Företag
 (defroute "/company/:id" {:as params}
   (swap! state assoc :module :companyedit)
   (swap! state assoc :moduleid (js/parseInt (:id params))))
@@ -25,8 +26,13 @@
 (defroute "/newcompany" {:as params}
   (swap! state assoc :module :companynew))
 
+;; Projekt
+(defroute "/project/:id" {:as params}
+  (swap! state assoc :module :projectedit)
+  (swap! state assoc :moduleid (js/parseInt (:id params))))
+
 (defroute "/newproject" {:as params}
-  (swap! state assoc :module :companynew))
+  (swap! state assoc :module :projectnew))
 
 (defroute module-path "/:module" {module :module}
   (let [module-keys (set (map :key (:modules @state)))
