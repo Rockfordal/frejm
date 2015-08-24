@@ -13,16 +13,22 @@
   (render-route [_]           (str "#project/" id))
   (render-route [this params] (go-route this params)))
 
+(defn select-project [project]
+  (swap! state assoc :activeproject project))
+
 (r/defc project_item [project db]
-  [:tr.company
-   [:td.name  (:project/name        project)]
-   [:td.desc  (:project/description project)]
+  [:tr.project
+   [:td.name  (:project/name project)]
+   [:td.desc  (:project/desc project)]
    [:td
-    [:a {:href "#project"
-         :on-click #(trans/delete project conn)}
-         (ikon "delete")]
-    [:a {:href (render-route (Project. (:db/id project)))}
-         (ikon "view_headline")]]])
+     [:a {:href "#project"
+          :on-click #(trans/delete project conn)}
+          (ikon "delete")]
+     [:a {:href (render-route (Project. (:db/id project)))}
+          (ikon "view_headline")]
+     [:a {:href "#project"
+          :on-click #(select-project project)}
+          (ikon "play_for_work")]]])
 
 (r/defc project-list [db]
  [:table
