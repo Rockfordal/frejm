@@ -47,11 +47,26 @@
    (gv/component-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])
 
-(defn aktivtprojekt []
-  (str (get-state :activeproject)))
+(r/defc active-project < rum/reactive []
+  [:div
+   [:a#droppi.dropdown-button.btn {:href "#company"
+                            ;:data-activates "dropdown1"
+                            :on-click #(
+                                        println (by-id "#dropdown1")
+                                        )
+                            }
+   (str (:project/name (get-state :activeproject)))]
+   [:ul#dropdown1.dropdown-content
+    [:li
+     [:a {:href "#!"} "one"]
+     [:a {:href "#!"} "two"]
+     ]
+    ]
+   ]
+  )
 
 (r/defc company_v < rum/reactive [db]
   [:div
-   [:div "Valt Projekt: " aktivtprojekt]
+    (active-project)
     (company-list db)
     (button {:href (render-route "/newcompany")} "Ny" "send")])
