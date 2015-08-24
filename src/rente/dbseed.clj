@@ -43,12 +43,12 @@
 
 (def projects
   [{:type :project
-          :project/name         "Baker Tilly"
-          :project/description  "Första"}
+          :project/name  "Baker Tilly"
+          :project/desc  "Första"}
 
    {:type :project
-          :project/name         "nytt projekt"
-          :project/description  ""}])
+          :project/name  "nytt projekt"
+          :project/desc  ""}])
 
 (defn seed-data []
   (concat

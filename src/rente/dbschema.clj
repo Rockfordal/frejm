@@ -26,7 +26,7 @@
 ;; --------------------------------
    (s/schema project (s/fields
      [name        :string :indexed]
-     [description :string :indexed]))
+     [desc        :string :indexed]))
 
    (s/schema company (s/fields
      [name        :string :indexed]
