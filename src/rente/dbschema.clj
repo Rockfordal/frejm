@@ -29,6 +29,7 @@
      [desc        :string :indexed]))
 
    (s/schema company (s/fields
+     [project     :ref]
      [name        :string :indexed]
      [orgnr       :string :indexed]
      [phone       :string :indexed]
