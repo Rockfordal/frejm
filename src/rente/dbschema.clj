@@ -35,17 +35,17 @@
      [phone        :string :indexed]
      [email        :string :indexed]
      [vd           :string :indexed]
-
+     [oms          :string :indexed]
      [employees    :string :indexed]
+     [othercontact :string :indexed]
      [snikod       :string :indexed]
      [snitext      :string :indexed]
-     [adr          :string :indexed]
-     [postnr       :string :indexed]
-     [ort          :string :indexed]
-     [oms          :string :indexed]
+
      [salesman     :string :indexed] ;FC Försäljningschef
      [marketingdir :string :indexed] ;MC (marknadschef)
-     [othercontact :string :indexed]))
+     [adr          :string :indexed]
+     [postnr       :string :indexed]
+     [ort          :string :indexed]))
 
    (s/schema aktivitet (s/fields
                     [status   :long :indexed]
