@@ -38,7 +38,7 @@
       [:th "Beskrivning"]
       [:th "Åtgärd"]]
   [:tbody
-    (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
+      (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
       (-> (project_item (d/entity db eid) db)
           (r/with-key [eid])))]]])
 

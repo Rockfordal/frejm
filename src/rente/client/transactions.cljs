@@ -42,9 +42,16 @@
     (if id (d/transact! @conn [query])
     (toast (str "kunde inte lägga till" data)))))
 
-(defn add-company [conn]
-  (let [data {:entity (db-company)}]
-  (ws/add data add-cb conn)))
+(defn add-company [activeproject conn]
+  (let [activepid (js/parseInt (:db/id activeproject))
+        company (db-company)
+        fullcompany (merge company {:company/project activepid})
+        data {:entity fullcompany}]
+    (ws/add data add-cb conn)))
+
+(defn move-company [conn]
+;  (when-let [projectname (dom/value (by-id "company-project"))]
+ )
 
 (defn add-project [conn]
   (let [data {:entity (db-project)}]

@@ -27,6 +27,9 @@
   (let [company-id (d/tempid :db.part/user)]
   @(d/transact (db/conn) [{:db/id company-id
                            :company/name company-name
-                           :type :company}
-                          {:db/id (q/by-name :project/name project-name)
-                           :project/companies company-id}])))
+                           :type :company
+                           :company/project (ffirst (q/by-name :project/name project-name))
+                          }])))
+
+                          ;{:db/id (q/by-name :project/name project-name)
+                          ; :project/companies company-id}])))

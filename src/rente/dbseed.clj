@@ -50,7 +50,13 @@
           :project/name  "nytt projekt"
           :project/desc  ""}])
 
+(def aktiviteter
+  [{:type :aktivitet
+    :aktivitet/status 1}
+   {:type :aktivitet
+    :aktivitet/status 15}])
+
 (defn seed-data []
   (concat
     products shelfs items
-    projects companies))
+    projects companies aktiviteter))

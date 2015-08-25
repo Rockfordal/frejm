@@ -79,7 +79,10 @@
        '[[(visible ?p) (?p :product/name)]
          [(visible ?s) (?s :shelf/name)]
          [(visible ?j) (?j :project/name)]
-         [(visible ?c) (?c :company/name)]]))
+         [(visible ?c) (?c :company/name)]
+         [(visable ?c) (?c :item/antal)]
+         [(visable ?c) (?c :aktivitet/status)]
+         ]))
 
 (defn load-entity
   "Loads an entity and its attributes. Keep in the db/id

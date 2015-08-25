@@ -11,6 +11,19 @@
             closeOnClick: true});
     });
 
+   $(document).on('click', '#droppi', function(e) {
+   e.preventDefault();
+      $(e.target).dropdown();
+   });
+
+
+//   setTimeout(droppi, 2000)
+//
+//   function droppi() {
+//      $('#droppi').dropdown();
+//   }
+
+
     // $('.dropdown-button').dropdown({
     //     inDuration: 300,
     //     outDuration: 225,

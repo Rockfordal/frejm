@@ -36,6 +36,12 @@
      [email       :string :indexed]
      [vd          :string :indexed]
      ))
+
+   (s/schema aktivitet (s/fields
+                    [status   :long :indexed]
+                    [project  :ref]
+                    [company  :ref]))
+
   ])
 
 (defn get-schema []
