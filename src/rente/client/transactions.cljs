@@ -1,6 +1,7 @@
 (ns rente.client.transactions
   (:require
     [rente.client.ws :as ws]
+    [rente.client.queries :refer [find-by-projectname]]
     [rente.client.dom :as dom :refer [q by-id toast]]
     [datascript :as d]))
 
@@ -50,9 +51,23 @@
     (ws/add inkproj add-cb conn)
     (ws/add exproj  add-cb conn))))
 
-(defn move-company [conn]
-;  (when-let [projectname (dom/value (by-id "company-project"))]
- )
+(defn move-company-cb [msg]
+  (let [entity (:entity msg)
+        project (:company/project entity)
+        name (:company/name entity)]
+  (if (= project nil)
+    (do
+      (toast "Kunde inte sätta projekt!")
+      (println "fel vid projektflytt: " msg))
+    (toast (str "Företaget " name " flyttades" )))))
+
+(defn move-company [id conn db]
+  (when-let [projname (dom/value (by-id "company-project"))]
+    (let [projid (find-by-projectname projname db)
+          data {:entity (merge (db-company)
+                               {:db/id id
+                                :company/project projid})}]
+      (ws/upd data move-company-cb conn))))
 
 (defn add-project [conn]
   (let [data {:entity (db-project)}]
