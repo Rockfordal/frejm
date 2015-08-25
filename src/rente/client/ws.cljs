@@ -55,10 +55,6 @@
 ;;     2000
 ;;     #(dispatch [:get-success (second %) types])))
 
-(defn edit [data callback conn]
-  (chsk-send! [:rente/edit data] 2000
-              #(callback (second %) conn)))
-
 (defn add [data callback conn]
   (chsk-send! [:rente/add data] 2000
     #(callback (second %) conn)))
@@ -70,11 +66,3 @@
 (defn del [id type callback conn]
   (chsk-send! [:rente/delete {:db/id id :type type}] 2000
     #(callback (second %) conn)))
-
-;; (defn add-name [item key type types]
-;;   (chsk-send!
-;;     [:rente/add-name {:data item :key key :type type}]
-;;     2000
-;;     #(let [data (second %)
-;;            r    {:data data :key key :type type :types types}]
-;;       (dispatch [:add-name-success r]))))
