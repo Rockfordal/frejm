@@ -39,7 +39,6 @@
 
 (defn update-entity [entity]
   (d/transact (conn) (list entity))
-  ;(:db/id entity)
   true)
 
 (defn seed []
