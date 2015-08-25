@@ -4,6 +4,7 @@
             [rente.client.views.company :as companyview :refer [active-project]]
             [rente.client.state :refer [state get-state get-moduleid conn get-currententity]]
             [rente.client.transactions :as trans]
+            [rente.client.dom :as dom :refer [q by-id toast]]
             [rum :as r]))
 
 
@@ -15,11 +16,6 @@
 
 (r/defc back-button []
   (button {:href "#company"} "Tillbaka " "info"))
-
-(r/defc move-btn []
-  (button {:href "#"
-           :on-click (trans/move-company)}
-          "Projekt " "perm_data_setting"))
 
 (r/defc save-button [save]
   (button {:on-click save} "Spara " "info"))
@@ -35,18 +31,21 @@
   [:div.row
    (company-field "company-vd" "phone" "VD" (:company/vd company))]])
 
+(r/defc changeproject-field [id domid db]
+  [:div.input-field.col.s6
+    [:i.material-icons.prefix "code"]
+   (gv/component-input {:id domid
+                        :on-save #(trans/move-company id conn db)})
+   [:label {:for domid :class "active"} "Flytta till projekt"]])
+
 (r/defc companyedit_v < rum/reactive [db]
   [:div
     [:h2 "Redigera företag"]
     (company-form db (get-currententity db))
     [:div.row
-      [:div.col.s2
-      (let [moduleid (get-moduleid)]
-        (save-button #(trans/update-company moduleid conn)))]
-    [ :div.col.offset-s1.s2 (move-btn)]
-     [:div.col.s4
-      (company-field "company-project" "code" "Projekt" "")]
-    [:div.col.offset-s1.s2 (back-button)]]])
+      [:div.col.s2 (save-button #(trans/update-company (get-moduleid) conn))]
+      [:div.col.s4 (changeproject-field (get-moduleid) "company-project" db)]
+      [:div.col.offset-s1.s2 (back-button)]]])
 
 (r/defc companynew_v < rum/reactive [db]
   [:div
@@ -54,6 +53,7 @@
     [:h2 "Nytt företag"]
     (company-form db (get-state :newcompany))
   [:div.row
-    [:div.col.s2 (let [activeproject (get-state :activeproject)] (save-button #(trans/add-company activeproject conn)))]
+   [:div.col.s2 (let [activeproject (get-state :activeproject)]
+                   (save-button #(trans/add-company activeproject conn)))]
     [:div.col.offset-s8.s2 (back-button)]]])
 
