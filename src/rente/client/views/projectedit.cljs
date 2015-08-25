@@ -29,15 +29,15 @@
     [:h2 "Redigera projekt"]
     (project-form db (get-currententity db))
     [:div.row
-      [:div.col.s2
+     [:div.col.s2 (back-button)]
+      [:div.col.offset-s8.s2
        (let [moduleid (get-moduleid)]
-         (save-button #(trans/update-project moduleid conn)))]
-      [:div.col.offset-s8.s2 (back-button)]]])
+         (save-button #(trans/update-project moduleid conn)))]]])
 
 (r/defc projectnew_v < rum/reactive [db]
   [:div
     [:h2 "Nytt projekt"]
     (project-form db (get-state :newproject))
   [:div.row
-   [:div.col.s2 (save-button #(trans/add-project conn))]
-    [:div.col.offset-s8.s2 (back-button)]]])
+    [:div.col.offset-s8.s2 (back-button)]
+    [:div.col.s2 (save-button #(trans/add-project conn))]]])

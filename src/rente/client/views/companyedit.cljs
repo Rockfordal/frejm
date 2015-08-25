@@ -36,15 +36,16 @@
     [:h2 "Redigera företag"]
     (company-form db (get-currententity db))
     [:div.row
-      [:div.col.s2
-      (let [moduleid (get-moduleid)]
-        (save-button #(trans/update-company moduleid conn)))]
-    [:div.col.offset-s8.s2 (back-button)]]])
+     [:div.col.s2
+       (back-button)]
+     [:div.col.offset-s8.s2
+       (let [moduleid (get-moduleid)]
+         (save-button #(trans/update-company moduleid conn)))]]])
 
 (r/defc companynew_v < rum/reactive [db]
   [:div
     [:h2 "Nytt företag"]
     (company-form db (get-state :newcompany))
   [:div.row
-    [:div.col.s2 (save-button #(trans/add-company conn) )]
-    [:div.col.offset-s8.s2 (back-button)]]])
+    [:div.col.offset-s8.s2 (back-button)]
+    [:div.col.s2 (save-button #(trans/add-company conn))]]])
