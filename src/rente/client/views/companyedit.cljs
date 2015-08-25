@@ -29,7 +29,9 @@
    (company-field "company-phone" "phone" "Telefon" (:company/phone company))
    (company-field "company-email" "email" "E-post" (:company/email company))]
   [:div.row
-   (company-field "company-vd" "phone" "VD" (:company/vd company))]])
+   (company-field "company-vd"  "phone" "VD" (:company/vd company))
+   (company-field "company-oms" "phone" "Omsättning" (:company/oms company))
+   ]])
 
 (r/defc changeproject-field [id domid db]
   [:div.input-field.col.s6
