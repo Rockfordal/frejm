@@ -45,7 +45,8 @@
     [:h2 "Redigera företag"]
     (company-form db (get-currententity db))
     [:div.row
-      [:div.col.s2 (save-button #(trans/update-company (get-moduleid) conn))]
+      (let [moduleid (get-moduleid)]
+        [:div.col.s2 (save-button #(trans/update-company moduleid conn))])
       [:div.col.s4 (changeproject-field (get-moduleid) "company-project" db)]
       [:div.col.offset-s1.s2 (back-button)]]])
 
