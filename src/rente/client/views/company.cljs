@@ -14,11 +14,12 @@
 
 (r/defc company_item [company db]
   [:tr.company
-   [:td.name  (:company/name  company)]
-   [:td.orgnr (:company/orgnr company)]
-   [:td.name  (:company/phone company)]
-   [:td.email (:company/email company)]
-   [:td.vd    (:company/vd    company)]
+   [:td.name    (:company/name  company)]
+   [:td.orgnr   (:company/orgnr company)]
+   [:td.name    (:company/phone company)]
+   [:td.email   (:company/email company)]
+   [:td.vd      (:company/vd    company)]
+   [:td.project (:company/project company)]
    [:td
      [:a {:href "#company"
           :on-click #(trans/delete company conn)}
@@ -35,6 +36,7 @@
       [:th "Telefon"]
       [:th "E-post"]
       [:th "VD"]
+      [:th "Projekt"]
       [:th "Åtgärd"]]
   [:tbody
     (for [[eid] (sort (d/q '[:find ?e :where [?e :company/name]] db))]
