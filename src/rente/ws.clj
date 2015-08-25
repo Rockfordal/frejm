@@ -88,16 +88,6 @@
       (?reply-fn [:rente/update {:entity entity}])
       (?reply-fn [:rente/update {:message (str "misslyckades upd" ?data entity)}]))))
 
-(defmethod event-msg-handler :rente/add-name
-  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-  (let [kw (keyword (:key ?data))
-        typ (keyword (:type ?data))
-        dat (:data ?data)
-        id (db/create-entity {:type typ kw dat})]  ; {:type :company :company/name "ica" }
-   (if id
-     (?reply-fn [:rente/add-name {:db/id id :data (:data ?data)}])
-     (?reply-fn [:rente/add-name {:message "misslyckades add-name"}]))))
-
 ;-------------------------------------------------------
 
 (defmethod event-msg-handler :default ; Fallback
