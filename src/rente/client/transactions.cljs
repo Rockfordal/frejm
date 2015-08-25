@@ -30,8 +30,8 @@
 (defn db-project []
   (let [project (extract-project)]
   {:type :project
-   :project/name  (:name project)
-   :project/desc  (:desc project)}))
+   :project/name (:name project)
+   :project/desc (:desc project)}))
 
 (defn add-cb [data conn]
   (let [id (:db/id data)
