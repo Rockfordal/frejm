@@ -8,11 +8,11 @@
          :module :sortiment
          :moduleid nil
          :activeproject nil
+         ;:new-company {:company/name "1" :company/orgnr "2" :company/phone "3" :company/email "4"}
          :modules [{:key :sortiment   :title "Sortiment" :url "#sortiment"}
                    {:key :project     :title "Projekt"   :url "#project"}
                    {:key :company     :title "Företag"   :url "#company"}
-                   {:key :login       :title "Logga in"  :url "#login"}]
-         :new-company {:company/name "1" :company/orgnr "2" :company/phone "3" :company/email "4"}}))
+                   {:key :login       :title "Logga in"  :url "#login"}]}))
 
 (def conn
   (atom (d/create-conn (:schema @state))))
