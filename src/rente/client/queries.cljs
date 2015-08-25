@@ -2,6 +2,11 @@
   (:require
    [datascript :as d]))
 
+(defn find-by-projectname [name db]
+  (ffirst (d/q '[:find ?e :in $ ?name
+                 :where [?e :project/name ?name]]
+                 db name)))
+
 ;; Rules are used to implement OR semantic of a filter
 ;; ?term must match either :project/name OR :todo/tags
 (def todo-filter-rule
