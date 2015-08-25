@@ -41,11 +41,14 @@
     (toast (str "kunde inte lägga till" data)))))
 
 (defn add-company [activeproject conn]
-  (let [activepid (js/parseInt (:db/id activeproject))
-        company (db-company)
-        fullcompany (merge company {:company/project activepid})
-        data {:entity fullcompany}]
-    (ws/add data add-cb conn)))
+    (let [activepid (js/parseInt (:db/id activeproject))
+          company (db-company)
+          fullcompany (merge company {:company/project activepid})
+          inkproj {:entity fullcompany}
+          exproj  {:entity company}]
+  (if activeproject
+    (ws/add inkproj add-cb conn)
+    (ws/add exproj  add-cb conn))))
 
 (defn move-company [conn]
 ;  (when-let [projectname (dom/value (by-id "company-project"))]
