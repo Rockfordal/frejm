@@ -30,8 +30,13 @@
    (company-field "company-email" "email" "E-post" (:company/email company))]
   [:div.row
    (company-field "company-vd"  "phone" "VD" (:company/vd company))
-   (company-field "company-oms" "phone" "Omsättning" (:company/oms company))
-   ]])
+   (company-field "company-oms" "phone" "Omsättning" (:company/oms company))]
+  [:div.row
+   (company-field "company-employees" "phone" "Antal anställda" (:company/employees company))
+   (company-field "company-othercontact" "phone" "Övrig kontakt" (:company/othercontact company))]
+  [:div.row
+   (company-field "company-snikod" "phone" "SNI-kod" (:company/snikod company))
+   (company-field "company-snitext" "phone" "SNI-text" (:company/snitext company))]])
 
 (r/defc changeproject-field [id domid db]
   [:div.input-field.col.s6

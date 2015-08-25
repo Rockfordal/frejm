@@ -9,21 +9,29 @@
 (defn extract-company []
   (when-let [name (dom/value (by-id "company-name"))]
     {:name   name
-     :orgnr (dom/value (by-id "company-orgnr"))
-     :phone (dom/value (by-id "company-phone"))
-     :email (dom/value (by-id "company-email"))
-     :vd    (dom/value (by-id "company-vd"))
-     :oms   (dom/value (by-id "company-oms"))}))
+     :orgnr        (dom/value (by-id "company-orgnr"))
+     :phone        (dom/value (by-id "company-phone"))
+     :email        (dom/value (by-id "company-email"))
+     :vd           (dom/value (by-id "company-vd"))
+     :oms          (dom/value (by-id "company-oms"))
+     :employees    (dom/value (by-id "company-employees"))
+     :othercontact (dom/value (by-id "company-othercontact"))
+     :snikod       (dom/value (by-id "company-snikod"))
+     :snitext      (dom/value (by-id "company-snitext"))}))
 
 (defn db-company []
   (let [company (extract-company)]
   {:type :company
-   :company/name  (:name  company)
-   :company/orgnr (:orgnr company)
-   :company/phone (:phone company)
-   :company/email (:email company)
-   :company/vd    (:vd    company)
-   :company/oms   (:oms   company)}))
+   :company/name         (:name  company)
+   :company/orgnr        (:orgnr company)
+   :company/phone        (:phone company)
+   :company/email        (:email company)
+   :company/vd           (:vd    company)
+   :company/oms          (:oms   company)
+   :company/employees    (:employees company)
+   :company/othercontact (:othercontact company)
+   :company/snikod       (:snikod company)
+   :company/snitext      (:snitext company)}))
 
 (defn extract-project []
   (when-let [name (dom/value (by-id "project-name"))]
