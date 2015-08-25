@@ -14,9 +14,12 @@
   (render-route [this params] (go-route this params)))
 
 (defn select-project [project]
-  (swap! state assoc :activeproject project))
+  (let [activeproject (:activeproject @state)]
+    (if (= activeproject project)
+      (swap! state assoc :activeproject nil)
+      (swap! state assoc :activeproject project))))
 
-(r/defc project-item [project db]
+(r/defc project-item [project db activeproject]
   [:tr.project
    [:td.name  (:project/name project)]
    [:td.desc  (:project/desc project)]
@@ -27,10 +30,11 @@
      [:a {:href (render-route (Project. (:db/id project)))}
           (ikon "view_headline")]
      [:a {:href "#project"
+          :class (if (= activeproject project) "yellow" "")
           :on-click #(select-project project)}
-          (ikon "play_for_work")]]])
+      (ikon "play_for_work")]]])
 
-(r/defc project-list [db]
+(r/defc project-list [db activeproject]
  [:table
   [:thead
     [:tr
@@ -39,10 +43,10 @@
       [:th "Åtgärd"]]
   [:tbody
       (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
-      (-> (project-item (d/entity db eid) db)
-          (r/with-key [eid])))]]])
+      (-> (project-item (d/entity db eid) db activeproject)
+        (r/with-key [eid])))]]])
 
 (r/defc project_v < rum/reactive [db]
   [:div
-    (project-list db) [:br]
+    (project-list db (get-state :activeproject) ) [:br]
     (button {:href (render-route "/newproject")} "Ny" "send")])
