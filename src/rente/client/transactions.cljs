@@ -51,7 +51,7 @@
     (ws/add inkproj add-cb conn)
     (ws/add exproj  add-cb conn))))
 
-(defn move-company-cb [msg]
+(defn move-company-cb [msg conn]
   (let [entity (:entity msg)
         project (:company/project entity)
         name (:company/name entity)]
@@ -59,7 +59,9 @@
     (do
       (toast "Kunde inte sätta projekt!")
       (println "fel vid projektflytt: " msg))
-    (toast (str "Företaget " name " flyttades" )))))
+    (do
+      (d/transact! @conn [entity])
+      (toast (str "Företaget " name " flyttades" ))))))
 
 (defn move-company [id conn db]
   (when-let [projname (dom/value (by-id "company-project"))]
