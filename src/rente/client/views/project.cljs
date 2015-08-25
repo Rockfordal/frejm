@@ -16,7 +16,7 @@
 (defn select-project [project]
   (swap! state assoc :activeproject project))
 
-(r/defc project_item [project db]
+(r/defc project-item [project db]
   [:tr.project
    [:td.name  (:project/name project)]
    [:td.desc  (:project/desc project)]
@@ -39,7 +39,7 @@
       [:th "Åtgärd"]]
   [:tbody
       (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
-      (-> (project_item (d/entity db eid) db)
+      (-> (project-item (d/entity db eid) db)
           (r/with-key [eid])))]]])
 
 (r/defc project_v < rum/reactive [db]

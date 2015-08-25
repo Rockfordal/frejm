@@ -11,8 +11,7 @@
      :orgnr (dom/value (by-id "company-orgnr"))
      :phone (dom/value (by-id "company-phone"))
      :email (dom/value (by-id "company-email"))
-     :vd    (dom/value (by-id "company-vd"))
-     }))
+     :vd    (dom/value (by-id "company-vd"))}))
 
 (defn db-company []
   (let [company (extract-company)]
@@ -21,8 +20,7 @@
    :company/orgnr (:orgnr company)
    :company/phone (:phone company)
    :company/email (:email company)
-   :company/vd    (:vd    company)
-   }))
+   :company/vd    (:vd    company)}))
 
 (defn extract-project []
   (when-let [name (dom/value (by-id "project-name"))]
