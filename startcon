@@ -1,0 +1,1 @@
+/opt/datomic/bin/console -p 8888 dev datomic:dev://localhost:4334/
