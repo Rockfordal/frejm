@@ -69,12 +69,12 @@
                 :output-to "resources/public/js/app.js"
                 :output-dir "dev-resources/public/js/out"}}}
 
-      :deploy {:source-paths ["src/cljs"]
-                ;:jar true ; DON'T DO THIS
-                :compiler
-                {:output-to "dev-resources/public/js/deploy.js"
-                 :optimizations :none
-                 :pretty-print false}}
+      ;; :deploy {:source-paths ["src/cljs"]
+      ;;           ;:jar true ; DON'T DO THIS
+      ;;           :compiler
+      ;;           {:output-to "dev-resources/public/js/deploy.js"
+      ;;            :optimizations :none
+      ;;            :pretty-print false}}
   }
 
   :profiles {
