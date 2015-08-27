@@ -6,7 +6,7 @@
 
 
 (r/defc project-field [id icon label data]
-  [:div.input-field.col.s6
+  [:.input-field.col.s6
     [:i.material-icons.prefix icon]
    ;(let [moduleid (get-moduleid)]
    (my-input {:id id
@@ -17,7 +17,7 @@
 
 (r/defc project-form [db project]
   [:form
-    [:div.row
+    [:.row
       (project-field "project-name" "person_pin"     "Namn"        (:project/name project))
       (project-field "project-desc" "account_circle" "Beskrivning" (:project/desc project))]])
 
@@ -28,9 +28,9 @@
   [:div
     [:h2 "Redigera projekt"]
     (project-form db (get-currententity db))
-    [:div.row
-      [:div.col.s2 (back-button)]
-        [:div.col.offset-s8.s2
+    [:.row
+      [:.col.s2 (back-button)]
+        [:.col.offset-s8.s2
           (let [moduleid (get-moduleid)]
             (save-button #(trans/update-project moduleid conn)))]]])
 
@@ -38,6 +38,6 @@
   [:div
     [:h2 "Nytt projekt"]
     (project-form db (get-state :newproject))
-  [:div.row
-    [:div.col.offset-s8.s2 (back-button)]
-    [:div.col.s2 (save-button #(trans/add-project conn))]]])
+  [:.row
+    [:.col.offset-s8.s2 (back-button)]
+    [:.col.s2 (save-button #(trans/add-project conn))]]])

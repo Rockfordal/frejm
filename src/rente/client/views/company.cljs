@@ -44,7 +44,7 @@
           (r/with-key [eid])))]]])
 
 (r/defc company-field [id icon label data]
-  [:div.input-field.col.s6
+  [:.input-field.col.s6
     [:i.material-icons.prefix icon]
    (my-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])

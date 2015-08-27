@@ -30,18 +30,18 @@
       (ikon "play_for_work")]]])
 
 (r/defc project-list [db activeproject]
- [:table
-  [:thead
-    [:tr
-      [:th "Namn"]
-      [:th "Beskrivning"]
-      [:th "Åtgärd"]]
-  [:tbody
-      (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
-      (-> (project-item (d/entity db eid) db activeproject)
-        (r/with-key [eid])))]]])
+  [:table
+   [:thead
+     [:tr
+       [:th "Namn"]
+       [:th "Beskrivning"]
+       [:th "Åtgärd"]]
+   [:tbody
+     (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
+       (-> (project-item (d/entity db eid) db activeproject)
+         (r/with-key [eid])))]]])
 
 (r/defc project_v < rum/reactive [db]
   [:div
     (project-list db (get-state :activeproject) ) [:br]
-   (button {:href newprojectroute} "Ny" "send")])
+    (button {:href newprojectroute} "Ny" "send")])

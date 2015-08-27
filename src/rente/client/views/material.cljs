@@ -4,7 +4,7 @@
 
 
 (r/defc ikon < rum/static [namn]
- [:i.material-icons namn])
+  [:i.material-icons namn])
 
 (r/defc button [opts name icontext]
   [:a.btn.waves-effect.waves-light opts (str name " ")(ikon icontext)])
@@ -12,7 +12,7 @@
 (r/defc save-button [save]
   (button {:on-click save} "Spara " "info"))
 
-(rum/defc my-input [{:keys [id title on-save on-stop defval]}]
+(r/defc my-input [{:keys [id title on-save on-stop defval]}]
   (let [val (atom defval)
         stop #(do (reset! val "")
                   (.blur (by-id id))

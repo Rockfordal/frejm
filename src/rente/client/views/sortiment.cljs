@@ -1,8 +1,6 @@
 (ns rente.client.views.sortiment
   (:require
     [datascript :as d]
-    ;[rente.client.queries :as q]
-    ;[rente.client.ws :as ws]
     [rum :as r]))
 
 
@@ -45,24 +43,24 @@
          (r/with-key [item])))])
 
 (r/defc sortiment_v [db]
-  [:div.sortiment
+  [:.sortiment
     [:.main-view.row
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
+      [:.col.s3
+        [:.card.blue-grey.darken-1
+         [:.card-content.white-text
           [:span.card-title "Produkter"]
           (visa-alla-produkter db) [:br]
-          [:div.card-action [:a {:href "#" :on-click #(println "get")} "Hämta"]]]]]
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
+          [:.card-action [:a {:href "#" :on-click #(println "get")} "Hämta"]]]]]
+      [:.col.s3
+        [:.card.blue-grey.darken-1
+         [:.card-content.white-text
           [:span.card-title "Sortiment"]
           (visa-sortiment db)
          [:br]
-          [:div.card-action [:a {:href "#"} "ok"] ]]]]
-      [:div.col.s3
-        [:div.card.blue-grey.darken-1
-         [:div.card-content.white-text
+          [:.card-action [:a {:href "#"} "ok"] ]]]]
+      [:.col.s3
+        [:.card.blue-grey.darken-1
+         [:.card-content.white-text
           [:span.card-title "Hyllor"]
           (visa-alla-hyllor db) [:br]
-          [:div.card-action [:a {:href "#"} "ok"] ]]]]]])
+          [:.card-action [:a {:href "#"} "ok"] ]]]]]])
