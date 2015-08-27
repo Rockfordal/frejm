@@ -4,7 +4,7 @@
             [clojure.tools.logging :as log]
             [com.stuartsierra.component :as component]
             [clojure.algo.generic.functor :refer [fmap]]
-    ;[clojure.java.io :refer (resource)]
+            ;[clojure.java.io :refer (resource)]
             [rente.dbschema :refer [get-schema]]
             [rente.dbseed :refer [seed-data]]
             [rente.config :refer [get-config]]))

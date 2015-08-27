@@ -37,10 +37,10 @@
                  [rum "0.3.0"]
                  [datascript "0.11.6"]
                  [secretary "1.2.3"]
-                 ;[clj-json "0.5.3"]
-                 [cljs-http "0.1.37"]
-                 ;[cljsjs/highlight "8.4-0"]
                  [jayq "2.5.4"]
+                 [cljs-http "0.1.37"]
+                 ;[clj-json "0.5.3"]
+                 ;[cljsjs/highlight "8.4-0"]
                  ;[org.webjars.bower/jquery "2.1.4"]
                  ;[org.webjars.bower/materialize "0.97.0" :exclusions [org.webjars.bower/jquery]]
                  ;[org.webjars.bower/highlightjs "8.5.0"]
@@ -92,10 +92,10 @@
 
                     :cljsbuild
                     {:builds
-                     {:client {:source-paths ["dev"]
-                               :compiler
-                                 {:optimizations :none
-                                  :source-map true}}}
+                      {:client {:source-paths ["dev"]
+                                :compiler
+                                  {:optimizations :none
+                                   :source-map true}}}
                      }
              }
              :prod {:cljsbuild
@@ -112,7 +112,6 @@
 
   :uberjar-name "frejm.jar"
 
-  :aliases {"package"
-            ["with-profile" "prod" "do"
-             "clean" ["cljsbuild" "once"]]}
-  )
+  :aliases {"package" ["with-profile" "prod" "do"
+                       "clean" ["cljsbuild" "once"]]}
+)
