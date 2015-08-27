@@ -20,6 +20,9 @@
     (when-not (str/blank? val)
       (str/trim val))))
 
+(defn get-value [id]
+  (str (value (by-id id))))
+
 (defn array-value [el]
   (when-let [val (value el)]
     (str/split val #"\s+")))

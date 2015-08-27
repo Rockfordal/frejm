@@ -2,22 +2,22 @@
   (:require
     [rente.client.ws :as ws]
     [rente.client.queries :refer [find-by-projectname]]
-    [rente.client.dom :as dom :refer [q by-id toast]]
+    [rente.client.dom :as dom :refer [q by-id toast get-value]]
     [datascript :as d]))
 
 
 (defn extract-company []
-  (when-let [name (dom/value (by-id "company-name"))]
+  (when-let [name (get-value "company-name")]
     {:name   name
-     :orgnr        (dom/value (by-id "company-orgnr"))
-     :phone        (dom/value (by-id "company-phone"))
-     :email        (dom/value (by-id "company-email"))
-     :vd           (dom/value (by-id "company-vd"))
-     :oms          (dom/value (by-id "company-oms"))
-     :employees    (dom/value (by-id "company-employees"))
-     :othercontact (dom/value (by-id "company-othercontact"))
-     :snikod       (dom/value (by-id "company-snikod"))
-     :snitext      (dom/value (by-id "company-snitext"))}))
+     :orgnr        (get-value "company-orgnr")
+     :phone        (get-value  "company-phone")
+     :email        (get-value  "company-email")
+     :vd           (get-value  "company-vd")
+     :oms          (get-value  "company-oms")
+     :employees    (get-value  "company-employees")
+     :othercontact (get-value  "company-othercontact")
+     :snikod       (get-value  "company-snikod")
+     :snitext      (get-value  "company-snitext")}))
 
 (defn db-company []
   (let [company (extract-company)]
@@ -34,9 +34,9 @@
    :company/snitext      (:snitext company)}))
 
 (defn extract-project []
-  (when-let [name (dom/value (by-id "project-name"))]
+  (when-let [name (get-value "project-name")]
     {:name   name
-     :desc (dom/value (by-id "project-desc"))}))
+     :desc (get-value "project-desc")}))
 
 (defn db-project []
   (let [project (extract-project)]
@@ -74,7 +74,7 @@
       (toast (str "Företaget " name " flyttades" ))))))
 
 (defn move-company [id conn db]
-  (when-let [projname (dom/value (by-id "company-project"))]
+  (when-let [projname (get-value  "company-project")]
     (let [projid (find-by-projectname projname db)
           data {:entity (merge (db-company)
                                {:db/id id
