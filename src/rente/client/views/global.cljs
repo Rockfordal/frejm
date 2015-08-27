@@ -30,7 +30,3 @@
                                 13 (save)
                                 27 (stop)
                                 nil)}]))
-
-(defn go-route [this params]
-  (str (render-route this) "?"
-    (encode-query-params params)))

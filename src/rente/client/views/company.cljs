@@ -2,15 +2,11 @@
   (:require [rum :as r]
             [datascript :as d]
             [rente.client.dom :as dom :refer [by-id]]
-            [rente.client.views.global :as gv :refer [ikon button go-route]]
+            [rente.client.views.global :as gv :refer [ikon button]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
-            [secretary.core :refer [IRenderRoute render-route encode-query-params]]))
+            [rente.client.routehelper :refer [Company companyroute newcompanyroute]]))
 
-(defrecord Company [id]
-  IRenderRoute
-  (render-route [_]           (str "#company/" id))
-  (render-route [this params] (go-route this params)))
 
 (defn projnamn [projektid db]
   (d/q '[:find ?name :in $ ?e :where
@@ -28,7 +24,7 @@
    [:td [:a {:href "#company"
              :on-click #(trans/delete company conn)}
             (ikon "delete")]
-        [:a {:href (render-route (Company. (:db/id company)))}
+        [:a {:href (companyroute company)}
             (ikon "view_headline")]]])
 
 (r/defc company-list [db]
@@ -68,4 +64,4 @@
   [:div
     (active-project)
     (company-list db)
-    (button {:href (render-route "/newcompany")} "Ny" "send")])
+   (button {:href (newcompanyroute)} "Ny" "send")])

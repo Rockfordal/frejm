@@ -2,16 +2,11 @@
   (:require [rum :as r]
             [datascript :as d]
             [rente.client.dom :as dom :refer [by-id]]
-            [rente.client.views.global :as gv :refer [ikon button go-route]]
+            [rente.client.views.global :as gv :refer [ikon button]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
-            [secretary.core :refer [IRenderRoute render-route encode-query-params]]))
+            [rente.client.routehelper :refer [Project projectroute newprojectroute]]))
 
-
-(defrecord Project [id]
-  IRenderRoute
-  (render-route [_]           (str "#project/" id))
-  (render-route [this params] (go-route this params)))
 
 (defn select-project [project]
   (let [activeproject (:activeproject @state)]
@@ -27,7 +22,7 @@
      [:a {:href "#project"
           :on-click #(trans/delete project conn)}
           (ikon "delete")]
-     [:a {:href (render-route (Project. (:db/id project)))}
+     [:a {:href (projectroute project)}
           (ikon "view_headline")]
      [:a {:href "#project"
           :class (if (= activeproject project) "yellow" "")
@@ -49,4 +44,4 @@
 (r/defc project_v < rum/reactive [db]
   [:div
     (project-list db (get-state :activeproject) ) [:br]
-    (button {:href (render-route "/newproject")} "Ny" "send")])
+   (button {:href newprojectroute} "Ny" "send")])
