@@ -1,8 +1,8 @@
-(ns rente.client.views.global
+(ns rente.client.views.material
   (:require [rente.client.dom :as dom :refer [by-id]]
             [rum :as r]))
 
-;; Egna materialize funktioner
+
 (r/defc ikon < rum/static [namn]
  [:i.material-icons namn])
 
@@ -12,7 +12,7 @@
 (r/defc save-button [save]
   (button {:on-click save} "Spara " "info"))
 
-(rum/defc component-input [{:keys [id title on-save on-stop defval]}]
+(rum/defc my-input [{:keys [id title on-save on-stop defval]}]
   (let [val (atom defval)
         stop #(do (reset! val "")
                   (.blur (by-id id))
