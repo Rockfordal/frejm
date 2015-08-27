@@ -10,7 +10,7 @@
             [rente.companies :as companies]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
-            [taoensso.sente.packers.transit :as sente-transit]))
+            [taoensso.sente.packers.transit :refer [get-flexi-packer]]))
 
 (def ping-counts (atom 0))
 (defmulti event-msg-handler :id) ; Dispatch on event-id
@@ -106,7 +106,7 @@
     (if (and ch-recv connected-uids send-fn ring-handlers)
       component
       (let [component (component/stop component)
-            packer (sente-transit/get-flexi-packer :edn)
+            packer (get-flexi-packer :edn)
             {:keys [ch-recv send-fn connected-uids
                     ajax-post-fn ajax-get-or-ws-handshake-fn]}
             (sente/make-channel-socket! sente-http/http-kit-adapter {:packer packer})]
