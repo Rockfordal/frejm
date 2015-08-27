@@ -22,15 +22,13 @@
 
 (r/defc visa-alla-produkter [db]
   [:div
-    (for [[eid] (sort (d/q '[:find ?e
-                             :where [?e :product/name]] db))]
+    (for [[eid] (sort (d/q '[:find ?e :where [?e :product/name]] db))]
       (-> (product_v (d/entity db eid))
           (r/with-key [eid])))])
 
 (r/defc visa-alla-hyllor [db]
   [:div
-   (for [[eid] (sort (d/q '[:find ?e
-                            :where [?e :shelf/name]] db))]
+   (for [[eid] (sort (d/q '[:find ?e :where [?e :shelf/name]] db))]
      (-> (shelf_v (d/entity db eid))
          (r/with-key [eid])))])
 
@@ -54,11 +52,7 @@
          [:div.card-content.white-text
           [:span.card-title "Produkter"]
           (visa-alla-produkter db) [:br]
-          [:div.card-action [:a {:href "#" :on-click #(
-                                                       println "get"
-                                                       ;ws/get-products
-                                                        )} "Hämta"] ]
-          ]]]
+          [:div.card-action [:a {:href "#" :on-click #(println "get")} "Hämta"]]]]]
       [:div.col.s3
         [:div.card.blue-grey.darken-1
          [:div.card-content.white-text
