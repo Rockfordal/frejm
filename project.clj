@@ -9,10 +9,13 @@
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data för datascript
                  [org.clojure/tools.logging "0.3.1"]
-                 [ch.qos.logback/logback-classic "1.1.3"]
-                 [org.clojure/algo.generic "0.1.2"]
 
+                 ; Framtida
+                 ; [com.taoensso/timbre "4.1.1"] ; mkt kraftfullare än tools.logging
+                 ; [dire "0.5.3"]                ; hantera exceptions erlang style (se theatralia github)
+                 ; [liberator "0.12.0"]          ; REST style a'la powerhouse+webgui
 
                  ; Server
                  [ring/ring-core "1.4.0"]
@@ -21,7 +24,6 @@
                  [compojure "1.4.0"]
                  [http-kit "2.1.19"]
                  [datomic-schema "1.3.0"]
-                 ;[liberator "0.12.0"]
 
                  [com.stuartsierra/component "0.2.3"]
                  [com.datomic/datomic-pro "0.9.5206"
@@ -51,16 +53,13 @@
                  ]
 
   :plugins [[lein-environ "1.0.0"]
-            [lein-cljsbuild "1.0.6"] ;
             ;[lein-bin "0.3.4"]      ; kör uberjars enklare!  target/runs -h  (istället för java -jar target/..)
-            ]
+            [lein-cljsbuild "1.0.6"]]
 
   :source-paths ["src"]
   :resource-paths ["resources" "resources-index/prod"]
   :target-path "target/%s"
-
   :main ^:skip-aot rente.run
-  ;:main rente.run
 
   :cljsbuild
   {:builds
