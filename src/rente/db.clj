@@ -7,6 +7,7 @@
             ;[clojure.java.io :refer (resource)]
             [rente.dbschema :refer [get-schema]]
             [rente.dbseed :refer [seed-data]]
+            [rente.dbseedz :refer [seedz]]
             [rente.config :refer [get-config]]))
 
 
