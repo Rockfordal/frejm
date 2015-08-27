@@ -13,6 +13,7 @@
             [rente.shelfs :as shelfs]
             [rente.projects :as projects]
             [rente.companies :as companies]
+            [rente.items :as items]
             ;[clj-json.core :as json]
             [rente.ws :as ws]))
 
