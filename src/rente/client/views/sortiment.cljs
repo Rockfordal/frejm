@@ -1,25 +1,23 @@
 (ns rente.client.views.sortiment
   (:require
     [datascript :as d]
-    [rente.client.queries :as q]
+    ;[rente.client.queries :as q]
     ;[rente.client.ws :as ws]
     [rum :as r]))
 
+
 (r/defc shelf_v < r/static [shelf]
   [:.product
-    ;[:span.id   (:db/id shelf)]
     [:span.name (:shelf/name shelf)]])
 
 (r/defc item_v [item product shelf]
   [:div
-    ;[:span (:db/id item)]           [:span " "]
     [:span (:item/quantity item)]   [:span " "]
     [:span (:product/name product)] [:span " "]
     [:span (:shelf/name shelf)]])
 
 (r/defc product_v [product]
   [:.product
-    ;[:span.id   (:db/id product)]
     [:span.name (:product/name product)]])
 
 (r/defc visa-alla-produkter [db]
