@@ -76,12 +76,11 @@
   (d/q '[:find ?e :in $ %
          :where (visible ?e)]
        (db)
-       '[[(visible ?p) (?p :product/name)]
-         [(visible ?s) (?s :shelf/name)]
-         [(visible ?j) (?j :project/name)]
+       '[[(visible ?pj) (?pj :project/name)]
          [(visible ?c) (?c :company/name)]
-         [(visable ?c) (?c :item/antal)]
-         [(visable ?c) (?c :aktivitet/status)]
+         [(visible ?p) (?p :product/name)]
+         [(visible ?s) (?s :shelf/name)]
+         [(visible ?i) (?i :item/quantity)]
          ]))
 
 (defn load-entity
