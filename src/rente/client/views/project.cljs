@@ -2,7 +2,7 @@
   (:require [rum :as r]
             [datascript :as d]
             [rente.client.dom :as dom :refer [by-id]]
-            [rente.client.views.global :as gv :refer [ikon button]]
+            [rente.client.views.material :refer [ikon button]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
             [rente.client.routehelper :refer [Project projectroute newprojectroute]]))

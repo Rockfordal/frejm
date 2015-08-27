@@ -2,7 +2,7 @@
   (:require [rum :as r]
             [datascript :as d]
             [rente.client.dom :as dom :refer [by-id]]
-            [rente.client.views.global :as gv :refer [ikon button]]
+            [rente.client.views.material :refer [ikon button my-input]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
             [rente.client.routehelper :refer [Company companyroute newcompanyroute]]))
@@ -46,7 +46,7 @@
 (r/defc company-field [id icon label data]
   [:div.input-field.col.s6
     [:i.material-icons.prefix icon]
-   (gv/component-input {:id id :on-save #(do (println "sparar " %))})
+   (my-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])
 
 (r/defc active-project < rum/reactive []
