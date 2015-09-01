@@ -15,7 +15,7 @@
 (r/defc product-form [db product]
         [:form
          [:.row (product-field "product-name" "person_pin" "Namn" (:product/name product))
-          (product-field "product-id" "account_circle" "Orgnr"    (:db/id product))]])
+          (product-field "product-artnr" "account_circle" "artikelnr"    (:product/artnr product))]])
 
 (r/defc changeproduct-field [id domid db]
         [:.input-field.col.s6

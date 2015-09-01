@@ -27,6 +27,7 @@
 (defn panels [i db]
   (case i
     :sortiment   (sortiment_v db)
+    :productedit (productedit_v db)
     :company     (company_v db)
     :companyedit (companyedit_v db)
     :companynew  (companynew_v db)
