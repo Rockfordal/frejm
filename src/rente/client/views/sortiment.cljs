@@ -1,22 +1,36 @@
 (ns rente.client.views.sortiment
   (:require
     [datascript :as d]
-    [rum :as r]))
+    [rum :as r]
+    [rente.client.dom :as dom :refer [by-id]]
+    [rente.client.views.material :refer [ikon button my-input]]
+    [rente.client.transactions :as trans]
+    [rente.client.state :refer [state get-state conn]]
+    [rente.client.routehelper :refer [Product productroute newproductroute]]
+    ))
 
 
 (r/defc shelf_v < r/static [shelf]
   [:.product
-    [:span.name (:shelf/name shelf)]])
+    [:span.name (:shelf/name shelf)]
+   ])
 
 (r/defc item_v [item product shelf]
   [:div
     [:span (:item/quantity item)]   [:span " "]
     [:span (:product/name product)] [:span " "]
-    [:span (:shelf/name shelf)]])
+    [:span (:shelf/name shelf)]
+   ])
 
 (r/defc product_v [product]
   [:.product
-    [:span.name (:product/name product)]])
+    [:span.name (:product/name product)]
+   [:td [:a {:href "#sortiment"
+             :on-click #(trans/delete product conn)}
+         (ikon "delete")]
+    [:a {:href (productroute product)}
+     (ikon "view_headline")]]
+   ])
 
 (r/defc visa-alla-produkter [db]
   [:div

@@ -7,6 +7,7 @@
     [rente.client.views.company     :refer [company_v]]
     [rente.client.views.companyedit :refer [companyedit_v companynew_v]]
     [rente.client.views.sortiment   :refer [sortiment_v]]
+    [rente.client.views.produktedit :refer [productedit_v productnew_v]]
     [rente.client.state             :refer [state get-state]]
     [rum :as r :include-macros true]))
 
