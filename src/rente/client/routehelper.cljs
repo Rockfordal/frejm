@@ -7,8 +7,8 @@
   (str (render-route this) "?"
     (encode-query-params params)))
 
-    ;Helper för Company
 
+;; --- Company ---
 (defrecord Company [id]
   IRenderRoute
   (render-route [_]           (str "#company/" id))
@@ -20,8 +20,8 @@
 (defn newcompanyroute []
   (render-route "/newcompany"))
 
-    ;Helper för Projekt
 
+;; --- Projekt ---
 (defrecord Project [id]
   IRenderRoute
   (render-route [_]           (str "#project/" id))
@@ -33,8 +33,8 @@
 (defn newprojectroute []
   (render-route "/newproject"))
 
-;Helper för Company mr Landin Code ;)
 
+;; --- Product ---
 (defrecord Product [id]
   IRenderRoute
   (render-route [_]           (str "#product/" id))
@@ -45,4 +45,3 @@
 
 (defn newproductroute []
   (render-route "/newproduct"))
-
