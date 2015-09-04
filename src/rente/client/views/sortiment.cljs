@@ -29,6 +29,9 @@
 (r/defc shelf_v < r/static [shelf db activeshelf]
   [:.product
     [:span.name (:shelf/name shelf)]
+    [:span.delete [:a {:href "#sortiment"
+                       :on-click #(trans/delete shelf conn)}
+                       (ikon "delete")]]
    [:a {:href "#sortiment"
         :class (if (= activeshelf shelf) "yellow" "")
         :on-click #(select-shelf shelf)}
