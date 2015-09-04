@@ -15,3 +15,6 @@
 
 (defn get-all []
   (q/get-all :item))
+
+(defn delete-all []
+  (for [entity (get-all)]  (db/delete-entity (:db/id entity))))
