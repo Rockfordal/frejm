@@ -3,59 +3,17 @@
     [rente.client.ws :as ws]
     [rente.client.queries :refer [find-by-projectname]]
     [rente.client.dom :as dom :refer [q by-id toast get-value]]
+    [rente.client.struct :refer [db-move-company db-company db-project db-item]]
     [datascript :as d]))
 
-
-(defn extract-company []
-  (when-let [name (get-value "company-name")]
-    {:name   name
-     :orgnr        (get-value "company-orgnr")
-     :phone        (get-value  "company-phone")
-     :email        (get-value  "company-email")
-     :vd           (get-value  "company-vd")
-     :oms          (get-value  "company-oms")
-     :employees    (get-value  "company-employees")
-     :othercontact (get-value  "company-othercontact")
-     :snikod       (get-value  "company-snikod")
-     :snitext      (get-value  "company-snitext")}))
-
-(defn db-company []
-  (let [company (extract-company)]
-  {:type :company
-   :company/name         (:name  company)
-   :company/orgnr        (:orgnr company)
-   :company/phone        (:phone company)
-   :company/email        (:email company)
-   :company/vd           (:vd    company)
-   :company/oms          (:oms   company)
-   :company/employees    (:employees company)
-   :company/othercontact (:othercontact company)
-   :company/snikod       (:snikod company)
-   :company/snitext      (:snitext company)}))
-
-(defn extract-project []
-  (when-let [name (get-value "project-name")]
-    {:name   name
-     :desc (get-value "project-desc")}))
-
-(defn db-project []
-  (let [project (extract-project)]
-  {:type :project
-   :project/name (:name project)
-   :project/desc (:desc project)}))
-
-(defn db-item [shelfid productid quantity]
-        {:type :item
-         :item/shelf shelfid
-         :item/product productid
-         :item/quantity quantity})
 
 (defn add-cb [data conn]
   (let [id (:db/id data)
         entity (:entity data)
         query  (into {:db/id id} entity)]
-    (if id (d/transact! @conn [query])
-    (toast (str "kunde inte lägga till" data)))))
+    (if id
+      (d/transact! @conn [query])
+      (toast (str "kunde inte lägga till" data)))))
 
 (defn add-company [activeproject conn]
     (let [activepid (js/parseInt (:db/id activeproject))
@@ -80,11 +38,9 @@
       (toast (str "Företaget " name " flyttades" ))))))
 
 (defn move-company [id conn db]
-  (when-let [projname (get-value  "company-project")]
+  (when-let [projname (get-value "company-project")]
     (let [projid (find-by-projectname projname db)
-          data {:entity (merge (db-company)
-                               {:db/id id
-                                :company/project projid})}]
+          data (db-move-company db-company id projid)]
       (ws/upd data move-company-cb conn))))
 
 (defn add-project [conn]
