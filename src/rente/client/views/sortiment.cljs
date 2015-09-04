@@ -7,9 +7,8 @@
     [rente.client.transactions :as trans]
     [rente.client.actions :refer [add-item]]
     [rente.client.state :refer [state get-state conn]]
-    [rente.client.routehelper :refer [Product productroute newproductroute]]
-    ))
-;
+    [rente.client.routehelper :refer [Product productroute newproductroute]]))
+
 ;(r/defc kolla < r/reactive []
 ;        [:.kollaprod
 ;         (str (get-state :activeproduct))
@@ -33,25 +32,23 @@
    [:a {:href "#sortiment"
         :class (if (= activeshelf shelf) "yellow" "")
         :on-click #(select-shelf shelf)}
-    (ikon "play_for_work")]
-   ])
+    (ikon "play_for_work")]])
 
 (r/defc item_v [item product shelf]
   [:div
-    [:span (:item/quantity item)]   [:span " "]
-    [:span (:product/name product)] [:span " "]
+    [:span (:item/quantity item)]
+    [:span (:product/name product)]
     [:span (:shelf/name shelf)]])
 
 (r/defc product_v [product db activeproduct]
   [:.product
-   [:span.artnr (:product/artnr product)] [:span " "]
-    [:span.name (:product/name product)]
-   [:td [:a {:href "#sortiment"
-             :on-click #(trans/delete product conn)}
-         (ikon "delete")]
-    [:a {:href (productroute product)}
-     (ikon "view_headline")]]
-
+   [:span.artnr (:product/artnr product)]
+   [:span.name  (:product/name product)]
+   [:span.delete [:a {:href "#sortiment"
+                      :on-click #(trans/delete product conn)}
+                      (ikon "delete")]]
+   [:a {:href (productroute product)}
+     (ikon "view_headline")]
    [:a {:href "#sortiment"
         :class (if (= activeproduct product) "yellow" "")
         :on-click #(select-product product)}
@@ -103,5 +100,4 @@
           [:span.card-title "Hyllor"]
           (visa-alla-hyllor db (get-state :activeshelf)) [:br]
           [:.card-action [:a {:href "#"} "ok"] ]]]]]
-   (save-button #(add-item))
-   ])
+   (save-button #(add-item))])
