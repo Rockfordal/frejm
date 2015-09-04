@@ -1,14 +1,19 @@
 (ns rente.dbschema
   (:require [datomic-schema.schema :as s]))
 
+
 (def parts [(s/part "frejm")])
 
 (def schema
   [(s/fields
      [type        :keyword :indexed])
 
-;; Sortiment
-;; --------------------------------
+;; --- SNI ---
+   (s/schema sni (s/fields
+     [code        :string :indexed]
+     [name        :string :indexed]))
+
+;; -- Sortiment --
    (s/schema product (s/fields
      [artnr       :string :indexed]
      [name        :string :indexed]
@@ -23,8 +28,7 @@
      [name        :string :indexed]
      [location    :string :indexed]))
 
-;; Callcenter
-;; --------------------------------
+;; --- Callcenter ---
    (s/schema project (s/fields
      [name        :string :indexed]
      [desc        :string :indexed]))
