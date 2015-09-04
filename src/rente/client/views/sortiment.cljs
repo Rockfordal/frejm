@@ -24,6 +24,7 @@
 
 (r/defc product_v [product]
   [:.product
+   [:span.artnr (:product/artnr product)] [:span " "]
     [:span.name (:product/name product)]
    [:td [:a {:href "#sortiment"
              :on-click #(trans/delete product conn)}

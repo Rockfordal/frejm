@@ -10,6 +10,7 @@
 ;; Sortiment
 ;; --------------------------------
    (s/schema product (s/fields
+     [artnr       :string :indexed]
      [name        :string :indexed]
      [price       :string :indexed]))
 

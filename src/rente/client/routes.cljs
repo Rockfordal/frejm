@@ -39,10 +39,11 @@
         module-key (or (module-keys (keyword module)) :notfound)]
     (swap! state assoc :module module-key)))
 
-;; Företag
+;; Produkt
 (defroute "/product/:id" {:as params}
           (swap! state assoc :module :productedit)
           (swap! state assoc :moduleid (js/parseInt (:id params))))
 
 (defroute "/newproduct" {:as params}
           (swap! state assoc :module :productnew))
+
