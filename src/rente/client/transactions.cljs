@@ -29,7 +29,7 @@
   (let [entity (:entity msg)
         project (:company/project entity)
         name (:company/name entity)]
-  (if (= project nil)
+  (if (nil? project)
     (do
       (toast "Kunde inte sätta projekt!")
       (println "fel vid projektflytt: " msg))
@@ -49,6 +49,7 @@
 
 (defn add-item [conn shelfid productid quantity]
   (let [data {:entity (db-item shelfid productid quantity)}]
+    (println "ws/add data: " data)
     (ws/add data add-cb conn)))
 
 (defn update-cb [data conn]
