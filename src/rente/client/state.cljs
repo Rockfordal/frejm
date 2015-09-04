@@ -8,6 +8,8 @@
          :module :sortiment
          :moduleid nil
          :activeproject nil
+         :activeproduct nil
+         :activeshelf nil
          ;:new-company {:company/name "1" :company/orgnr "2" :company/phone "3" :company/email "4"}
          :modules [{:key :sortiment   :title "Sortiment" :url "#sortiment"}
                    {:key :project     :title "Projekt"   :url "#project"}

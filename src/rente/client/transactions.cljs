@@ -44,6 +44,12 @@
    :project/name (:name project)
    :project/desc (:desc project)}))
 
+(defn db-item [shelfid productid quantity]
+        {:type :item
+         :item/shelf shelfid
+         :item/product productid
+         :item/quantity quantity})
+
 (defn add-cb [data conn]
   (let [id (:db/id data)
         entity (:entity data)
@@ -84,6 +90,10 @@
 (defn add-project [conn]
   (let [data {:entity (db-project)}]
   (ws/add data add-cb conn)))
+
+(defn add-item [conn shelfid productid quantity]
+  (let [data {:entity (db-item shelfid productid quantity)}]
+    (ws/add data add-cb conn)))
 
 (defn update-cb [data conn]
   (let [entity (:entity data)
