@@ -76,11 +76,14 @@
   [:div
    (for [[item product shelf]
          (d/q '[:find ?item ?product ?shelf
-                :in $ ?shelfname :where
+                ;:in $ ?shelfname
+                :where
                       [?shelf :shelf/name   ?shelfname]
                       [?item  :item/shelf   ?shelf]
                       [?item  :item/product ?product]]
-                      db "C1")]
+                      db
+              ;"C1"
+              )]
      (-> (item_v (d/entity db item) (d/entity db product) (d/entity db shelf))
          (r/with-key [item])))])
 

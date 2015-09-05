@@ -9,13 +9,13 @@
      [type        :keyword :indexed])
 
 ;; --- SNI ---
-   (s/schema sni  (s/fields
-     [code        :long   :unique-identity]
+   (s/schema sni (s/fields
+     [code        :long :unique-value]
      [name        :string :indexed]))
 
 ;; -- Sortiment --
    (s/schema product (s/fields
-     [artnr       :string :indexed]
+     [artnr       :long :unique-value]
      [name        :string :indexed]
      [price       :string :indexed]))
 
