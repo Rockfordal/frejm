@@ -4,7 +4,8 @@
 /plugin/*/target/
 /resources/public/js/compiled
 /resources/public/js/app.js
-/dev-resources/public
+/prod-resources/public/js/out
+/dev-resources/public/js/out
 /figwheel_server.log
 /.idea
 /.lein-env
