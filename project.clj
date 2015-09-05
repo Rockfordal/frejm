@@ -12,12 +12,12 @@
                  [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data för datascript
                  [org.clojure/tools.logging "0.3.1"]
 
-                 ; Framtida
+                 ;; Framtida
                  ; [com.taoensso/timbre "4.1.1"] ; mkt kraftfullare än tools.logging
                  ; [dire "0.5.3"]                ; hantera exceptions erlang style (se theatralia github)
                  ; [liberator "0.12.0"]          ; REST style a'la powerhouse+webgui
 
-                 ; Server
+                 ;; Server
                  [ring/ring-core "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [fogus/ring-edn "0.3.0"]
@@ -28,14 +28,15 @@
                  [com.stuartsierra/component "0.2.3"]
                  [com.datomic/datomic-pro "0.9.5206"
                   :exclusions [joda-time
-                               org.slf4j/jul-to-slf4j
-                               org.slf4j/slf4j-nop]]
+                               ;org.slf4j/jul-to-slf4j
+                               ;org.slf4j/slf4j-nop
+                               ]]
 
                  [com.taoensso/sente "1.6.0" :exclusions [org.clojure/tools.reader]]
                  [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.225"]
 
-                 ; Klien
+                 ;; Klient
                  [rum "0.3.0"]
                  [datascript "0.11.6"]
                  [secretary "1.2.3"]
