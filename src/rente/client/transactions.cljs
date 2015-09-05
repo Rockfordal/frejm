@@ -1,11 +1,18 @@
 (ns rente.client.transactions
   (:require
     [rente.client.ws :as ws]
-    [rente.client.queries :refer [find-by-projectname]]
+    [rente.client.queries :refer [find-by-projectname find-by-snicode]]
     [rente.client.dom :as dom :refer [q by-id toast get-value]]
     [rente.client.struct :refer [db-move-company db-company db-project db-item]]
     [datascript :as d]))
 
+
+(defn snuppy [db]
+  (let [kod (js/parseInt (get-value "company-snikod"))
+        sni (find-by-snicode kod db)]
+    (println "kod: " kod)
+    (println "sni: " sni)
+    ))
 
 (defn add-cb [data conn]
   (let [id (:db/id data)
