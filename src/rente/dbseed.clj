@@ -116,5 +116,6 @@
 
 (defn seed-data []
   (concat
+    sni
     products shelfs items
     projects companies aktiviteter))
