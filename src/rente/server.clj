@@ -11,6 +11,7 @@
             [rente.db :as db]
             [rente.products :as products]
             [rente.shelfs :as shelfs]
+            [rente.sni :as sni]
             [rente.projects :as projects]
             [rente.companies :as companies]
             [rente.items :as items]

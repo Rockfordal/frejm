@@ -9,8 +9,8 @@
      [type        :keyword :indexed])
 
 ;; --- SNI ---
-   (s/schema sni (s/fields
-     [code        :string :indexed]
+   (s/schema sni  (s/fields
+     [code        :long   :unique-identity]
      [name        :string :indexed]))
 
 ;; -- Sortiment --
@@ -35,29 +35,38 @@
 
    (s/schema company (s/fields
      [project      :ref]
-     [name         :string :indexed]
+     [sni          :ref]
      [orgnr        :string :indexed]
+     [name         :string :indexed]
      [phone        :string :indexed]
      [email        :string :indexed]
-     [vd           :string :indexed]
-     [oms          :string :indexed]
      [employees    :string :indexed]
-     [othercontact :string :indexed]
-     [snikod       :string :indexed]
-     [snitext      :string :indexed]
+     [contact      :string :indexed]
+     [contacttype  :string :indexed]
 
-     [salesman     :string :indexed] ;FC Försäljningschef
-     [marketingdir :string :indexed] ;MC (marknadschef)
-     [adr          :string :indexed]
-     [postnr       :string :indexed]
-     [ort          :string :indexed]))
+     [homepage     :string :indexed]
+     [visitadr     :string]
+     [zipcode      :long]
+     [postal       :string]
+
+     [info         :string :indexed]
+     [workphone    :string :indexed]
+     [oms          :string :indexed]
+     [othercontact :string :indexed]
+
+     [salesman     :string :indexed] ; FC Försäljningschef
+     [marketingdir :string :indexed] ; MC (marknadschef)
+     [vd           :string :indexed] ; behövs?
+     [snicode      :string]
+     ;[snitext      :string :indexed]
+     ))
 
    (s/schema aktivitet (s/fields
-                    [status   :long :indexed]
-                    [project  :ref]
-                    [company  :ref]))
-                    ;; note
-                    ;; datum
+     [status  :enum [:pending :active :inactive :cancelled]]
+     [project :ref]
+     [company :ref]))
+     ;; note
+     ;; datum
   ])
 
 (defn get-schema []

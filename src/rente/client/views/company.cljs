@@ -19,7 +19,8 @@
    [:td.orgnr   (:company/orgnr company)]
    [:td.name    (:company/phone company)]
    [:td.email   (:company/email company)]
-   [:td.vd      (:company/vd    company)]
+   [:td.contact (:company/contact company)]
+   ;[:td.vd      (:company/vd    company)]
    [:td.project (projnamn (:company/project company ) db)]
    [:td [:a {:href "#company"
              :on-click #(trans/delete company conn)}
@@ -35,7 +36,7 @@
       [:th "Orgnr"]
       [:th "Telefon"]
       [:th "E-post"]
-      [:th "VD"]
+      [:th "Kontakt"]
       [:th "Projekt"]
       [:th "Åtgärd"]]
   [:tbody

@@ -3,6 +3,7 @@
             [rente.queries :as q]
             [datomic.api :as d]))
 
+
 (defn create!
   ([]  (db/create! {:type :company}))
   ([m] (db/create! (assoc m :type :company))))
