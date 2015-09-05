@@ -13,7 +13,7 @@
 ;      :item/quantity 10
 ;      :item/product #db/id [:db.part/user -100]
 ;      :item/shelf #db/id [:db.part/user -200]}
-;     ]
+;    ]
 
 ;; --- Sortiment ---
 (def products

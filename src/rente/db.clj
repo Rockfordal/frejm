@@ -76,11 +76,11 @@
          :where (visible ?e)]
        (db)
        '[[(visible ?pj) (?pj :project/name)]
-         [(visible ?c) (?c :company/name)]
-         [(visible ?p) (?p :product/name)]
-         [(visible ?s) (?s :shelf/name)]
-         [(visible ?i) (?i :item/quantity)]
-         ]))
+         [(visible ?co) (?co :company/name)]
+         [(visible ?pr) (?pr :product/name)]
+         [(visible ?sn) (?sn :sni/code)]
+         [(visible ?sh) (?sh :shelf/name)]
+         [(visible ?it) (?it :item/quantity)]]))
 
 (defn load-entity
   "Loads an entity and its attributes. Keep in the db/id
