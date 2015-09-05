@@ -7,7 +7,7 @@
 
   :dependencies [[environ "1.0.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.122" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data för datascript
                  [org.clojure/tools.logging "0.3.1"]
