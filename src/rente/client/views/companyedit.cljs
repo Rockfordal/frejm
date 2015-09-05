@@ -15,15 +15,27 @@
 (r/defc company-form [db company]
   [:form
    [:.row (company-field "company-name"      "person_pin"     "Namn"            (:company/name company))
-          (company-field "company-orgnr"     "account_circle" "Orgnr"           (:company/orgnr company))]
-   [:.row (company-field "company-phone"     "phone"          "Telefon"         (:company/phone company))
+          (company-field "company-orgnr"     "account_circle" "Orgnr"           (:company/orgnr company))
           (company-field "company-email"     "email"          "E-post"          (:company/email company))]
+
+   [:.row (company-field "company-phone"     "phone"          "Telefon"         (:company/phone company))
+          (company-field "company-contact"   "account_circle" "Kontaktperson"   (:company/contact company))
+          (company-field "company-homepage"  "email"          "Hemsida"         (:company/homepage company))]
+    
    [:.row (company-field "company-vd"        "phone"          "VD"              (:company/vd company))
-          (company-field "company-oms"       "phone"          "Omsättning"      (:company/oms company))]
-   [:.row (company-field "company-employees" "phone"          "Antal anställda" (:company/employees company))
-          (company-field "company-othercontact" "phone"       "Övrig kontakt"   (:company/othercontact company))]
-   [:.row (company-field "company-snikod"    "phone"          "SNI-kod"         (:company/snikod company))
-          (company-field "company-snitext"   "phone"          "SNI-text"        (:company/snitext company))]])
+          (company-field "company-oms"       "phone"          "Omsättning"      (:company/oms company))
+          (company-field "company-employees" "phone"          "Antal anställda" (:company/employees company))]
+
+   [:.row (company-field "company-othercontact" "phone"       "Övrig kontakt"   (:company/othercontact company))
+          (company-field "company-snikod"    "phone"          "SNI-kod"         (:company/snikod company))
+          (company-field "company-snitext"   "phone"          "SNI-text"        (:company/snitext company))]
+
+   [:.row (company-field "company-visitadr"   "phone"         "Besöksadress"    (:company/visitadr company))
+          (company-field "company-zipcode"    "phone"         "Postnr"          (:company/zipcode company))
+          (company-field "company-postal"     "phone"         "Ort"             (:company/postal company))]
+
+   [:.row (company-field "company-contacttype" "phone"        "KontaktTyp"      (:company/contacttype company))]
+   ])
 
 (r/defc changeproject-field [id domid db]
   [:.input-field.col.s6
