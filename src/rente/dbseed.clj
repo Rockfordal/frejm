@@ -18,9 +18,11 @@
 ;; --- Sortiment ---
 (def products
   [{:type :product
-          :product/name    "Filmjölk"
-          :product/price   "49.90"}
+          :product/artnr 112390
+          :product/name "Filmjölk"
+          :product/price "49.90"}
   {:type  :product
+
           :product/name    "Prickig Korv"
           :product/price   "25"}])
 

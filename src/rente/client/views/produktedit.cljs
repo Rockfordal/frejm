@@ -1,7 +1,7 @@
 (ns rente.client.views.produktedit
   (:require [rum :as r]
             [rente.client.views.material :refer [ikon button my-input save-button]]
-            [rente.client.views.company :refer [active-project]]
+            ;[rente.client.views.company :refer [active-project]]
             [rente.client.state :refer [state get-state get-moduleid conn get-currententity]]
             [rente.client.transactions :as trans]))
 
@@ -38,7 +38,7 @@
 
 (r/defc productnew_v < rum/reactive [db]
         [:div
-         (active-project)
+         ;(active-project)
          [:h2 "Nytt företag"]
          (product-form db (get-state :newproduct))
          [:.row

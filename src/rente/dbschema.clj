@@ -10,12 +10,12 @@
 
 ;; --- SNI ---
    (s/schema sni (s/fields
-     [code        :string :indexed]
+     [code        :long :unique-value]
      [name        :string :indexed]))
 
 ;; -- Sortiment --
    (s/schema product (s/fields
-     [artnr       :string :indexed]
+     [artnr       :long :unique-value]
      [name        :string :indexed]
      [price       :string :indexed]))
 
@@ -52,10 +52,10 @@
      [postnr       :string :indexed]
      [ort          :string :indexed]))
 
-   (s/schema aktivitet (s/fields
-                    [status   :long :indexed]
-                    [project  :ref]
-                    [company  :ref]))
+   ;(s/schema aktivitet (s/fields
+   ;                 [status   :long :indexed]
+   ;                 [project  :ref]
+   ;                 [company  :ref]))
                     ;; note
                     ;; datum
   ])

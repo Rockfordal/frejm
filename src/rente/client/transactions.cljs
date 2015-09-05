@@ -47,8 +47,8 @@
   (let [data {:entity (db-project)}]
   (ws/add data add-cb conn)))
 
-(defn add-item [conn shelfid productid quantity]
-  (let [data {:entity (db-item shelfid productid quantity)}]
+(defn add-item [conn itemdata]
+  (let [data {:entity (db-item itemdata)}]
     (println "ws/add data: " data)
     (ws/add data add-cb conn)))
 

@@ -27,11 +27,11 @@
    :project/name (:name project)
    :project/desc (:desc project)}))
 
-(defn db-item [shelfid productid quantity]
+(defn db-item [itemdata]
   {:type :item
-    :item/shelf    shelfid
-    :item/product  productid
-    :item/quantity quantity})
+    :item/shelf    (:shelfid   itemdata)
+    :item/product  (:productid itemdata)
+    :item/quantity (:quantity  itemdata)})
 
 (defn db-company []
   (let [company (extract-company)]
