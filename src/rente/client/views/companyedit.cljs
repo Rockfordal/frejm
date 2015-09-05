@@ -51,5 +51,5 @@
     (company-form db (get-state :newcompany))
    [:.row
     [:.col.s2 (let [activeproject (get-state :activeproject)]
-                   (save-button #(trans/add-company activeproject conn)))]
+                (save-button #(trans/add-company activeproject conn)))]
      [:.col.offset-s8.s2 (back-button)]]])
