@@ -61,11 +61,12 @@
 
 (defn update-company [id conn]
   (let [entity {:entity (assoc (db-company) :db/id id)}]
-  (ws/upd entity update-cb conn)))
+    (println "uppdaterar företag:" entity)
+    (ws/upd entity update-cb conn)))
 
 (defn update-project [id conn]
   (let [entity {:entity (assoc (db-project) :db/id id)}]
-    (println "uppdaterar projekt")
+    (println "uppdaterar projekt:" entity)
   (ws/upd entity update-cb conn)))
 
 (defn del-success [data conn]
