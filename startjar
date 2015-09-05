@@ -1,7 +1,6 @@
-#lein clean
-#lein uberjar
-#java -jar target/uberjar/rente-1.0.0-standalone.jar -h
-java -server -Xms320m -Xmx320m -jar target/uberjar/rente-1.0.0-standalone.jar
-# 256mb för lite
-
-
+XMS="-Xms256m"
+#XMX="-Xmx1g"
+XMX="-Xmx256m"
+OPTS="-server $XMS $XMS"
+JARFILE="target/uberjar/frejm.jar"
+java $OPTS -jar $JARFILE 
