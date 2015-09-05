@@ -1,0 +1,4 @@
+lein clean
+#LEIN_SNAPSHOTS_IN_RELEASE=y lein jar
+LEIN_SNAPSHOTS_IN_RELEASE=y lein uberjar
+
