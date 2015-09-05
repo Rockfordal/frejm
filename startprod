@@ -1,1 +1,4 @@
-JVM_OPTS="-server -Xmx1g" lein with-profile prod run prod
+#XMS="-Xms256m"
+XMX="-Xmx1g"
+OPTS="-server $XMX"
+JVM_OPTS="$OPTS" lein with-profile prod run
