@@ -7,7 +7,7 @@
 
   :dependencies [[environ "1.0.0"]
                  [org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.107" :scope "provided"]
+                 [org.clojure/clojurescript "1.7.122" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data för datascript
                  [org.clojure/tools.logging "0.3.1"]
@@ -33,7 +33,7 @@
 
                  [com.taoensso/sente "1.6.0" :exclusions [org.clojure/tools.reader]]
                  [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
-                 [com.cognitect/transit-cljs "0.8.220"]
+                 [com.cognitect/transit-cljs "0.8.225"]
 
                  ; Klien
                  [rum "0.3.0"]
