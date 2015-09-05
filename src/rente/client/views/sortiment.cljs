@@ -41,7 +41,10 @@
   [:div
     [:span (:item/quantity item)]
     [:span (:product/name product)]
-    [:span (:shelf/name shelf)]])
+    [:span (:shelf/name shelf)]
+    [:span.delete [:a {:href "#sortiment"
+                       :on-click #(trans/delete item conn)}
+                       (ikon "delete")]]])
 
 (r/defc product_v [product db activeproduct]
   [:.product
