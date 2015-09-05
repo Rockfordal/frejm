@@ -1,8 +1,7 @@
 (defproject rente "1.0.0"
   :description "Datomic, Component, Sente, Rum, Datascript"
-  :url "http://enterlab.com"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  ;:url "http://enterlab.com"
+  ;:license {:name "Eclipse Public License" :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.5.1"
 
   :dependencies [[environ "1.0.0"]
@@ -54,7 +53,7 @@
                  ]
 
   :plugins [[lein-environ "1.0.0"]
-            ;[lein-bin "0.3.4"]      ; kör uberjars enklare!  target/runs -h  (istället för java -jar target/..)
+            ;[lein-bin "0.3.4"] ; kör uberjars enkelare. target/runs -h (vs java -jar target/..)
             [lein-cljsbuild "1.0.6"]]
 
   :source-paths ["src"]
@@ -62,22 +61,29 @@
   :target-path "target/%s"
   :main ^:skip-aot rente.run
 
-  :cljsbuild
-  {:builds
-     {:client {:source-paths ["src/rente/client"]
+  :figwheel {:nrepl-port 7888
+             :server-port 3000}
+
+  :cljsbuild {:builds {
+      :client {:source-paths ["src/rente/client"]
+               ;:figwheel true
                :compiler {
+                ;:main rente.client.app
+                ;:asset-path "/js/out" ; Base URL for JS requests from browser.
+                ;:recompile-dependents true ; Speed doesn't matter right now.
+                ;:cache-analysis true
+                :source-map true
+                :optimizations :none
                 :warnings {:single-segment-namespace false} ; för rum
                 :output-to "resources/public/js/app.js"
-                :output-dir "dev-resources/public/js/out"}}}
+                          :output-dir "dev-resources/public/js/out"}}
 
-      ;; :deploy {:source-paths ["src/cljs"]
-      ;;           ;:jar true ; DON'T DO THIS
-      ;;           :compiler
-      ;;           {:output-to "dev-resources/public/js/deploy.js"
-      ;;            :optimizations :none
-      ;;            :pretty-print false}}
+      :deploy {:source-paths ["src/rente/client"]
+                :compiler {:output-to "prod-resources/public/js/deploy.min.js"
+                           :output-dir "prod-resources/public/js/out"
+                           :optimizations :advanced
+                           :pretty-print false}}}
   }
-
   :profiles {
              :dev {
                     :source-paths ["dev"]
@@ -89,26 +95,39 @@
 
                    :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader
                                                                  org.clojure/clojurescript clj-stacktrace]]]
-
-                    :cljsbuild
-                    {:builds
+                   :cljsbuild {:builds
                       {:client {:source-paths ["dev"]
                                 :compiler
                                   {:optimizations :none
-                                   :source-map true}}}
-                     }
-             }
-             :prod {:cljsbuild
-                    {:builds
-                     {:client {:compiler
-                               {;output-to "dev-resources/pub/js/prod_client.js"
-                                :optimizations :advanced
-                                :pretty-print false}}}}}
-             :uberjar {:aot :all}
+                                   :source-map true
+                                   }}}}
              }
 
-  :figwheel {:nrepl-port 7888
-             :server-port 3000}
+             :prod {
+                    :resource-paths ^:replace ; Replace instead of merge
+                    ["resources" "prod-resources" "resources-index/prod"]
+
+                    ;; :cljsbuild {:builds {
+                    ;;   :client {:compiler
+                    ;;            {:optimizations :advanced
+                    ;;             :output-to "dev-resources/pub/js/prod_client.js"
+                    ;;             :pretty-print false}}}}
+                    }
+
+             :uberjar {
+               :resource-paths ^:replace ; Replace instead of merge
+               ["resources" "dev-resources" "resources-index/prod"]
+   
+               ;; :cljsbuild {:builds {
+               ;;                 :client {:compiler {
+               ;;                 ;:optimizations :advanced
+               ;;                 :optimizations :none
+               ;;                 :output-to "dev-resources/pub/js/prod_client.js"
+               ;;                 :pretty-print false}}}}
+                    ;:aot :all
+                    :aot :none
+               }
+             }
 
   :uberjar-name "frejm.jar"
 
