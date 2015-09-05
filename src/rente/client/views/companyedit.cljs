@@ -7,7 +7,7 @@
 
 
 (r/defc company-field [id icon label data]
-  [:.input-field.col.s6
+  [:.input-field.col.s4
     [:i.material-icons.prefix icon]
    (my-input {:id id :defval data})
     [:label {:for id :class "active"} label]])
@@ -53,8 +53,9 @@
     [:.row
       (let [moduleid (get-moduleid)]
         [:.col.s2 (save-button #(trans/update-company moduleid conn))])
-      [:.col.s4 (changeproject-field (get-moduleid) "company-project" db)]
-      [:.col.offset-s1.s2 (back-button)]]])
+     [:.col.s2 (changeproject-field (get-moduleid) "company-project" db)]
+     [:.col.s2 (button {:href "#" :on-click #(trans/snuppy db)} "SNI " "info")]
+     [:.col.offset-s1.s2 (back-button)]]])
 
 (r/defc companynew_v < rum/reactive [db]
   [:div
