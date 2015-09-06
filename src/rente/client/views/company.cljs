@@ -5,6 +5,7 @@
             [rente.client.views.material :refer [ikon button my-input]]
             [rente.client.transactions :as trans]
             [rente.client.state :refer [state get-state conn]]
+            [rente.client.queries :refer [find-companies]]
             [rente.client.routehelper :refer [Company companyroute newcompanyroute]]))
 
 
@@ -18,29 +19,31 @@
    [:td.name    (:company/name  company)]
    [:td.orgnr   (:company/orgnr company)]
    [:td.name    (:company/phone company)]
-   [:td.email   (:company/email company)]
+   [:td.typ     (:company/contacttype company)]
    [:td.contact (:company/contact company)]
-   ;[:td.vd      (:company/vd    company)]
-   [:td.project (projnamn (:company/project company ) db)]
+   [:td.antal   (:company/employees company)]
+   ;[:td.email   (:company/email company)]
+   ;[:td.project (projnamn (:company/project company) db)]
    [:td [:a {:href "#company"
              :on-click #(trans/delete company conn)}
             (ikon "delete")]
         [:a {:href (companyroute company)}
             (ikon "view_headline")]]])
 
-(r/defc company-list [db]
+(r/defc company-list [db projectid]
  [:table
   [:thead
     [:tr
       [:th "Namn"]
       [:th "Orgnr"]
       [:th "Telefon"]
-      [:th "E-post"]
+      [:th "Titel"]
       [:th "Kontakt"]
-      [:th "Projekt"]
-      [:th "Åtgärd"]]
+      [:th "Anställda"]
+      ;[:th "Projekt"]
+     [:th ""]]
   [:tbody
-    (for [[eid] (sort (d/q '[:find ?e :where [?e :company/name]] db))]
+   (for [[eid] (sort (find-companies projectid db))]
       (-> (company_item (d/entity db eid) db)
           (r/with-key [eid])))]]])
 
@@ -64,5 +67,5 @@
 (r/defc company_v < rum/reactive [db]
   [:div
     (active-project)
-    (company-list db)
-   (button {:href (newcompanyroute)} "Ny" "send")])
+    (company-list db (str (:project/name (get-state :activeproject))))
+    (button {:href (newcompanyroute)} "Ny" "send")])
