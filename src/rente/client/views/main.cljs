@@ -2,6 +2,7 @@
   (:require
     [rente.client.views.layout      :refer [navbar]]
     [rente.client.views.login       :refer [login_v]]
+    [rente.client.views.sni         :refer [sni_v]]
     [rente.client.views.project     :refer [project_v]]
     [rente.client.views.projectedit :refer [projectedit_v projectnew_v]]
     [rente.client.views.company     :refer [company_v]]
@@ -34,6 +35,7 @@
     :project     (project_v db)
     :projectedit (projectedit_v db)
     :projectnew  (projectnew_v db)
+    :sni         (sni_v db)
     :login       (login_v db)
     :notfound    (notfound_v)))
 
