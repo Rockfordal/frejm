@@ -37,26 +37,28 @@
            :project/desc  "Andra"}
 
     ;; Företag
-    {
-     ;:db/id #db/id [:db.part/user -251]
+    {:db/id #db/id [:db.part/user -251]
      :type :company
            :company/name    "Baker Tilly"
            :company/orgnr   4839381134
            :company/phone   "08-42424"
            :company/email   "tilly@billy.lab"
            :company/vd      "Johanesburg freidricht"}
-    {
-     ;:db/id #db/id [:db.part/user -252]
-    :type :company
-          :company/name    "Yellow-backed duiker"
-          :company/orgnr   4838382424
-          :company/phone   "08-48398"
-          :company/email   "yo@do.lab"
-          :company/vd      "Greiger Wolfenstein"}
+
+    {:db/id #db/id [:db.part/user -252]
+     :type :company
+           :company/name    "Yellow-backed duiker"
+           :company/orgnr   4838382424
+           :company/phone   "08-48398"
+           :company/email   "yo@do.lab"
+           :company/vd      "Greiger Wolfenstein"}
 
     ;; Aktivitet
-    ; [{:type :aktivitet :aktivitet/status 1}
-    ;  {:type :aktivitet :aktivitet/status 15}])
+    {:db/id #db/id [:db.part/user -261]
+     :type :activity
+           :activity/project #db/id [:db.part/user -201]
+           :activity/company #db/id [:db.part/user -251]
+           :activity/note "Hej hopp"}
    ])
 
 (def sni
@@ -107,6 +109,6 @@
   (concat
     sni
     ;sortiment
-    projects companies
+    ;projects companies
     ;aktiviteter
     ))
