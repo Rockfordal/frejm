@@ -45,14 +45,14 @@
 (def companies
   [{:type :company
           :company/name    "Baker Tilly"
-          :company/orgnr   "483938-1134"
+          :company/orgnr   4839381134
           :company/phone   "08-42424"
           :company/email   "tilly@billy.lab"
           :company/vd      "Johanesburg freidricht"}
 
    {:type :company
           :company/name    "Yellow-backed duiker"
-          :company/orgnr   "483838-2424"
+          :company/orgnr   4838382424
           :company/phone   "08-48398"
           :company/email   "yo@do.lab"
           :company/vd      "Greiger Wolfenstein"}])

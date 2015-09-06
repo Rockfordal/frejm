@@ -36,11 +36,11 @@
    (s/schema company (s/fields
      [project      :ref]
      [sni          :ref]
-     [orgnr        :string :indexed]
+     [orgnr        :long :indexed]
      [name         :string :indexed]
      [phone        :string :indexed]
      [email        :string :indexed]
-     [employees    :string :indexed]
+     [employees    :long :indexed]
      [contact      :string :indexed]
      [contacttype  :string :indexed]
 
@@ -57,7 +57,7 @@
      [salesman     :string :indexed] ; FC Försäljningschef
      [marketingdir :string :indexed] ; MC (marknadschef)
      [vd           :string :indexed] ; behövs?
-     [snicode      :string]
+     [snicode      :long]
      ;[snitext      :string :indexed]
      ))
 
