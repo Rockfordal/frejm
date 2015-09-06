@@ -34,11 +34,6 @@
 (defroute "/newproject" {:as params}
   (swap! state assoc :module :projectnew))
 
-(defroute module-path "/:module" {module :module}
-  (let [module-keys (set (map :key (:modules @state)))
-        module-key (or (module-keys (keyword module)) :notfound)]
-    (swap! state assoc :module module-key)))
-
 ;; Produkt
 (defroute "/product/:id" {:as params}
           (swap! state assoc :module :productedit)
@@ -47,3 +42,12 @@
 (defroute "/newproduct" {:as params}
           (swap! state assoc :module :productnew))
 
+;;SNI
+(defroute "/sni" {}
+  (swap! state assoc :module :sni))
+
+;; Dynamisk
+(defroute module-path "/:module" {module :module}
+  (let [module-keys (set (map :key (:modules @state)))
+        module-key (or (module-keys (keyword module)) :notfound)]
+    (swap! state assoc :module module-key)))
