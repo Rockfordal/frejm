@@ -9,9 +9,12 @@
     [rente.client.views.companyedit :refer [companyedit_v companynew_v]]
     [rente.client.views.sortiment   :refer [sortiment_v]]
     [rente.client.views.produktedit :refer [productedit_v productnew_v]]
-    [rente.client.state             :refer [state get-state]]
+    [rente.client.state             :refer [state get-state set-project]]
     [rum :as r :include-macros true]))
 
+
+(def setproject-memo
+  (memoize set-project))
 
 ;; Sidan finns inte
 (r/defc notfound_v []
@@ -42,6 +45,7 @@
 ;; Huvud vy med navbar
 (r/defc canvas < rum/reactive [db]
   [:div
+   (setproject-memo db)
    (navbar
      (:module  (get-state))
      (:modules (get-state)))
