@@ -2,6 +2,7 @@
   (:require [rente.db :as db :refer [conn]]
             [rente.queries :as q]))
 
+
 (defn create!
   ([]  (db/create!         {:type :project}))
   ([m] (db/create! (assoc m :type :project))))
@@ -14,3 +15,7 @@
 
 (defn get-all []
   (q/get-all :project))
+
+(defn delete-all []
+  (for [entity (get-all)]
+    (db/delete-entity (:db/id entity))))
