@@ -9,7 +9,7 @@
             [rente.client.state :refer [conn]]
             [rente.client.dom :refer [toast]]
             [clojure.string :as str]))
-   ;[cognitect.transit :as transit]
+            ;[cognitect.transit :as transit]
 
 (defn random []
   (js/parseInt(rand 999999)))
