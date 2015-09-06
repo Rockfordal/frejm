@@ -41,7 +41,8 @@
 
 (defn filterdata [indata]
   (dissoc indata
-    :company/snitext :company/snicode :company/contact :company/contacttype :company/email))
+    :company/snitext
+    :company/snicode))
 
 (defn importcompany [rad]
   (-> rad
@@ -54,10 +55,8 @@
   (let [rows (rest (get-data))]
     (doseq [row rows]
       (do
-      ;(print (rowmap row))
       (print ".")
-      (importcompany (rowmap row))
-      ))))
+      (importcompany (rowmap row))))))
 
 (defn importera []
   ;(rente.companies/delete-all)
