@@ -24,6 +24,11 @@
     (d/transact (conn) (get-schema))
     true))
 
+(defn destroy-database []
+  (let [uri (:dburi (get-config))]
+    (d/delete-database uri)
+    (init)))
+
 (defn db []
   (d/db (conn)))
 
