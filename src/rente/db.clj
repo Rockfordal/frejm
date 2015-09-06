@@ -83,6 +83,7 @@
        '[[(visible ?pj) (?pj :project/name)]
          [(visible ?co) (?co :company/name)]
          [(visible ?pr) (?pr :product/name)]
+         [(visible ?ac) (?ac :activity/note)]
          [(visible ?sn) (?sn :sni/code)]
          [(visible ?sh) (?sh :shelf/name)]
          [(visible ?it) (?it :item/quantity)]]))
