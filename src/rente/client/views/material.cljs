@@ -9,6 +9,9 @@
 (r/defc button [opts name icontext]
   [:a.btn.waves-effect.waves-light opts (str name " ")(ikon icontext)])
 
+(r/defc link-button [href text icon]
+  (button {:href href} text icon))
+
 (r/defc save-button [save]
   (button {:on-click save} "Spara " "info"))
 
