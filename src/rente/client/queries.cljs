@@ -3,6 +3,11 @@
    [datascript :as d]))
 
 
+(defn getsni [company db]
+  (let [id (:company/sni company)
+        sni (d/touch (d/entity db id))]
+    sni))
+
 (defn find-by-projectname [name db]
   (ffirst (d/q '[:find ?e :in $ ?name
                  :where [?e :project/name ?name]]
