@@ -3,10 +3,11 @@
 
 
 (defn getsni [company db]
- (if company
-  (let [id (:company/sni company)
-        sni (d/touch (d/entity db id))]
-        sni)))
+  (if (contains? company :company/sni)
+    (let [id (:company/sni company)
+            sni (d/touch (d/entity db id))]
+        sni)
+  ""))
 
 (defn find-by-projectname [name db]
   (ffirst (d/q '[:find ?e :in $ ?name
