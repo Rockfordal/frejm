@@ -8,21 +8,20 @@
 
 
 (r/defc changeproject-field [id domid db]
-  [:.input-field.col.s6
+  [:.input-field
     [:i.material-icons.prefix "code"]
     (my-input {:id domid :on-save #(trans/move-company id conn db)})
     [:label {:for domid :class "active"} "Flytta till projekt"]])
 
 (r/defc companyedit_v < rum/reactive [db]
   [:div
-    [:h2 "Redigera företag"]
+    [:br]
     (company-form db (get-currententity db))
     [:.row
       (let [moduleid (get-moduleid)]
         [:.col.s2 (save-button #(trans/update-company moduleid conn))])
-     [:.col.s2 (changeproject-field (get-moduleid) "company-project" db)]
-     [:.col.s2 (button {:href "#" :on-click #(trans/snuppy db)} "SNI " "info")]
-     [:.col.offset-s1.s2 (link-button "#company" "Tillbaka " "info")]]])
+     [:.col.offset-s3.s2 (changeproject-field (get-moduleid) "company-project" db)]
+     [:.col.offset-s3.s2 (link-button "#company" "Tillbaka " "info")]]])
 
 (r/defc companynew_v < rum/reactive [db]
   [:div
