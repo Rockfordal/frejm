@@ -10,12 +10,12 @@
 
 ;; --- SNI ---
    (s/schema sni (s/fields
-     [code        :long :unique-value]
-     [name        :string :indexed]))
+     [code        :long   :unique-value]
+     [name        :string :unique-value]))
 
 ;; -- Sortiment --
    (s/schema product (s/fields
-     [artnr       :long :unique-value]
+     [artnr       :long   :unique-value]
      [name        :string :indexed]
      [price       :string :indexed]))
 
@@ -30,17 +30,17 @@
 
 ;; --- Callcenter ---
    (s/schema project (s/fields
-     [name        :string :indexed]
+     [name        :string :unique-value]
      [desc        :string :indexed]))
 
    (s/schema company (s/fields
      [project      :ref]
      [sni          :ref]
-     [orgnr        :long :indexed]
-     [name         :string :indexed]
+     [orgnr        :long   :unique-value]
+     [name         :string :unique-value]
      [phone        :string :indexed]
      [email        :string :indexed]
-     [employees    :long :indexed]
+     [employees    :long   :indexed]
      [contact      :string :indexed]
      [contacttype  :string :indexed]
 
@@ -57,9 +57,7 @@
      [salesman     :string :indexed] ; FC Försäljningschef
      [marketingdir :string :indexed] ; MC (marknadschef)
      [vd           :string :indexed] ; behövs?
-     [snicode      :long]
-     ;[snitext      :string :indexed]
-     ))
+     [snicode      :long]))
 
    (s/schema aktivitet (s/fields
      [status  :enum [:pending :active :inactive :cancelled]]
