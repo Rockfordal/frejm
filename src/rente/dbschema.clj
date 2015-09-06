@@ -59,12 +59,13 @@
      [vd           :string :indexed] ; behövs?
      [snicode      :long]))
 
-   (s/schema aktivitet (s/fields
-     [status  :enum [:pending :active :inactive :cancelled]]
+   (s/schema activity (s/fields
      [project :ref]
-     [company :ref]))
-     ;; note
-     ;; datum
+     [company :ref]
+     [status  :enum [:pending :active :inactive :cancelled]]
+     [note    :string :fulltext]
+     [datum   :instant]
+     ))
   ])
 
 (defn get-schema []
