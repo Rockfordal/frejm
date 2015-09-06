@@ -44,4 +44,4 @@
 (r/defc project_v < rum/reactive [db]
   [:div
     (project-list db (get-state :activeproject) ) [:br]
-    (button {:href newprojectroute} "Ny" "send")])
+    (button {:href (newprojectroute)} "Ny" "send")])

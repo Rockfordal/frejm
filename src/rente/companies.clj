@@ -47,6 +47,6 @@
                           ;{:db/id (q/by-name :project/name project-name)
                           ; :project/companies company-id}])))
 
-(defn delete-all [
+(defn delete-all []
   (for [entity (get-all)]
     (db/delete-entity (:db/id entity))))
