@@ -8,7 +8,7 @@
                  [org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data för datascript
+                 [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data
                  [org.clojure/tools.logging "0.3.1"]
 
                  ;; Framtida
@@ -23,17 +23,17 @@
                  [compojure "1.4.0"]
                  [http-kit "2.1.19"]
                  [datomic-schema "1.3.0"]
-
+               
                  [com.stuartsierra/component "0.2.3"]
                  [com.datomic/datomic-pro "0.9.5206"
-                  :exclusions [joda-time
-                               ;org.slf4j/jul-to-slf4j
-                               ;org.slf4j/slf4j-nop
-                               ]]
+                  :exclusions [joda-time]]
 
                  [com.taoensso/sente "1.6.0" :exclusions [org.clojure/tools.reader]]
                  [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.225"]
+
+                 ;; Server Verktyg
+                 [org.clojure/data.csv "0.1.3"]
 
                  ;; Klient
                  [rum "0.3.0"]
@@ -53,7 +53,6 @@
                  ]
 
   :plugins [[lein-environ "1.0.0"]
-            ;[lein-bin "0.3.4"] ; kör uberjars enkelare. target/runs -h (vs java -jar target/..)
             [lein-cljsbuild "1.0.6"]]
 
   :source-paths ["src"]
@@ -66,7 +65,6 @@
 
   :cljsbuild {:builds {
       :client {:source-paths ["src/rente/client"]
-               ;:figwheel true
                :compiler {
                 ;:main rente.client.app
                 ;:asset-path "/js/out" ; Base URL for JS requests from browser.
@@ -100,8 +98,7 @@
                                 :compiler
                                   {:optimizations :none
                                    :source-map true
-                                   }}}}
-             }
+                                   }}}}}
 
              :prod {
                     :resource-paths ^:replace ; Replace instead of merge
@@ -130,7 +127,5 @@
              }
 
   :uberjar-name "frejm.jar"
-
-  :aliases {"package" ["with-profile" "prod" "do"
-                       "clean" ["cljsbuild" "once"]]}
+  :aliases {"package" ["with-profile" "prod" "do" "clean" ["cljsbuild" "once"]]}
 )
