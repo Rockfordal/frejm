@@ -19,12 +19,13 @@
                  db code)))
 
 (defn find-companies [projectid db]
- (if projectid
+ (when-not (or (= nil projectid) (= "" projectid))
   (d/q '[:find   ?c :in $ ?pn
          :where [?c :company/project ?p]
                 [?p :project/name ?pn]]
-    db projectid)
+       db projectid)
   (d/q '[:find   ?c
-         :where [?c :company/name]
-           (not [?c :company/project])]
-    db)))
+         :where [?c :company/name _]
+                [(get-else $ ?c :company/project nil) ?p]
+                [(nil? ?p)]]
+       db)))
