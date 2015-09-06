@@ -4,21 +4,15 @@
             [ring.middleware.edn :refer [wrap-edn-params]]
             [compojure.core :refer [routes GET POST PUT DELETE]]
             [compojure.route :as route]
-            [ring.util.response :as resp]
+            ;[ring.util.response :as resp]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.resource :refer (wrap-resource)]
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
-            [rente.products :as products]
-            [rente.shelfs :as shelfs]
-            [rente.sni :as sni]
-            [rente.projects :as projects]
-            [rente.companies :as companies]
-            [rente.items :as items]
-            ;[clj-json.core :as json]
+            [rente.sortiment]
+            [rente.call]
             [rente.ws :as ws]))
 
-;(defmacro tojson [& args] `(json/generate-string ~@args))
 
 (defn edn-res [data & [status]]
   {:status (or status 200)
@@ -30,12 +24,7 @@
    (GET  "/"     _   (clojure.java.io/resource "index.html"))
    (GET  "/chsk" req (ajax-get-or-ws-handshake-fn req))
    (POST "/chsk" req (ajax-post-fn req))
-   ; produkter
-   ;(GET "/seed" _ (db/seed))
    (GET "/getstate" _ (edn-res (db/get-state)))
-   ;(GET "/getproducts" _ (json/generate-string products/get-all))
-   ;(DELETE "/companies" req (companydel req))
-   ;(GET "/getprojects" _ (json/generate-string projects/getall))
    (route/not-found "<h1>Sidan kan tyvärr inte hittas</h1>")))
 
 (defn wrap-dir-index [handler]
@@ -63,12 +52,9 @@
     (if server-stop
       component
       (let [component (component/stop component)
-
             {:keys [ajax-post-fn ajax-get-or-ws-handshake-fn]}
             (ws/ring-handlers ws-conn)
-
             handler (handler ajax-post-fn ajax-get-or-ws-handshake-fn)
-
             server-stop (run-server (app handler) {:port port})]
         (log/debug "HTTP server startad")
         (assoc component :server-stop server-stop))))
