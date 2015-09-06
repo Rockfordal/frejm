@@ -8,6 +8,7 @@
     [rente.client.views.company     :refer [company_v]]
     [rente.client.views.companyedit :refer [companyedit_v companynew_v]]
     [rente.client.views.sortiment   :refer [sortiment_v]]
+    [rente.client.views.activity    :refer [activity_v]]
     [rente.client.views.produktedit :refer [productedit_v productnew_v]]
     [rente.client.state             :refer [state get-state set-project]]
     [rum :as r :include-macros true]))
@@ -32,12 +33,13 @@
   (case i
     :sortiment   (sortiment_v db)
     :productedit (productedit_v db)
-    :company     (company_v db)
-    :companyedit (companyedit_v db)
-    :companynew  (companynew_v db)
     :project     (project_v db)
     :projectedit (projectedit_v db)
     :projectnew  (projectnew_v db)
+    :company     (company_v db)
+    :companyedit (companyedit_v db)
+    :companynew  (companynew_v db)
+    :activity    (activity_v db)
     :sni         (sni_v db)
     :login       (login_v db)
     :notfound    (notfound_v)))

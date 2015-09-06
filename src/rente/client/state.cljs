@@ -14,6 +14,7 @@
          :modules [{:key :sortiment   :title "Sortiment" :url "#sortiment"}
                    {:key :project     :title "Projekt"   :url "#project"}
                    {:key :company     :title "Företag"   :url "#company"}
+                   {:key :activity    :title "Aktivitet" :url "#activity"}
                    {:key :login       :title "Logga in"  :url "#login"}]}))
 
 (def conn
