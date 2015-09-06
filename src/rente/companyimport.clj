@@ -1,4 +1,4 @@
-(ns rente.import
+(ns rente.companyimport
   (:require [rente.db :as db :refer [conn]]
             [rente.queries :as q]
             [datomic.api :as d]
@@ -23,9 +23,9 @@
    :company/visitadr    :company/zipcode     :company/postal])
   ;homepage snicode info workphone oms othercontact salesman marketingdir vd project
 
-(defn rubrik [] (first (get-data)))
-(defn enrad [] (second (get-data)))
-(defn rowmap [rad] (zipmap rubriker rad))
+;(defn rubrik [] (first (get-data)))
+;(defn enrad  [] (second (get-data)))
+;(defn rowmap [rad] (zipmap rubriker rad))
 
 (defn datatypes [indata]
   (assoc indata
@@ -34,33 +34,41 @@
     :company/employees (read-string (:company/employees indata))
     :company/snicode   (read-string (:company/snicode   indata))))
 
-(defn datarefs [indata]
-  (assoc indata
-    :company/sni     (findsni  (:company/snicode indata))
-    :company/project (findproject "ibm")))
+(defn projref [indata projekt]
+  (let [sni  (findsni  (:company/snicode indata))
+        proj (findproject projekt)]
+    (if proj
+      (assoc indata :company/project proj)
+      (throw (Throwable. "projeket kunde inte hittas")))))
+
+(defn sniref [indata]
+  (let [sni  (findsni  (:company/snicode indata))]
+    (if sni
+      (assoc indata :company/sni sni))))
 
 (defn filterdata [indata]
   (dissoc indata
     :company/snitext
     :company/snicode))
 
-(defn importcompany [rad]
+(defn importcompany [projekt rad]
   (-> rad
       (datatypes)
-      (datarefs)
+      (sniref)
+      (projref projekt)
       (filterdata)
       (rente.companies/create!)))
 
-(defn import-companies []
+(defn import-companies [projekt]
   (let [rows (rest (get-data))]
     (doseq [row rows]
       (do
       (print ".")
-      (importcompany (rowmap row))))))
+      (importcompany projekt (rowmap row))))))
 
-(defn importera []
+(defn importera [projekt]
   ;(rente.companies/delete-all)
   ;(Thread/sleep 5000)
-  ;(import-companies)
-  (count (rente.companies/get-all)))
-
+  (import-companies projekt)
+  ;(count (rente.companies/get-all))
+  )
