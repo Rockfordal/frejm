@@ -3,7 +3,10 @@
 
 
 (r/defc navbar-item < rum/static [currentmodule module]
-  [:li {:class (if (= currentmodule (:key module)) "active" "")}
+  [:li {:class
+        (if (or (= currentmodule (:key module))
+                (and (= currentmodule :companyedit)
+                     (= (:key module) :company))) "active" "")}
     [:a {:href (:url module)} (:title module)]])
 
 (r/defc navbar-items < rum/static [currentmodule modules]
