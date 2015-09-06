@@ -1,5 +1,6 @@
 (ns rente.sortiment
   (:require [rente.shelfs :as shelfs]
+            [rente.items :as items]
             [rente.products :as products]))
 
 
