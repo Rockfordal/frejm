@@ -34,7 +34,6 @@
     [:h2 "Nytt företag"]
     (company-form db (get-state :newcompany))
    [:.row
-    [:.col.s2 (let [activeproject (get-state :activeproject)]
-                (save-button #(trans/add-company activeproject conn)))]
-    [:.col.offset-s8.s2 (link-button "#company" "Tillbaka " "info")]
-    ]])
+    [:.col.s2 (link-button "#company" "Tillbaka " "info")]
+    [:.col.offset-s8.s2 (let [activeproject (get-state :activeproject)]
+              (save-button #(trans/add-company activeproject conn)))]]])
