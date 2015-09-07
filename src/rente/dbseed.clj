@@ -1,6 +1,6 @@
 (ns rente.dbseed)
 
-(def sortiment
+(def sortimentdata
    [;; produkt
     {:db/id #db/id [:db.part/user -101] :product/name "Ägg 6p" :type :product}
     {:db/id #db/id [:db.part/user -102] :product/name "Korv"   :type :product}
@@ -25,20 +25,21 @@
 
 ;; --- Callcenter ---
 
-(def callcenter
+(def calldata
   [ ;; Projekt
     {:db/id #db/id [:db.part/user -201]
      :type :project
-           :project/name  "Baker Tilly"
+           :project/name  "Baker"
            :project/desc  "Första"}
     {:db/id #db/id [:db.part/user -202]
      :type :project
-           :project/name  "Mekonomen"
-           :project/desc  "Andra"}
+           :project/name  "ibm"
+           :project/desc  ""}
 
     ;; Företag
     {:db/id #db/id [:db.part/user -251]
      :type :company
+           :company/project #db/id [:db.part/user -201]
            :company/name    "Baker Tilly"
            :company/orgnr   4839381134
            :company/phone   "08-42424"
@@ -47,7 +48,7 @@
 
     {:db/id #db/id [:db.part/user -252]
      :type :company
-           :company/name    "Yellow-backed duiker"
+           :company/name    "Yellow-lonely duiker"
            :company/orgnr   4838382424
            :company/phone   "08-48398"
            :company/email   "yo@do.lab"
@@ -61,7 +62,7 @@
            :activity/note "Hej hopp"}
    ])
 
-(def sni
+(def snidata
   [{:type :sni :sni/code 10710 :sni/name "Tillverkning av mjukt matbröd och färska bakverk"}
    {:type :sni :sni/code 11010 :sni/name "Destillering, rening och tillblandning av spritdrycker"}
    {:type :sni :sni/code 18122 :sni/name "Tryckning av böcker och övriga trycksaker"}
@@ -107,7 +108,7 @@
 
 (defn seed-data []
   (concat
-    sni
+    snidata
     ;sortiment
     ;projects companies
     ;aktiviteter
