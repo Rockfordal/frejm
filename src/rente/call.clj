@@ -1,7 +1,7 @@
 (ns rente.call
   (:require [datomic.api :as d]
-            [rente.db :refer [conn]]
-            [rente.dbseed :refer [callcenter]]
+            [rente.db :refer [conn create!]]
+            [rente.dbseed :refer [calldata snidata]]
             [rente.projects :as projects]
             [rente.companies :as companies]
             [rente.activities :as activities]
@@ -9,7 +9,9 @@
 
 
 (defn seed []
-  (d/transact (conn) callcenter))
+  (for [entry snidata]
+    (create! entry))
+  (d/transact (conn) calldata))
 
 (defn delete-all []
   (activities/delete-all)
