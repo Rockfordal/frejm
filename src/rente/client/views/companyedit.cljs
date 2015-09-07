@@ -15,7 +15,7 @@
 
 (r/defc companyedit_v < rum/reactive [db]
   [:div
-    [:br]
+    (active-project)
     (company-form db (get-currententity db))
     [:.row
       (let [moduleid (get-moduleid)]
