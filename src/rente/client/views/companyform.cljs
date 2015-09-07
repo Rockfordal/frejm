@@ -29,8 +29,8 @@
 
    [:.row
     (c-field "othercontact" "phone"       "Övrig kontakt"   (:company/othercontact company))
-    (c-field "snikod"    "phone"          "SNI-kod"         (:sni/code (getsni company db)))
-    (c-field "snitext"   "phone"          "SNI-text"        (:sni/name (getsni company db)))]
+    (c-field "snicode"      "phone"       "SNI-kod"         (:sni/code (getsni company db)))
+    (c-field "snitext"      "phone"       "SNI-text"        (:sni/name (getsni company db)))]
 
    [:.row
     (c-field "visitadr"   "phone"         "Besöksadress"    (:company/visitadr company))

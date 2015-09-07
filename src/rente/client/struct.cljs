@@ -24,8 +24,8 @@
      :oms          (get-value "company-oms")
      :employees    (get-value "company-employees")
      :othercontact (get-value "company-othercontact")
-     :snikod       (get-value "company-snikod")
-     ;:snitext      (get-value "company-snitext")
+     :snicode       (get-value "company-snikod")
+     :snitext      (get-value "company-snitext")
      }))
 
 (defn db-project []
@@ -57,8 +57,8 @@
    :company/oms          (:oms     company)
    :company/employees    (:employees company)
    :company/othercontact (:othercontact company)
-   :company/snikod       (:snikod company)
-   ;:company/snitext      (:snitext company)
+   :company/snicode      (:snicode company)
+   :company/snitext      (:snitext company)
    }))
 
 (defn db-move-company [db-company id projid]
