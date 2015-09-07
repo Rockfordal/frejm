@@ -45,11 +45,6 @@
   (d/transact (conn) (list entity))
   true)
 
-(defn seed []
-  (d/transact (conn) rente.dbseed/sortimentdata)
-  (for [entry (seed-data)]
-    (create! entry)))
-
 (defn read
   ([k v]
    (let [found (d/q '[:find ?e :in $ ?k ?v :where [?e ?k ?v]] (db) k v)]
