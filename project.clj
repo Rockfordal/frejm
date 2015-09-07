@@ -39,6 +39,7 @@
                  [rum "0.3.0"]
                  [datascript "0.11.6"]
                  [secretary "1.2.3"]
+                 [prismatic/schema "1.0.1"]
                  [jayq "2.5.4"]
                  [cljs-http "0.1.37"]
                  ;[clj-json "0.5.3"]
