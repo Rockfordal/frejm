@@ -23,10 +23,6 @@
    :company/visitadr    :company/zipcode     :company/postal])
   ;homepage snicode info workphone oms othercontact salesman marketingdir vd project
 
-;(defn rubrik [] (first (get-data)))
-;(defn enrad  [] (second (get-data)))
-;(defn rowmap [rad] (zipmap rubriker rad))
-
 (defn datatypes [indata]
   (assoc indata
     :company/zipcode   (read-string (:company/zipcode   indata))
@@ -35,16 +31,18 @@
     :company/snicode   (read-string (:company/snicode   indata))))
 
 (defn projref [indata projekt]
-  (let [sni  (findsni  (:company/snicode indata))
-        proj (findproject projekt)]
-    (if proj
-      (assoc indata :company/project proj)
-      (throw (Throwable. "projeket kunde inte hittas")))))
+  (let [proj (findproject projekt)]
+    (if (nil? proj)
+      (throw (Throwable. (str "projeket " projekt " kunde inte hittas")))
+      (assoc indata :company/project proj))))
 
 (defn sniref [indata]
   (let [sni  (findsni  (:company/snicode indata))]
     (if sni
-      (assoc indata :company/sni sni))))
+      (assoc indata :company/sni sni)
+      (throw (Throwable. (str "kunde inte binda till snicode för " (:db/id indata))))
+      ;indata
+      )))
 
 (defn filterdata [indata]
   (dissoc indata
@@ -62,9 +60,8 @@
 (defn import-companies [projekt]
   (let [rows (rest (get-data))]
     (doseq [row rows]
-      (do
-      (print ".")
-      (importcompany projekt (rowmap row))))))
+      (do (print ".")
+          (importcompany projekt (zipmap rubriker row))))))
 
 (defn importera [projekt]
   ;(rente.companies/delete-all)
