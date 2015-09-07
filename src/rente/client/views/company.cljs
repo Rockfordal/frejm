@@ -24,10 +24,8 @@
    [:td.antal   (:company/employees company)]
    ;[:td.email   (:company/email company)]
    ;[:td.project (projnamn (:company/project company) db)]
-   [:td [:a {:href "#company"
-             :on-click #(trans/delete company conn)}
-            (ikon "delete")]
-        [:a {:href (companyroute company)}
+   [:td
+     [:a {:href (companyroute company)}
             (ikon "view_headline")]]])
 
 (r/defc company-list [db projectid]
