@@ -9,9 +9,9 @@
    ;[clojure.test :as test]
    [com.stuartsierra.component :as component]
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
-   ;[rente.products] ; för att snabbt komma åt från repl
    [rente.config :as config]
    [rente.run]
+   [rente.companyimport :as import]
    [rente.system]))
 
 (def system nil)
