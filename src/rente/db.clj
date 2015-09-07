@@ -46,7 +46,7 @@
   true)
 
 (defn seed []
-  ;(d/transact (conn) rente.dbseed/sortiment)
+  (d/transact (conn) rente.dbseed/sortimentdata)
   (for [entry (seed-data)]
     (create! entry)))
 
