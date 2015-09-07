@@ -37,9 +37,9 @@
  (swap! state assoc k v kvs))
 
 (defn find-first-project [db]
-  (let [query (ffirst (d/q '[:find ?p :where [?p :project/name]] db))]
-    (if query
-      (d/touch (d/entity db) query))))
+  (let [id (ffirst (d/q '[:find ?p :where [?p :project/name]] db))]
+    (if id
+     (d/touch (d/entity db id)))))
 
 (defn set-project [db]
   (let [project (find-first-project db)]
