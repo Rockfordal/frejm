@@ -3,16 +3,16 @@
     [rente.client.ws :as ws]
     [rente.client.queries :refer [find-by-projectname find-by-snicode]]
     [rente.client.dom :as dom :refer [q by-id toast get-value]]
-    [rente.client.struct :refer [db-move-company db-company db-project db-item]]
+    [rente.client.struct :refer [db-move-company db-company db-project db-item safe-company]]
     [datascript :as d]))
 
 
-(defn snuppy [db]
-  (let [kod (js/parseInt (get-value "company-snikod"))
-        sni (find-by-snicode kod db)]
-    (println "kod: " kod)
-    (println "sni: " sni)
-    ))
+(defn update-cb [data conn]
+  (let [entity (:entity data)
+        msg (:message data)]
+    (if msg
+      (toast (str "kunde inte lägga till" data msg))
+      (d/transact! @conn [entity]))))
 
 (defn add-cb [data conn]
   (let [id (:db/id data)
@@ -23,14 +23,21 @@
       (toast (str "kunde inte lägga till" data)))))
 
 (defn add-company [activeproject conn]
-    (let [activepid (js/parseInt (:db/id activeproject))
-          company (db-company)
-          fullcompany (merge company {:company/project activepid})
-          inkproj {:entity fullcompany}
-          exproj  {:entity company}]
+  (let [company     (safe-company)
+        activepid   (js/parseInt (:db/id activeproject))
+        fullcompany (merge company {:company/project activepid})
+        medproj     {:entity fullcompany}
+        utanproj    {:entity fullcompany}]
+    (println "skapar företag:" company)
   (if activeproject
-    (ws/add inkproj add-cb conn)
-    (ws/add exproj  add-cb conn))))
+    (ws/add medproj  add-cb conn)
+    (ws/add utanproj add-cb conn))))
+
+(defn update-company [id conn]
+  (let [company (safe-company)
+        utanproj {:entity (assoc company :db/id id)}]
+    (println "uppdaterar företag:" utanproj)
+    (ws/upd utanproj update-cb conn)))
 
 (defn move-company-cb [msg conn]
   (let [entity (:entity msg)
@@ -58,18 +65,6 @@
   (let [data {:entity (db-item itemdata)}]
     (println "ws/add data: " data)
     (ws/add data add-cb conn)))
-
-(defn update-cb [data conn]
-  (let [entity (:entity data)
-        msg (:message data)]
-    (if msg
-      (toast (str "kunde inte lägga till" data msg))
-      (d/transact! @conn [entity]))))
-
-(defn update-company [id conn]
-  (let [entity {:entity (assoc (db-company) :db/id id)}]
-    (println "uppdaterar företag:" entity)
-    (ws/upd entity update-cb conn)))
 
 (defn update-project [id conn]
   (let [entity {:entity (assoc (db-project) :db/id id)}]
