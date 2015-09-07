@@ -17,7 +17,7 @@
 (r/defc project-item [project db activeproject]
   [:tr.project
    [:td.name  (:project/name project)]
-   [:td.desc  (:project/desc project)]
+   ;[:td.desc  (:project/desc project)]
    [:td
      [:a {:href "#project"
           :on-click #(trans/delete project conn)}
@@ -34,7 +34,7 @@
    [:thead
      [:tr
        [:th "Namn"]
-       [:th "Beskrivning"]
+       ;[:th "Beskrivning"]
        [:th "Åtgärd"]]
    [:tbody
      (for [[eid] (sort (d/q '[:find ?e :where [?e :project/name]] db))]
