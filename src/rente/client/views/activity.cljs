@@ -9,8 +9,7 @@
    [:td.note    (:activity/note activity)]
    [:td.status]
    [:td.project [:a {:href (str "#project/" (:activity/project activity))} (:activity/project activity)]]
-   [:td.company [:a {:href (str "#company/" (:activity/company activity))} (:activity/company activity)]]
-   ])
+   [:td.company [:a {:href (str "#company/" (:activity/company activity))} (:activity/company activity)]]])
 
 (r/defc activity-list [db]
   [:table

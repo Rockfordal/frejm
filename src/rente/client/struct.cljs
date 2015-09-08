@@ -79,8 +79,7 @@
     :company/employees    (read-string (:employees company))
     :company/othercontact (:othercontact company)
     :company/snicode      (:snicode      company)
-    :company/snitext      (:snitext      company)
-    }))
+    :company/snitext      (:snitext      company)}))
 
 (defn filtered-company [c]
   (let [company (atom c)]
