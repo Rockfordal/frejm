@@ -9,6 +9,7 @@
     [rente.client.views.companyedit :refer [companyedit_v companynew_v]]
     [rente.client.views.sortiment   :refer [sortiment_v]]
     [rente.client.views.activity    :refer [activity_v]]
+    [rente.client.views.call        :refer [call_v]]
     [rente.client.views.produktedit :refer [productedit_v productnew_v]]
     [rente.client.state             :refer [state get-state set-project]]
     [rum :as r :include-macros true]))
@@ -40,6 +41,7 @@
     :companyedit (companyedit_v db)
     :companynew  (companynew_v db)
     :activity    (activity_v db)
+    :call        (call_v db)
     :sni         (sni_v db)
     :login       (login_v db)
     :notfound    (notfound_v)))
