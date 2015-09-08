@@ -10,5 +10,5 @@
 /.idea
 /.lein-env
 /.lein-repl-history
+/.repl
 /logs
-/
