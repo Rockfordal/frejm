@@ -37,7 +37,7 @@
 
                  ;; Klient
                  [rum "0.3.0"]
-                 [datascript "0.11.6"]
+                 [datascript "0.13.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "1.0.1"]
                  [jayq "2.5.4"]
