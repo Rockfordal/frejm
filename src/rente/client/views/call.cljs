@@ -32,7 +32,7 @@
    [:h4 "Aktiviteter"]
    [:form
     [:div.input-field
-     [:textarea#textarea1.materialize-textarea "rad ett\nrad två\nrad tre"]
+     [:textarea#textarea1.materialize-textarea { :value "rad ett\nrad två\nrad tre" }]
      [:label {:for "textarea1"} "Anteckning"]
      ]]
    [:br]
