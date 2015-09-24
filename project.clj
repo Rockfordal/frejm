@@ -36,7 +36,7 @@
                  [org.clojure/data.csv "0.1.3"]
 
                  ;; Klient
-                 [rum "0.3.0"]
+                 [rum "0.4.1"]
                  [datascript "0.13.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "1.0.1"]
