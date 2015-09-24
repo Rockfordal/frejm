@@ -24,7 +24,7 @@
                  [http-kit "2.1.19"]
                  [datomic-schema "1.3.0"]
                
-                 [com.stuartsierra/component "0.2.3"]
+                 [com.stuartsierra/component "0.3.0"]
                  [com.datomic/datomic-pro "0.9.5206"
                   :exclusions [joda-time]]
 
