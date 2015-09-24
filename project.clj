@@ -90,7 +90,7 @@
                     ["resources" "dev-resources" "resources-index/dev"]
 
                    :dependencies [[org.clojure/tools.namespace "0.2.10"]
-                                  [org.clojure/tools.nrepl "0.2.10"]]
+                                  [org.clojure/tools.nrepl "0.2.11"]]
 
                    :plugins [[lein-figwheel "0.3.7" :exclusions [org.clojure/tools.reader
                                                                  org.clojure/clojurescript clj-stacktrace]]]
