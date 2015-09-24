@@ -1,5 +1,5 @@
 (ns rente.client.queries
-  (:require [datascript :as d]))
+  (:require [datascript.core :as d]))
 
 
 (defn getsni [company db]

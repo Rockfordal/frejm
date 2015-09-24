@@ -1,6 +1,6 @@
 (ns rente.client.views.company
-  (:require [rum :as r]
-            [datascript :as d]
+  (:require [rum.core :as r]
+            [datascript.core :as d]
             [rente.client.dom :as dom :refer [by-id]]
             [rente.client.views.material :refer [ikon button my-input]]
             [rente.client.transactions :as trans]
@@ -51,7 +51,7 @@
    (my-input {:id id :on-save #(do (println "sparar " %))})
     [:label {:for id} label]])
 
-(r/defc active-project < rum/reactive []
+(r/defc active-project < r/reactive []
   [:div
    [:a#droppi.dropdown-button.btn {:href "#company"
                             :data-activates "dropdown1"
@@ -62,7 +62,7 @@
      [:a {:href "#!"} "one"]
      [:a {:href "#!"} "two"]]]])
 
-(r/defc company_v < rum/reactive [db]
+(r/defc company_v < r/reactive [db]
   [:div
     (active-project)
     (company-list db (str (:project/name (get-state :activeproject))))

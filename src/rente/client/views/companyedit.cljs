@@ -1,5 +1,5 @@
 (ns rente.client.views.companyedit
-  (:require [rum :as r]
+  (:require [rum.core :as r]
             [rente.client.views.material :refer [button ikon link-button my-input save-button]]
             [rente.client.views.company :refer [active-project]]
             [rente.client.views.companyform :refer [company-form]]
@@ -13,7 +13,7 @@
     (my-input {:id domid :on-save #(trans/move-company id conn db)})
     [:label {:for domid :class "active"} "Flytta till projekt"]])
 
-(r/defc companyedit_v < rum/reactive [db]
+(r/defc companyedit_v < r/reactive [db]
   [:div
     (active-project)
     (company-form db (get-currententity db))
@@ -28,7 +28,7 @@
            :on-click #(trans/delete-id moduleid conn)}
            (ikon "delete")])]])
 
-(r/defc companynew_v < rum/reactive [db]
+(r/defc companynew_v < r/reactive [db]
   [:div
    (active-project)
     [:h2 "Nytt företag"]

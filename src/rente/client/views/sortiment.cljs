@@ -1,13 +1,14 @@
 (ns rente.client.views.sortiment
   (:require
-    [datascript :as d]
-    [rum :as r]
+    [rum.core :as r]
+    [datascript.core :as d]
     [rente.client.dom :as dom :refer [by-id]]
     [rente.client.views.material :refer [ikon button save-button my-input]]
     [rente.client.transactions :as trans]
     [rente.client.actions :refer [add-item]]
     [rente.client.state :refer [state get-state conn]]
     [rente.client.routehelper :refer [Product productroute newproductroute]]))
+
 
 ;(r/defc kolla < r/reactive []
 ;        [:.kollaprod

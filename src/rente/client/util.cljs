@@ -1,7 +1,7 @@
 (ns rente.client.util
   (:require-macros
     [cljs.core.async.macros :refer [go]])
-  (:require [datascript :as d]
+  (:require [datascript.core :as d]
             [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
             [cognitect.transit :as t]
@@ -10,6 +10,7 @@
             [rente.client.dom :refer [toast]]
             [clojure.string :as str]))
             ;[cognitect.transit :as transit]
+
 
 (defn random []
   (js/parseInt(rand 999999)))

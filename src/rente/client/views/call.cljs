@@ -1,9 +1,9 @@
 (ns rente.client.views.call
-  (:require [rum :as r]
+  (:require [rum.core :as r]
             [rente.client.views.company :refer [active-project]]
             [rente.client.state :refer [state get-state get-moduleid conn get-currententity
                                         find-first-company set-company]]
-            [datascript :as d]))
+            [datascript.core :as d]))
 
 
 (r/defc company_v [company]
@@ -23,7 +23,7 @@
     (:company/zipcode company) [:span " "] (:company/postal company)
     ])
 
-(r/defc call_v < rum/reactive [db]
+(r/defc call_v < r/reactive [db]
   [:div
    (active-project)
    [:h4 "Företag"]

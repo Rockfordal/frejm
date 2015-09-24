@@ -1,6 +1,7 @@
 (ns rente.client.state
-  (:require [rum :as r]
-            [datascript :as d]))
+  (:require [rum.core :as r]
+            [datascript.core :as d]))
+
 
 (defonce ^:private state
   (atom {:schema  {:item/shelf   {:db/valueType :db.type/ref}

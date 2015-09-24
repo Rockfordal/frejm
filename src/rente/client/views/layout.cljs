@@ -1,20 +1,20 @@
 (ns rente.client.views.layout
-  (:require [rum :as r]))
+  (:require [rum.core :as r]))
 
 
-(r/defc navbar-item < rum/static [currentmodule module]
+(r/defc navbar-item < r/static [currentmodule module]
   [:li {:class
         (if (or (= currentmodule (:key module))
                 (and (= currentmodule :companyedit)
                      (= (:key module) :company))) "active" "")}
     [:a {:href (:url module)} (:title module)]])
 
-(r/defc navbar-items < rum/static [currentmodule modules]
+(r/defc navbar-items < r/static [currentmodule modules]
   [:div
     (for [module modules]
-     (rum/with-props navbar-item currentmodule module :rum/key module))])
+     (r/with-props navbar-item currentmodule module :r/key module))])
 
-(r/defc navbar < rum/static [currentmodule modules]
+(r/defc navbar < r/static [currentmodule modules]
   [:nav.light-blue.lighten-1 {:role "navigation"}
     [:.nav-wrapper.container
       [:a#logo-container.brand-logo {:href "#"} "Frejm"]

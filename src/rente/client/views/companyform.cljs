@@ -1,5 +1,5 @@
 (ns rente.client.views.companyform
-  (:require [rum :as r]
+  (:require [rum.core :as r]
             [rente.client.views.material :refer [my-input]]
             [rente.client.queries :refer [getsni]]))
 

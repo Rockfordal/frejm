@@ -1,9 +1,9 @@
 (ns rente.client.views.material
   (:require [rente.client.dom :as dom :refer [by-id]]
-            [rum :as r]))
+            [rum.core :as r]))
 
 
-(r/defc ikon < rum/static [namn]
+(r/defc ikon < r/static [namn]
   [:i.material-icons namn])
 
 (r/defc button [opts name icontext]

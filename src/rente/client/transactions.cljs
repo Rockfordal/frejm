@@ -4,7 +4,7 @@
     [rente.client.queries :refer [find-by-projectname find-by-snicode]]
     [rente.client.dom :as dom :refer [q by-id toast get-value]]
     [rente.client.struct :refer [db-move-company db-company db-project db-item safe-company]]
-    [datascript :as d]))
+    [datascript.core :as d]))
 
 
 (defn update-cb [data conn]

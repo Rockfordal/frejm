@@ -1,5 +1,5 @@
 (ns rente.client.views.projectedit
-  (:require [rum :as r]
+  (:require [rum.core :as r]
             [rente.client.views.material :refer [ikon button save-button my-input]]
             [rente.client.state :refer [state get-state get-moduleid conn get-currententity]]
             [rente.client.transactions :as trans]))
@@ -24,7 +24,7 @@
 (r/defc back-button []
   (button {:href "#project"} "Tillbaka " "info"))
 
-(r/defc projectedit_v < rum/reactive [db]
+(r/defc projectedit_v < r/reactive [db]
   [:div
     [:h2 "Redigera projekt"]
     (project-form db (get-currententity db))
@@ -34,7 +34,7 @@
           (let [moduleid (get-moduleid)]
             (save-button #(trans/update-project moduleid conn)))]]])
 
-(r/defc projectnew_v < rum/reactive [db]
+(r/defc projectnew_v < r/reactive [db]
   [:div
     [:h2 "Nytt projekt"]
     (project-form db (get-state :newproject))

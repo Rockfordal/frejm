@@ -1,6 +1,6 @@
 (ns rente.client.views.project
-  (:require [rum :as r]
-            [datascript :as d]
+  (:require [rum.core :as r]
+            [datascript.core :as d]
             [rente.client.dom :as dom :refer [by-id]]
             [rente.client.views.material :refer [ikon button]]
             [rente.client.transactions :as trans]
@@ -41,7 +41,7 @@
        (-> (project-item (d/entity db eid) db activeproject)
          (r/with-key [eid])))]]])
 
-(r/defc project_v < rum/reactive [db]
+(r/defc project_v < r/reactive [db]
   [:div
     (project-list db (get-state :activeproject) ) [:br]
     (button {:href (newprojectroute)} "Ny" "send")])

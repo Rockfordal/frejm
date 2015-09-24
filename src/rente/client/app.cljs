@@ -2,14 +2,15 @@
   (:require-macros
     [rente.macros :refer [profile]])
   (:require
-    [datascript :as d]
-    [rum :as r]
+    [datascript.core :as d]
+    [rum.core :as r]
     [rente.client.ws :as ws]
     [rente.client.util :as u :refer [log-transactions load-state]]
     [rente.client.state :refer [conn state set-project]]
     [rente.client.routes :refer [app-routes]]
     [rente.client.views.main :refer [canvas]]
     [rente.client.dom :refer [by-id]]))
+
 
 (declare render persist)
 

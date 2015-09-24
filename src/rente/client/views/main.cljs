@@ -12,7 +12,7 @@
     [rente.client.views.call        :refer [call_v]]
     [rente.client.views.produktedit :refer [productedit_v productnew_v]]
     [rente.client.state             :refer [state get-state set-project]]
-    [rum :as r :include-macros true]))
+    [rum.core :as r :include-macros true]))
 
 
 (def setproject-memo
@@ -47,7 +47,7 @@
     :notfound    (notfound_v)))
 
 ;; Huvud vy med navbar
-(r/defc canvas < rum/reactive [db]
+(r/defc canvas < r/reactive [db]
   [:div
    (setproject-memo db)
    (navbar

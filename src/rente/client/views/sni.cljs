@@ -1,6 +1,6 @@
 (ns rente.client.views.sni
-  (:require [rum :as r]
-            [datascript :as d]))
+  (:require [rum.core :as r]
+            [datascript.core :as d]))
 
 
 (r/defc sni-item [sni db]
@@ -20,6 +20,6 @@
        (-> (sni-item (d/entity db eid) db)
          (r/with-key [eid])))]]])
 
-(r/defc sni_v < rum/reactive [db]
+(r/defc sni_v < r/reactive [db]
   [:div
    (sni-list db) [:br]])

@@ -1,5 +1,5 @@
 (ns rente.client.views.produktedit
-  (:require [rum :as r]
+  (:require [rum.core :as r]
             [rente.client.views.material :refer [ikon button my-input save-button]]
             ;[rente.client.views.company :refer [active-project]]
             [rente.client.state :refer [state get-state get-moduleid conn get-currententity]]
@@ -26,7 +26,7 @@
 (r/defc back-button []
         (button {:href "#sortiment"} "Tillbaka " "info"))
 
-(r/defc productedit_v < rum/reactive [db]
+(r/defc productedit_v < r/reactive [db]
         [:div
          [:h2 "Redigera Produkt"]
          (product-form db (get-currententity db))
@@ -36,7 +36,7 @@
           ;[:.col.s4 (changeproject-field (get-moduleid) "company-project" db)]
           [:.col.offset-s1.s2 (back-button)]]])
 
-(r/defc productnew_v < rum/reactive [db]
+(r/defc productnew_v < r/reactive [db]
         [:div
          ;(active-project)
          [:h2 "Nytt företag"]

@@ -1,6 +1,6 @@
 (ns rente.client.views.activity
-  (:require [rum :as r]
-            [datascript :as d]))
+  (:require [rum.core :as r]
+            [datascript.core :as d]))
 
 
 (r/defc activity-item [activity db]
@@ -26,6 +26,6 @@
        (-> (activity-item (d/entity db eid) db)
          (r/with-key [eid])))]]])
 
-(r/defc activity_v < rum/reactive [db]
+(r/defc activity_v < r/reactive [db]
   [:div
    (activity-list db) [:br]])
