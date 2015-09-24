@@ -12,7 +12,7 @@
 (r/defc navbar-items < r/static [currentmodule modules]
   [:div
     (for [module modules]
-     (r/with-props navbar-item currentmodule module :r/key module))])
+     (r/with-props navbar-item currentmodule module :rum/key module))])
 
 (r/defc navbar < r/static [currentmodule modules]
   [:nav.light-blue.lighten-1 {:role "navigation"}
