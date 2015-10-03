@@ -4,21 +4,10 @@
 
 
 (defonce ^:private state
-  (atom {:schema  {:item/shelf   {:db/valueType :db.type/ref}
-                   :item/product {:db/valueType :db.type/ref}}
-         :module :sortiment
+  (atom {:module :login
          :moduleid nil
-         :activeproject nil
-         :activecompany nil
-         :activeproduct nil
-         :activeshelf nil
-         ;:new-company {:company/name "1" :company/orgnr "2" :company/phone "3" :company/email "4"}
-         :modules [{:key :sortiment   :title "Sortiment" :url "#sortiment"}
-                   {:key :project     :title "Projekt"   :url "#project"}
-                   {:key :company     :title "Företag"   :url "#company"}
-                   {:key :call        :title "Samtal"    :url "#call"}
-                   {:key :activity    :title "Aktivitet" :url "#activity"}
-                   {:key :login       :title "Logga in"  :url "#login"}]}))
+         :modules [{:key :login       :title "Logga in"  :url "#login"}
+                   {:key :sni         :title "Sni"       :url "#sni"}]}))
 
 (def conn
   (atom (d/create-conn (:schema @state))))
@@ -38,21 +27,3 @@
 
 (defn update-state! [k v & kvs]
  (swap! state assoc k v kvs))
-
-(defn find-first-project [db]
-  (let [id (ffirst (d/q '[:find ?p :where [?p :project/name]] db))]
-    (if id
-     (d/touch (d/entity db id)))))
-
-(defn find-first-company [db]
-  (let [id (ffirst (d/q '[:find ?p :where [?p :company/name]] db))]
-    (if id
-     (d/touch (d/entity db id)))))
-
-(defn set-project [db]
-  (let [project (find-first-project db)]
-    (swap! state assoc :activeproject project)))
-
-(defn set-company [db]
-  (let [company (find-first-company db)]
-    (swap! state assoc :activecompany company)))

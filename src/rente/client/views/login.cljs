@@ -6,4 +6,4 @@
   [:div
    [:h3 "Logga in"]
    [:br]
-   [:a.btn {:href "#sni"} "SNI Lista"]])
+   [:a.btn {:href "#sni"} "Sni"]])

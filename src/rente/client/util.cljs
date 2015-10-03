@@ -72,20 +72,6 @@
             (toast (str "kunde inte ladda state från server:" status)))
       (log-transactions @conn)))))
 
-(defn create-for-product-name [name]
-  (let [id (d/tempid :db.part/user)]
-  @(d/transact @conn [{:db/id id
-                       :product/name name}])))
-
 (defn toggle-fig []
   (d/transact! @conn
     [{:db/id 0 :figwheel (random)}]))
-
-;; (defn got-products [data]
-;;   (let [id   (d/tempid :db.part/user)
-;;         f    (first data)
-;;         name (:product/name f)]
-;;     ;(println "data: " name)
-;;     (d/transact @conn data)
-;;     ;(create-for-product-name name)
-;;     ))

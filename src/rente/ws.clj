@@ -5,9 +5,6 @@
             [datomic.api :as d]
             [rente.db :as db]
             [rente.queries :as q]
-            [rente.products :as products]
-            [rente.projects :as projects]
-            [rente.companies :as companies]
             [taoensso.sente.server-adapters.http-kit :as sente-http]
             [taoensso.sente :as sente]
             [taoensso.sente.packers.transit :refer [get-flexi-packer]]))
@@ -33,32 +30,6 @@
 (defmethod event-msg-handler :rente/get-data
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
     (?reply-fn [:rente/get-data (db/get-state)]))
-
-;------------ gamla ------------------------------------
-;(Defmethod event-msg-handler :rente/get-companies
-;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;    (?reply-fn [:rente/get-companies (db/expand (companies/get-all))]))
-
-;(defmethod event-msg-handler :rente/add-project
-;  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-;  (if-let [id (projects/create! (:project ?data))]
-;      (?reply-fn [:rente/add-project {:id id :project (:project ?data)}])
-;      (?reply-fn [:rente/add-project {:message (str "misslyckades adda")}])))
-
-;------------ nya --------------------------------------
-;(defn create-for-project-name [company-name project-name]
-
-(comment
-  (defmethod event-msg-handler :rente/add-company2project
-    [{:as ev-msg :keys [event id ?data ring-req ?reply-fn]}]
-    ;(if-let [id (companies/create! (:company ?data))]
-    ;(if-let [id (companies/create-for-project-name "yahoo" "ica")]
-    (if-let [id (companies/create-for-project-name (:company/name ?data) "ica")]
-    ;(if-let [id (companies/create-for-project-name (:company/name (:company ?data)) (:project/name ?data))]
-        ;(?reply-fn [:rente/add-company2project {:id id :company (:company ?data)}])
-        (?reply-fn [:rente/add-company2project {:id id}])
-        (?reply-fn [:rente/add-company2project {:message (str "misslyckades adda")}])))
-)
 
 ;------------ generella --------------------------------
 (defmethod event-msg-handler :rente/get

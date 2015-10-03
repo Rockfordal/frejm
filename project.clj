@@ -1,7 +1,5 @@
 (defproject rente "1.0.0"
   :description "Datomic, Component, Sente, Rum, Datascript"
-  ;:url "http://enterlab.com"
-  ;:license {:name "Eclipse Public License" :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.5.1"
 
   :dependencies [[environ "1.0.1"]
@@ -10,11 +8,6 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.clojure/algo.generic "0.1.2" :only [fmap]] ; massera data
                  [org.clojure/tools.logging "0.3.1"]
-
-                 ;; Framtida
-                 ; [com.taoensso/timbre "4.1.1"] ; mkt kraftfullare än tools.logging
-                 ; [dire "0.5.3"]                ; hantera exceptions erlang style (se theatralia github)
-                 ; [liberator "0.12.0"]          ; REST style a'la powerhouse+webgui
 
                  ;; Server
                  [ring/ring-core "1.4.0"]
@@ -25,10 +18,7 @@
                  [com.stuartsierra/component "0.3.0"]
                  [com.datomic/datomic-pro "0.9.5206" :exclusions [joda-time]]
                  [datomic-schema "1.3.0"]
-                 [org.clojure/data.csv "0.1.3"]
-                 [clojurewerkz/elastisch "2.1.0" :exclusions [clj-http]]
                  [clj-http "2.0.0"]
-                 [com.cemerick/friend "0.2.2-SNAPSHOT"]
                  [com.taoensso/sente "1.6.0" :exclusions [org.clojure/tools.reader]]
                  [com.cognitect/transit-clj  "0.8.281" :exclusions [commons-codec]]
                  [com.cognitect/transit-cljs "0.8.225"]
@@ -38,18 +28,7 @@
                  [datascript "0.13.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "1.0.1"]
-                 [jayq "2.5.4"]
-                 [cljs-http "0.1.37"]
-                 ;[clj-json "0.5.3"]
-                 ;[cljsjs/highlight "8.4-0"]
-                 ;[org.webjars.bower/jquery "2.1.4"]
-                 ;[org.webjars.bower/materialize "0.97.0" :exclusions [org.webjars.bower/jquery]]
-                 ;[org.webjars.bower/highlightjs "8.5.0"]
-                 ;[cljsjs/jquery "2.1.4-0"]
-                 ;[cljsjs/jquery-ui "1.11.3-1"]
-                 ;[org.webjars.bower/jquery-ui "1.11.4"]
-                 ;[matchbox "0.0.6"]
-                 ]
+                 [cljs-http "0.1.37"]]
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.0.6"]]
@@ -58,7 +37,6 @@
   :resource-paths ["resources" "resources-index/prod"]
   :target-path "target/%s"
   :main ^:skip-aot rente.run
-
   :figwheel {:nrepl-port 7888
              :server-port 3000}
 
@@ -80,8 +58,7 @@
                            :optimizations :advanced
                            :pretty-print false}}}
   }
-  :profiles {
-             :dev {
+  :profiles {:dev {
                     :source-paths ["dev"]
                     :resource-paths ^:replace ; Replace instead of merge
                     ["resources" "dev-resources" "resources-index/dev"]
@@ -95,8 +72,7 @@
                       {:client {:source-paths ["dev"]
                                 :compiler
                                   {:optimizations :none
-                                   :source-map true
-                                   }}}}}
+                                   :source-map true}}}}}
 
              :prod {
                     :resource-paths ^:replace ; Replace instead of merge
@@ -119,7 +95,6 @@
                ;;                 :optimizations :none
                ;;                 :output-to "dev-resources/pub/js/prod_client.js"
                ;;                 :pretty-print false}}}}
-                    ;:aot :all
                     :aot :none
                }
              }

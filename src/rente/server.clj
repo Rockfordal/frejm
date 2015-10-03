@@ -9,8 +9,6 @@
             [ring.middleware.resource :refer (wrap-resource)]
             [org.httpkit.server :refer (run-server)]
             [rente.db :as db]
-            [rente.sortiment]
-            [rente.call]
             [rente.ws :as ws]))
 
 

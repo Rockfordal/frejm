@@ -11,13 +11,11 @@
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
    [rente.config :as config]
    [rente.run]
-   [rente.companyimport :as import]
    [rente.system]))
 
 (def system nil)
 
 (defn init
-  ;([] (alter-var-root #'system (fn [_] (system/vanlig (config/get-config)))))
   ([]        (init rente.system/vanlig))
   ([makesys] (alter-var-root #'system (fn [_] (makesys (config/get-config))))))
 
