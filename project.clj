@@ -34,7 +34,7 @@
                  [com.cognitect/transit-cljs "0.8.225"]
 
                  ;; Klient
-                 [rum "0.4.1"]
+                 [rum "0.4.2"]
                  [datascript "0.13.1"]
                  [secretary "1.2.3"]
                  [prismatic/schema "1.0.1"]
