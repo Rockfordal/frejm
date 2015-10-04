@@ -18,33 +18,14 @@
   (secretary/set-config! :prefix "#")
   (hook-browser-navigation!))
 
-;; Företag
-(defroute "/company/:id" {:as params}
-  (swap! state assoc :module :companyedit)
+
+;; User
+(defroute "/user/:id" {:as params}
+  (swap! state assoc :module :useredit)
   (swap! state assoc :moduleid (js/parseInt (:id params))))
 
-(defroute "/newcompany" {:as params}
-  (swap! state assoc :module :companynew))
-
-;; Projekt
-(defroute "/project/:id" {:as params}
-  (swap! state assoc :module :projectedit)
-  (swap! state assoc :moduleid (js/parseInt (:id params))))
-
-(defroute "/newproject" {:as params}
-  (swap! state assoc :module :projectnew))
-
-;; Produkt
-(defroute "/product/:id" {:as params}
-          (swap! state assoc :module :productedit)
-          (swap! state assoc :moduleid (js/parseInt (:id params))))
-
-(defroute "/newproduct" {:as params}
-          (swap! state assoc :module :productnew))
-
-;;SNI
-(defroute "/sni" {}
-  (swap! state assoc :module :sni))
+(defroute "/newuser" {:as params}
+  (swap! state assoc :module :usernew))
 
 ;; Dynamisk
 (defroute module-path "/:module" {module :module}

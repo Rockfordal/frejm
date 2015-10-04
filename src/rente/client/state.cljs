@@ -6,8 +6,8 @@
 (defonce ^:private state
   (atom {:module :login
          :moduleid nil
-         :modules [{:key :login       :title "Logga in"  :url "#login"}
-                   {:key :sni         :title "Sni"       :url "#sni"}]}))
+         :modules [{:key :user         :title "User"       :url "#user"}
+                   {:key :login       :title "Logga in"  :url "#login"}]}))
 
 (def conn
   (atom (d/create-conn (:schema @state))))

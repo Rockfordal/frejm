@@ -2,6 +2,7 @@
   (:require
     [rente.client.views.layout      :refer [navbar]]
     [rente.client.views.login       :refer [login_v]]
+    [rente.client.views.user        :refer [user_v]]
     [rente.client.state             :refer [state get-state]]
     [rum.core :as r :include-macros true]))
 
@@ -17,15 +18,11 @@
           [:.card-action
             [:a {:href "#"} "Gå Hem"]]]]]])
 
-(r/defc sni_v []
-  [:div
-    [:h1 "SNI sidan"]])
-
 ;; Vy väljare baserat på aktuell modul
 (defn panels [i db]
   (case i
     :login       (login_v db)
-    :sni         (sni_v)
+    :user        (user_v db)
     :notfound    (notfound_v)))
 
 ;; Huvud vy med navbar

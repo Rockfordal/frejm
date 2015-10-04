@@ -4,7 +4,7 @@
    [cljs.reader :as reader :refer [read-string]]
    [rente.client.dom :as dom :refer [get-value]]))
 
-
+;; TODO ränsa filen då den inte hör till master
 (def Company
   {:company/name         s/Str
    :company/orgnr        s/Int
